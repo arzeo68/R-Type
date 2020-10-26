@@ -29,14 +29,12 @@ endif()
 conan_basic_setup()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
 
 
 # UI.h  PATH
 
-add_executable(r-type_client)
-add_executable(r-type_server)
+add_executable(r-type_client Client/main.cpp)
+add_executable(r-type_server Server/main.cpp)
 
 if (MSVC)
     set_target_properties(r-type_client PROPERTIES LINK_FLAGS /MACHINE:X64)
@@ -50,3 +48,4 @@ install(TARGETS r-type_server DESTINATION ${PROJECT_SOURCE_DIR}/bin)
 target_link_libraries(r-type_client ${CONAN_LIBS})
 #############################################################
 target_link_libraries(r-type_server ${CONAN_LIBS})
+message(${CONAN_LIBS})
