@@ -1,0 +1,13 @@
+[requires]
+zlib/1.2.11@conan/stable
+bzip2/1.0.8
+boost/1.71.0@conan/stable
+sfml/2.5.1@bincrafters/stable
+
+[generators]
+cmake
+cmake_find_package
+
+[imports]
+bin, *.dll -> ./bin
+lib, *.dylib* -> ./bin
