@@ -21,7 +21,7 @@ endif()
 if (EXISTS conanbuildinfo.cmake)
     include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 else()
-    message(FATAL_ERROR "No conanbuildinfo.cmake file found please create a directory named \"build\" at the root of the repository then execute the following command \nconan install build --build=missing")
+    message(FATAL_ERROR "No conanbuildinfo.cmake file found please create a directory named \"build\" at the root of the repository then go inside your build folder and execute the following command \nconan install .. --build=missing")
 endif()
 
 #include(CMakeSources.cmake)
