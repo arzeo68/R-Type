@@ -10,6 +10,7 @@ namespace ECS
 class EntityManager {
     public:
         EntityManager()
+            : m_nLivingEntityCount(0)
         {
             for (Entity ent = 1; ent < MAX_ENTITIES; ent += 1)
                 m_cAvailableEntities.push(ent);

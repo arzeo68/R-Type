@@ -1,3 +1,4 @@
+#include <cassert>
 #include "Components/Transform.hpp"
 #include "Components/Tag.hpp"
 #include "Print.hpp"
@@ -16,6 +17,7 @@ void PrintSystem::update(std::shared_ptr<ECS::World>& world)
 
 PrintSystem::Dependencies PrintSystem::getDependencies(ECS::Entity entity, std::shared_ptr<ECS::World>& world)
 {
+    assert(entity != 0 && "Asserted invalid entity");
     auto const position = world->getComponent<TransformComponent>(entity);
 
     return std::make_tuple(position);

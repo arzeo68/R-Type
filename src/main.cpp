@@ -1,5 +1,5 @@
 #include <iostream>
-#include <unistd.h>
+#include <windows.h>
 #include <type_traits>
 #include <utility>
 #include <typeindex>
@@ -58,7 +58,7 @@ int main()
 
         if (frame_count == 3)
             world->removeComponent<InvisibilityComponent>(entities[10]);
-        sleep(1);
+        Sleep(1000);
         frame_count += 1;
     }
 
