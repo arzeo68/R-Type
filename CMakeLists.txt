@@ -33,7 +33,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # UI.h  PATH
 
-add_executable(r-type_client Client/main.cpp)
+add_executable(r-type_client Client/main.cpp Client/src/window/Window.cpp Client/include/window/Window.hpp Client/src/window/AWindow.cpp Client/include/window/AWindow.hpp)
 add_executable(r-type_server Server/main.cpp)
 
 if (MSVC)
