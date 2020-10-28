@@ -29,11 +29,16 @@ conan_basic_setup()
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 
-add_executable(r-type_client Client/main.cpp Client/src/window/Window.cpp Client/include/window/Window.hpp Client/src/window/AWindow.cpp Client/include/window/AWindow.hpp Server/Network/Router.hpp Server/Network/NetworkBoost.cpp Server/Network/NetworkBoost.hpp)
+
+add_executable(r-type_client Client/main.cpp Client/src/window/Window.cpp Client/include/window/Window.hpp Client/src/window/AWindow.cpp Client/include/window/AWindow.hpp)
 add_executable(r-type_server
         Server/Network/INetwork.hpp
         Server/Network/Client/ISocket.hpp
-        Server/Network/ANetwork.hpp Server/Main.cpp)
+        Server/Network/Router.hpp
+        Server/Network/NetworkBoost.cpp
+        Server/Network/NetworkBoost.hpp
+        Server/Network/ANetwork.hpp
+        Server/Main.cpp)
 
 if (MSVC)
     set_target_properties(r-type_client PROPERTIES LINK_FLAGS /MACHINE:X64)

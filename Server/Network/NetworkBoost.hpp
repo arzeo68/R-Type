@@ -25,22 +25,25 @@ namespace RType::Network {
                 boost::asio::signal_set> {
 
         public:
-        NetworkBoost(uint32_t port) {
-            this->_router.set_acceptor(
-                boost_asio_tcp::acceptor(*this->_router.get_io_service(),
-                                         boost_asio_tcp::endpoint(
-                                             boost_asio_tcp::v4(), port)));
-        }
+        NetworkBoost(uint32_t port);
+        NetworkBoost() = delete;
+        ~NetworkBoost() = default;
+        NetworkBoost(const NetworkBoost&) = delete;
+
         void run() override {
         };
+
         void stop() override {
         };
-        void add_client(Client &&) override {
+
+        void add_client(Client&&) override {
         };
-        void remove_client(Client &&) override {
+
+        void remove_client(Client&&) override {
         };
+
         std::list<client_shared_ptr> GetClients() override {
-            return (std::list<client_shared_ptr> {});
+            return (std::list<client_shared_ptr>{});
         };
     };
 }

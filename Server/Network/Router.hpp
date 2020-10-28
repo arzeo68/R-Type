@@ -39,30 +39,32 @@ namespace RType::Network {
             printf("In default constr\n");
         };
 
-        [[maybe_unused]] typename std::enable_if_t<_isValidAssigment<IOService>>
-        set_io_service(IOService &&service) {
+        template<typename ...Arguments>
+        [[maybe_unused]] typename std::enable_if_t<!_isTemplateNull<IOService>>
+        set_io_service(Arguments&& ...arguments) {
             this->_service = std::make_shared<IOService>(
-                std::forward<IOService>(service));
+                std::forward<Arguments>(arguments)...);
         };
 
-        [[maybe_unused]] typename std::enable_if_t<!_isValidAssigment<Acceptor>>
-        set_acceptor(Acceptor &&acceptor) {
-            printf("Set default acceptor\n");
+        template<typename ...Arguments>
+        [[maybe_unused]] typename std::enable_if_t<!_isTemplateNull<Acceptor>>
+        set_acceptor(Arguments&& ...arguments) {
             this->_acceptor = std::make_shared<Acceptor>(
-                std::forward<Acceptor>(acceptor));
+                std::forward<Arguments>(arguments)...);
         };
 
-        [[maybe_unused]] typename std::enable_if_t<_isValidAssigment<SignalSet>>
-        set_signal_set(Acceptor &&signal_set) {
-            printf("Set default signal_set\n");
+        template<typename ...Arguments>
+        [[maybe_unused]] typename std::enable_if_t<!_isTemplateNull<SignalSet>>
+        set_signal_set(Arguments&& ...arguments) {
             this->_signal_set = std::make_shared<SignalSet>(
-                std::forward<SignalSet>(signal_set));
+                std::forward<Arguments>(arguments)...);
         };
 
         [[maybe_unused]] typename std::enable_if_t<!_isTemplateNull<IOService>, std::shared_ptr<IOService>>
         get_io_service() const {
             return (this->_service);
         };
+
         [[maybe_unused]] typename std::enable_if_t<!_isTemplateNull<IOService>, std::shared_ptr<IOService>>
         get_io_service() {
             return (this->_service);
