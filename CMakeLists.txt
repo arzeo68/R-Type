@@ -3,7 +3,7 @@ if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 endif ()
 
 cmake_minimum_required(VERSION 3.5.1)
-project(RType)
+project(r-type)
 
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY build/bin)
@@ -29,13 +29,16 @@ conan_basic_setup()
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 
-add_executable(r-type_client Client/main.cpp Client/src/window/Window.cpp Client/include/window/Window.hpp Client/src/window/AWindow.cpp Client/include/window/AWindow.hpp)
-add_executable(r-type_server Server/main.cpp)
+add_executable(r-type_client Client/main.cpp Client/src/window/Window.cpp Client/include/window/Window.hpp Client/src/window/AWindow.cpp Client/include/window/AWindow.hpp Server/Network/Router.hpp Server/Network/NetworkBoost.cpp Server/Network/NetworkBoost.hpp)
+add_executable(r-type_server
+        Server/Network/INetwork.hpp
+        Server/Network/Client/ISocket.hpp
+        Server/Network/ANetwork.hpp Server/Main.cpp)
 
 if (MSVC)
     set_target_properties(r-type_client PROPERTIES LINK_FLAGS /MACHINE:X64)
     set_target_properties(r-type_server PROPERTIES LINK_FLAGS /MACHINE:X64)
-endif()
+endif ()
 
 install(TARGETS r-type_client DESTINATION ${PROJECT_SOURCE_DIR}/bin)
 install(TARGETS r-type_server DESTINATION ${PROJECT_SOURCE_DIR}/bin)
