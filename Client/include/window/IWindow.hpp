@@ -5,6 +5,9 @@
 #ifndef BABEL_IWINDOW_HPP
 #define BABEL_IWINDOW_HPP
 
+/**
+ * window interface
+ */
 class IWindow
 {
     public:

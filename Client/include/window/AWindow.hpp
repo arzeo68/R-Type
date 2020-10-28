@@ -6,7 +6,9 @@
 #define BABEL_AWINDOW_HPP
 
 #include "IWindow.hpp"
-
+/**
+ * window abstraction
+ */
 class AWindow: public IWindow
 {
     public:
