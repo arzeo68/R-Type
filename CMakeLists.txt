@@ -3,7 +3,7 @@ if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 endif ()
 
 cmake_minimum_required(VERSION 3.5.1)
-project(babel)
+project(RType)
 
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY build/bin)
