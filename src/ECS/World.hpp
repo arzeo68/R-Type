@@ -119,10 +119,23 @@ class World
             m_SystemManager->setSignature<T>(signature);
         }
 
+        void deferEntityDestruction(Entity entity)
+        {
+            m_cDeferedDestruction->push_back(entity);
+        }
+
+        void clearDeferList()
+        {
+            for (auto entity : *m_cDeferedDestruction)
+                destroyEntity(entity);
+            m_cDeferedDestruction->clear();
+        }
+
     private:
         std::shared_ptr<ComponentManager> m_ComponentManager;
         std::shared_ptr<EntityManager> m_EntityManager;
         std::shared_ptr<SystemManager> m_SystemManager;
+        std::shared_ptr<std::vector<Entity>> m_cDeferedDestruction;
 
         template<typename T>
         void addComponentsHelper(Entity entity, T current)
