@@ -7,7 +7,7 @@ project(RType)
 
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY build/bin)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 
 if(MSVC)
@@ -24,14 +24,10 @@ else()
     message(FATAL_ERROR "No conanbuildinfo.cmake file found please create a directory named \"build\" at the root of the repository then go inside your build folder and execute the following command \nconan install .. --build=missing")
 endif()
 
-#include(CMakeSources.cmake)
-
 conan_basic_setup()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-
-# UI.h  PATH
 
 add_executable(r-type_client Client/main.cpp Client/src/window/Window.cpp Client/include/window/Window.hpp Client/src/window/AWindow.cpp Client/include/window/AWindow.hpp)
 add_executable(r-type_server Server/main.cpp)
