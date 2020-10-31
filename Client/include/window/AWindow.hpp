@@ -6,18 +6,23 @@
 #define BABEL_AWINDOW_HPP
 
 #include "IWindow.hpp"
-/**
- * window abstraction
- */
-class AWindow: public IWindow
+
+namespace Rtype
 {
-    public:
-    int getWidth() const override;
-    int getHeight() const override;
 
-    private:
-    int _width;
-    int _height;
-};
+    /**
+     * window abstraction
+     */
+    class AWindow : public IWindow
+    {
+        public:
+        int getWidth() const override;
 
+        int getHeight() const override;
+
+        private:
+        int _width;
+        int _height;
+    };
+}
 #endif //BABEL_AWINDOW_HPP

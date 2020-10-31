@@ -7,7 +7,7 @@ project(babel)
 
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY build/bin)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 
 if(MSVC)
@@ -33,7 +33,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # UI.h  PATH
 
-add_executable(r-type_client Client/main.cpp Client/src/window/Window.cpp Client/include/window/Window.hpp Client/src/window/AWindow.cpp Client/include/window/AWindow.hpp)
+add_executable(r-type_client Client/main.cpp Client/src/window/Window.cpp Client/include/window/Window.hpp Client/src/window/AWindow.cpp Client/include/window/AWindow.hpp Client/include/typeEncapsulation.hpp Client/include/RenderTarget/IRenderTarget.hpp Client/include/RenderTarget/ARenderTarget.hpp Client/src/RenderTarget/RenderTarget.cpp Client/include/RenderTarget/RenderTarget.hpp Client/src/ObserverPattern/Subject.cpp Client/include/ObserverPattern/Subject.hpp Client/include/ObserverPattern/IObserver.hpp Client/src/ObserverPattern/ObserverString.cpp Client/include/ObserverPattern/ObserverString.hpp)
 add_executable(r-type_server Server/main.cpp)
 
 if (MSVC)
@@ -48,4 +48,3 @@ install(TARGETS r-type_server DESTINATION ${PROJECT_SOURCE_DIR}/bin)
 target_link_libraries(r-type_client ${CONAN_LIBS})
 #############################################################
 target_link_libraries(r-type_server ${CONAN_LIBS})
-message(${CONAN_LIBS})

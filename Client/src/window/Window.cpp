@@ -9,7 +9,7 @@
  * @param width window's width
  * @param height window's height
  */
-Window::Window(std::string name, int width, int height):_name(name), _width(width), _height(height)
+Rtype::Window::Window(std::string name, int width, int height):_name(name), _width(width), _height(height)
 {
 }
 
@@ -17,9 +17,9 @@ Window::Window(std::string name, int width, int height):_name(name), _width(widt
  *
  * @return open the window
  */
-bool Window::open()
+bool Rtype::Window::open()
 {
-    _window = std::make_shared<sf::RenderWindow>(sf::VideoMode(_width, _height), _name);
+    _window.create(sf::VideoMode(_width, _height), _name);
     return true;
 }
 
@@ -27,7 +27,7 @@ bool Window::open()
  *
  * @return close the window
  */
-bool Window::close()
+bool Rtype::Window::close()
 {
     return false;
 }
@@ -36,7 +36,7 @@ bool Window::close()
  *
  * @return true if the window is open and false if the window is closed
  */
-bool Window::isOpen() const
+bool Rtype::Window::isOpen() const
 {
-    return _window->isOpen();
+    return _window.isOpen();
 }

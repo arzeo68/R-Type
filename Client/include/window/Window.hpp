@@ -11,23 +11,27 @@
 #include <memory>
 #include "AWindow.hpp"
 
-class Window: public AWindow
+namespace Rtype
 {
-    public:
-    Window(std::string name = "window", int width = 480, int height = 480);
 
-    bool isOpen() const override;
+    class Window : public AWindow
+    {
+        public:
+        Window(std::string name = "window", int width = 480, int height = 480);
 
-    public:
-    bool open() override;
+        bool isOpen() const override;
 
-    bool close() override;
+        public:
+        bool open() override;
 
-    private:
-    std::shared_ptr<sf::RenderWindow> _window = nullptr;
-    std::string _name;
-    int _width;
-    int _height;
-};
+        bool close() override;
+
+        private:
+        sf::RenderWindow _window;
+        std::string _name;
+        int _width;
+        int _height;
+    };
+}
 
 #endif //BABEL_WINDOW_HPP

@@ -4,11 +4,12 @@
 
 #include "Client/include/window/AWindow.hpp"
 
+
 /**
  *
  * @return the window width
  */
-int AWindow::getWidth() const
+int Rtype::AWindow::getWidth() const
 {
     return _width;
 }
@@ -17,7 +18,7 @@ int AWindow::getWidth() const
  *
  * @return the window height
  */
-int AWindow::getHeight() const
+int Rtype::AWindow::getHeight() const
 {
     return _height;
 }
