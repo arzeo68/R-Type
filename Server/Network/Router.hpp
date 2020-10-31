@@ -9,6 +9,9 @@
 #define SRC_RTYPE_ROUTER_
 
 #include <type_traits>
+#if __cplusplus > 201703L && __cpp_concepts >= 201907L
+#include <concepts>
+#endif
 
 namespace RType::Network {
     /**
@@ -18,15 +21,28 @@ namespace RType::Network {
     };
 
 
+#if __cplusplus > 201703L && __cpp_concepts >= 201907L
+    template<typename T>
+    concept _isTemplateNull = std::is_same_v<T, _nullTemplate>;
+#else
+    template<typename T>
+    constexpr inline bool _isTemplateNull = std::is_same_v<T, _nullTemplate>;
+#endif
+
+
+#if __cplusplus > 201703L && __cpp_concepts >= 201907L
+    template<typename T>
+    concept _isValidAssigment = !_isTemplateNull<T> && std::is_copy_constructible_v<T>;
+#else
+    template<typename T>
+    constexpr inline bool _isValidAssigment =
+    !_isTemplateNull<T> && std::is_copy_constructible_v<T>;
+#endif
+
     template<typename IOService = _nullTemplate, typename Acceptor = _nullTemplate,
         typename SignalSet = _nullTemplate>
     class Router {
         private:
-        template<typename T>
-        static inline constexpr bool _isTemplateNull = std::is_same_v<T, _nullTemplate>;
-        template<typename T>
-        static inline constexpr bool _isValidAssigment =
-            !_isTemplateNull<T> && std::is_copy_constructible_v<T>;
 
         public:
         Router() {

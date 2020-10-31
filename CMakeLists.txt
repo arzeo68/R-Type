@@ -15,7 +15,7 @@ if(MSVC)
             "${CMAKE_EXE_LINKER_FLAGS}")
 else()
     set(STANDARD_UNIX_CXX_FLAGS "-Wall -g3 -Wextra -Wfatal-errors")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${STANDARD_UNIX_CXX_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${STANDARD_UNIX_CXX_FLAGS} -std=c++20")
 endif()
 
 if (EXISTS conanbuildinfo.cmake)
@@ -29,16 +29,19 @@ conan_basic_setup()
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 
-
 add_executable(r-type_client Client/main.cpp Client/src/window/Window.cpp Client/include/window/Window.hpp Client/src/window/AWindow.cpp Client/include/window/AWindow.hpp)
 add_executable(r-type_server
         Server/Network/INetwork.hpp
-        Server/Network/Client/ISocket.hpp
+        Server/Network/Socket/ISocket.hpp
         Server/Network/Router.hpp
-        Server/Network/NetworkBoost.cpp
-        Server/Network/NetworkBoost.hpp
+        Server/Network/BoostNetwork.cpp
+        Server/Network/BoostNetwork.hpp
         Server/Network/ANetwork.hpp
-        Server/Main.cpp)
+        Server/Main.cpp
+        Common/Log.hpp Common/Log.cpp
+        Server/Network/Socket/TCPBoostSocket.cpp
+        Server/Network/Socket/TCPBoostSocket.hpp
+        Server/Network/Error/Error.hpp Server/Network/Socket/UDPBoostSocket.cpp Server/Network/Socket/UDPBoostSocket.hpp)
 
 if (MSVC)
     set_target_properties(r-type_client PROPERTIES LINK_FLAGS /MACHINE:X64)

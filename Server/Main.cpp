@@ -5,16 +5,13 @@
 ** TODO: CHANGE DESCRIPTION.
 */
 
-#include "Server/Network/NetworkBoost.hpp"
-
-class Test {
-    public:
-    Test() = default;
-};
+#include <cstdio>
+#include "Server/Network/BoostNetwork.hpp"
 
 int main(int, char **) {
-    RType::Network::NetworkBoost network(4242);
+    RType::Network::BoostNetwork network(4242);
     network.run();
-    network.stop();
+    //network.stop();
+    //printf("Version: %li\n", __cplusplus);
     return (0);
 }

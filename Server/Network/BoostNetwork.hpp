@@ -5,8 +5,8 @@
 ** TODO: CHANGE DESCRIPTION.
 */
 
-#ifndef R_TYPE_NETWORKBOOST_HPP
-#define R_TYPE_NETWORKBOOST_HPP
+#ifndef R_TYPE_BOOSTNETWORK_HPP
+#define R_TYPE_BOOSTNETWORK_HPP
 
 #include <boost/asio.hpp>
 #include "ANetwork.hpp"
@@ -19,19 +19,18 @@ namespace RType::Network {
 
     using boost_asio_tcp = boost::asio::ip::tcp;
 
-    class NetworkBoost
+    class BoostNetwork
         :
             public ANetwork<Client, boost::asio::io_service, boost_asio_tcp::acceptor,
                 boost::asio::signal_set> {
 
         public:
-        NetworkBoost(uint32_t port);
-        NetworkBoost() = delete;
-        ~NetworkBoost() = default;
-        NetworkBoost(const NetworkBoost&) = delete;
+        explicit BoostNetwork(uint32_t port);
+        BoostNetwork() = delete;
+        ~BoostNetwork() override = default;
+        BoostNetwork(const BoostNetwork&) = delete;
 
-        void run() override {
-        };
+        void run() override;
 
         void stop() override {
         };
@@ -49,4 +48,4 @@ namespace RType::Network {
 }
 
 
-#endif //R_TYPE_NETWORKBOOST_HPP
+#endif //R_TYPE_BOOSTNETWORK_HPP
