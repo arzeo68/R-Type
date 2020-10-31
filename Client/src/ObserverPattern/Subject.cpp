@@ -3,52 +3,34 @@
 //
 
 #include "Client/include/ObserverPattern/Subject.hpp"
-template<typename T>
-void Subject<T>::Attach(IObserver *observer)
+void Subject::Attach(IObserver *observer)
 {
     _list_observer.push_back(observer);
 }
 
-template<typename T>
-void Subject<T>::Detach(IObserver *observer)
+void Subject::Detach(IObserver *observer)
 {
     _list_observer.remove(observer);
 }
 
-template<typename T>
-void Subject<T>::Notify()
+template <typename T>
+void Subject::Notify(T message)
 {
     auto it = _list_observer.begin();
     HowManyObserver();
     while (it != _list_observer.end()) {
-        (*it)->Update(_message);
+        (*it)->Update(message);
         ++it;
     }
 }
 
-template<typename T>
-void Subject<T>::CreateMessage(T)
-{
-    this->_message = message;
-    Notify();
-}
-
-template<typename T>
-void Subject<T>::HowManyObserver()
+void Subject::HowManyObserver()
 {
     std::cout << "There are " << _list_observer.size() << " observers in the list.\n";
 }
 
-template<typename T>
-void Subject<T>::SomeBusinessLogic()
-{
-    this->_message = "change message message";
-    Notify();
-    std::cout << "I'm about to do some thing important\n";
-}
 
-template<typename T>
-Subject<T>::~Subject()
+Subject::~Subject()
 {
     _list_observer.clear();
     std::cout << "Goodbye, I was the Subject.\n";

@@ -9,20 +9,17 @@
 #include <iostream>
 #include "IObserver.hpp"
 
-template<typename T>
 class Subject {
     public:
     ~Subject();
     void Attach(IObserver *observer);
     void Detach(IObserver *observer);
-    void Notify();
-    void CreateMessage(T);
+    template<typename T>
+    void Notify(T);
     void HowManyObserver();
-    void SomeBusinessLogic();
 
     private:
     std::list<IObserver *> _list_observer;
-    T _message;
 };
 
 #endif //BABEL_SUBJECT_HPP

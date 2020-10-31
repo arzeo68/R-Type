@@ -3,8 +3,9 @@
 //
 
 #include "Client/include/ObserverPattern/ObserverString.hpp"
+#include "Client/include/ObserverPattern/Subject.hpp"
 
-ObserverString::ObserverString(Subject<std::string> &subject): _subject(subject)
+ObserverString::ObserverString(Subject &subject): _subject(subject)
 {
     this->_subject.Attach(this);
     std::cout << "Hi, I'm the ObserverString \"" << ++ObserverString::_static_number << "\".\n";

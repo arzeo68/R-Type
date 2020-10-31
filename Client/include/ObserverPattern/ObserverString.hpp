@@ -10,7 +10,7 @@
 
 class ObserverString : public IObserver {
     public:
-    ObserverString(Subject<std::string> &subject);
+    ObserverString(Subject &subject);
     virtual ~ObserverString();
     void Update(const std::string &message_from_subject) override;
     void RemoveMeFromTheList();
@@ -18,7 +18,7 @@ class ObserverString : public IObserver {
 
     private:
     std::string message_from_subject_;
-    Subject<std::string> &_subject;
+    Subject &_subject;
     static int _static_number ;
     int _number;
 };
