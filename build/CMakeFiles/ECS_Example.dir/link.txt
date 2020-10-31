@@ -1,3 +1,0 @@
-D:\CMake\bin\cmake.exe -E remove -f CMakeFiles\ECS_Example.dir/objects.a
-C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\ar.exe cr CMakeFiles\ECS_Example.dir/objects.a @CMakeFiles\ECS_Example.dir\objects1.rsp
-C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE    -Wl,--whole-archive CMakeFiles\ECS_Example.dir/objects.a -Wl,--no-whole-archive  -o ECS_Example.exe -Wl,--out-implib,libECS_Example.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\ECS_Example.dir\linklibs.rsp
