@@ -5,8 +5,8 @@
 ** TODO: CHANGE DESCRIPTION.
 */
 
-#ifndef SRC_RTYPE_ANETWORK_
-#define SRC_RTYPE_ANETWORK_
+#ifndef SRC_RTYPE_ANETWORK_HPP_
+#define SRC_RTYPE_ANETWORK_HPP_
 
 #include <mutex>
 #include <list>
@@ -17,7 +17,9 @@ namespace RType::Network {
     /**
      * Abstract class for the network
      */
-    template<typename Client = _nullTemplate, typename IOService = _nullTemplate, typename Acceptor = _nullTemplate,
+    template<typename Client = _nullTemplate,
+        typename IOService = _nullTemplate,
+        typename Acceptor = _nullTemplate,
         typename SignalSet = _nullTemplate>
     class ANetwork : public INetwork<Client> {
         public:

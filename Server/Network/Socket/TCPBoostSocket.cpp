@@ -9,16 +9,13 @@
 #include "TCPBoostSocket.hpp"
 
 RType::Network::Socket::TCPBoostSocket::TCPBoostSocket(
-    boost::asio::io_service &service, const std::shared_ptr<Common::Log::Log>& log) {
+    boost::asio::io_service& service,
+    const std::shared_ptr<Common::Log::Log>& log) {
     this->_socket = std::make_shared<socket_tcp_t>(service);
     this->_logger = log;
 }
 
-RType::Network::Socket::TCPBoostSocket::~TCPBoostSocket() {
-    this->shutdown();
-}
-
-void RType::Network::Socket::TCPBoostSocket::shutdown() {
+void RType::Network::Socket::TCPBoostSocket::shutdown() noexcept {
     if (this->_socket->is_open()) {
         boost::system::error_code ec;
         this->_socket->shutdown(
@@ -34,6 +31,42 @@ void RType::Network::Socket::TCPBoostSocket::shutdown() {
         this->_logger->Debug(this, " socket (tcp) successfully closed");
     } else
         this->_logger->Debug(this, " socket (tcp) already closed");
+}
+
+void RType::Network::Socket::TCPBoostSocket::start_read() {
+    std::shared_ptr<MessageArr_t> raw_message = std::make_shared<MessageArr_t>();
+
+    this->_socket->async_receive(boost::asio::buffer(*raw_message),
+                                 [self = this->shared_from_this(), raw_message](
+                                     const boost::system::error_code& err,
+                                     std::size_t bytes_transferred) {
+                                     if (err) {
+                                         self->_logger->Error(
+                                             "(read tcp) An error occurred: ",
+                                             err.message());
+                                     }
+                                     self->_logger->Debug("(tcp) Message: '",
+                                                          std::string(
+                                                              raw_message->begin(),
+                                                              raw_message->end()),
+                                                          "' w/ ",
+                                                          bytes_transferred);
+                                     self->start_read();
+                                 });
+}
+
+void RType::Network::Socket::TCPBoostSocket::write(const std::string& input) {
+    std::vector<boost::asio::const_buffer> buffers;
+    buffers.emplace_back(boost::asio::buffer(&input, sizeof(input)));
+    this->_socket->async_send(buffers,
+                              [this](const boost::system::error_code& error,
+                                     std::size_t) {
+                                  if (error) {
+                                      this->_logger->Error(
+                                          "[client-> TCPBoostSocket] write ",
+                                          error.message());
+                                  }
+                              });
 }
 
 

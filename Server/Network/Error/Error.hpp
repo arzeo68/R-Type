@@ -17,7 +17,8 @@ namespace RType::Network {
     template<typename T>
     class Error : std::exception {
         public:
-        explicit Error(T err, std::string message) : _message(std::move(message)) {
+        explicit Error(T err, std::string message) : _message(
+            std::move(message)) {
         }
         const char *what() const noexcept override {
             return (_message.c_str());

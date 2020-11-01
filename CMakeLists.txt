@@ -41,7 +41,15 @@ add_executable(r-type_server
         Common/Log.hpp Common/Log.cpp
         Server/Network/Socket/TCPBoostSocket.cpp
         Server/Network/Socket/TCPBoostSocket.hpp
-        Server/Network/Error/Error.hpp Server/Network/Socket/UDPBoostSocket.cpp Server/Network/Socket/UDPBoostSocket.hpp)
+        Server/Network/Error/Error.hpp
+        Server/Network/Socket/UDPBoostSocket.cpp
+        Server/Network/Socket/UDPBoostSocket.hpp
+        Server/Network/Client/BoostClient.cpp
+        Server/Network/Client/BoostClient.hpp
+        Server/Network/Client/AClient.hpp
+        Common/Network.hpp
+        Server/Server.cpp
+        Server/Server.hpp)
 
 if (MSVC)
     set_target_properties(r-type_client PROPERTIES LINK_FLAGS /MACHINE:X64)

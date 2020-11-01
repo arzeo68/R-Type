@@ -21,7 +21,7 @@ namespace RType::Network {
         public:
         virtual ~INetwork() = default;
         /**
-         * Run the network. This function might add client
+         * run the network. This function might add client
          */
         virtual void run() = 0;
 
@@ -34,13 +34,13 @@ namespace RType::Network {
          * Remove a client from the network
          */
         //virtual typename std::enable_if_t<!std::is_same_v<Socket, _TemplateNull>>
-        virtual void add_client(Client &&) = 0;
+        virtual void add_client(Client&&) = 0;
 
         /**
          * Remove a client from the network
          */
         //virtual typename std::enable_if_t<!std::is_base_of_v<Socket, _TemplateNull>>
-        virtual void remove_client(Client &&) = 0;
+        virtual void remove_client(Client&&) = 0;
     };
 }
 
