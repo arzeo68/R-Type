@@ -11,12 +11,9 @@ set(CMAKE_CXX_STANDARD 20)
 
 
 if(MSVC)
+    add_compile_options("/std:c++latest")
     set(CMAKE_EXE_LINKER_FLAGS
             "${CMAKE_EXE_LINKER_FLAGS}")
-    check_cxx_compiler_flag("/std:c++latest" _cpp_latest_flag_supported)
-    if (_cpp_latest_flag_supported)
-        add_compile_options("/std:c++latest")
-    endif()
 else()
     set(STANDARD_UNIX_CXX_FLAGS "-Wall -g3 -Wextra -Wfatal-errors")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${STANDARD_UNIX_CXX_FLAGS}")
