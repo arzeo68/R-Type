@@ -20,7 +20,7 @@ jobs:
         run: sudo pip install configparser && sudo pip install conan
 
       - name: Install c++20
-        uses: |
+        run: |
           sudo apt install gcc-10 gcc-10-base gcc-10-doc
           sudo apt install libstdc++-10-dev libstdc++-10-doc
 
