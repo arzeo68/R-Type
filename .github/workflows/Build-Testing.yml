@@ -23,11 +23,15 @@ jobs:
         run: |
           sudo apt install gcc-10 gcc-10-base gcc-10-doc
           sudo apt install libstdc++-10-dev libstdc++-10-doc
+          sudo ln -s /usr/bin/g++-10 /usr/bin/g++
+          sudo ln -s /usr/bin/g++-10 /usr/bin/c++
+          sudo ln -s /usr/bin/gcc-10 /usr/bin/gcc
 
       - name: Add remote to conan
         run: |
           conan profile new default --detect
           conan profile update settings.compiler.libcxx=libstdc++11 default
+          conan profile update settings.compiler.version=10 default
           conan remote add conan_center https://api.bintray.com/conan/conan/conan-center && conan remote add epitech_conan https://api.bintray.com/conan/epitech/public-conan && conan remote add public_conan https://api.bintray.com/conan/bincrafters/public-conan
 
       - name: Potential missing packages
@@ -44,7 +48,7 @@ jobs:
         # Note the current convention is to use the -S and -B options here to specify source
         # and build directories, but this is only available with CMake 3.13 and higher.
         # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-        run: conan install $GITHUB_WORKSPACE --build=missing && cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -CMAKE_CXX_COMPILER=g++-10 -CMAKE_C_COMPILER=gcc-10
+        run: conan install $GITHUB_WORKSPACE --build=missing && cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_COMPILER=g++-10 -DCMAKE_C_COMPILER=gcc-10
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
