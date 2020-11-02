@@ -3,7 +3,7 @@ if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 endif ()
 
 cmake_minimum_required(VERSION 3.5.1)
-project(RType)
+project(RType CXX)
 
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY build/bin)
@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD 20)
 if(MSVC)
     set(CMAKE_EXE_LINKER_FLAGS
             "${CMAKE_EXE_LINKER_FLAGS}")
-    CHECK_CXX_COMPILER_FLAG("/std:c++latest" _cpp_latest_flag_supported)
+    check_cxx_compiler_flag("/std:c++latest" _cpp_latest_flag_supported)
     if (_cpp_latest_flag_supported)
         add_compile_options("/std:c++latest")
     endif()
