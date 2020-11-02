@@ -7,7 +7,7 @@ project(RType)
 
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY build/bin)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 
 if(MSVC)
