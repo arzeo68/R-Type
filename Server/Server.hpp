@@ -27,10 +27,9 @@ namespace RType::Server {
          * @param port
          */
         //explicit Server(uint32_t port) :
-        explicit Server() :
+        explicit Server(uint16_t logLevel = Common::Log::g_AllLogLevel) :
             _logger(std::make_shared<RType::Common::Log::Log>("server", "server.log",
-                                                              RType::Common::Log::Log::g_AllLogLevel,
-                                                              //RType::Common::Log::LOG_INFO_E | RType::Common::Log::LOG_WARN_E | RType::Common::Log::LOG_ERROR_E,
+                                                              logLevel,
                                                               std::ios_base::trunc)) {
             //_network(std::make_shared<RType::Network::BoostNetwork>(port,
             //                                            this->_logger->shared_from_this())) {
@@ -39,7 +38,9 @@ namespace RType::Server {
         /**
          * Defined but it only prints an informative message
          */
-        ~Server();
+        ~Server() {
+            this->_logger->Info("Server exited gracefully.");
+        }
         Server(const Server &obj) = default;
 
 
@@ -47,11 +48,22 @@ namespace RType::Server {
          *
          * @param ptr
          */
-        void create_network(const std::shared_ptr<RType::Network::ANetwork<Client, IOService, Acceptor, SignalSet>>& ptr);
+        void create_network(const std::shared_ptr<RType::Network::ANetwork<Client, IOService, Acceptor, SignalSet>>& ptr) {
+            this->_network = ptr;
+        }
+
         /**
          * Run the server. The server might be stopped by pressing CTRL+C (or sending SIGINT).
          */
-        void run();
+        void run() {
+            this->_logger->Info("Server is now running.");
+            try {
+                //this->_network->PreRun();
+                this->_network->run();
+            } catch (const std::exception &e) {
+                this->_logger->Error(e.what());
+            }
+        }
 
         private:
         RType::Common::Log::Log::shared_log_t _logger;

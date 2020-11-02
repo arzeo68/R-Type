@@ -10,6 +10,13 @@
 #include "Network/Client/BoostClient.hpp"
 #include "Server/Network/BoostNetwork.hpp"
 
+template<typename A>
+concept test_concept = std::is_integral_v<A>;
+
+template<typename A>
+void __attribute__((unused)) helloFunc() requires test_concept<A> {
+}
+
 int main(const int ac, const char **av) {
     uint32_t port = 4242;
     if (ac != 1)

@@ -19,12 +19,17 @@
 
 namespace RType::Common::Log {
     enum LogLevel_e : uint16_t {
-        LOG_DEBUG_E = 0b0001u,
-        LOG_INFO_E = 0b0010u,
-        LOG_WARN_E = 0b01000u,
+        LOG_DEBUG_E = 0b00001u,
+        LOG_INFO_E  = 0b00010u,
+        LOG_WARN_E  = 0b01000u,
         LOG_ERROR_E = 0b10000u,
     };
 
+    static const constexpr uint8_t g_AllLogLevel =
+        LOG_DEBUG_E | LOG_INFO_E | LOG_WARN_E | LOG_ERROR_E;
+
+    static const constexpr uint8_t g_ProdLogLevel =
+        LOG_INFO_E | LOG_WARN_E | LOG_ERROR_E;
     /**
      * Log is a logger with different level:
      *  - DEBUG
@@ -51,9 +56,6 @@ namespace RType::Common::Log {
 
         Log(const Log& log);
         ~Log() = default;
-
-        static const constexpr uint8_t g_AllLogLevel =
-            LOG_DEBUG_E | LOG_INFO_E | LOG_WARN_E | LOG_ERROR_E;
 
         template<typename ...variadic>
         void Debug(variadic&& ... args) {
