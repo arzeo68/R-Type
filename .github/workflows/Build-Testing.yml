@@ -82,4 +82,4 @@ jobs:
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
-        run: msbuild RType.sln /std:c++latest
+        run: msbuild RType.sln
