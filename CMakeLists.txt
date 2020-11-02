@@ -11,6 +11,11 @@ set(CMAKE_CXX_STANDARD 20)
 
 include_directories(${SFML_INCLUDE_DIR})
 
+# Find SFML
+set(SFML_STATIC_LIBRARIES TRUE)
+find_package(SFML REQUIRED COMPONENTS audio graphics window system)
+include_directories(${SFML_INCLUDE_DIR})
+
 if(MSVC)
     add_compile_options("/std:c++latest")
     set(CMAKE_EXE_LINKER_FLAGS
@@ -47,8 +52,6 @@ endif()
 install(TARGETS rtype_client DESTINATION ${PROJECT_SOURCE_DIR}/bin)
 install(TARGETS rtype_server DESTINATION ${PROJECT_SOURCE_DIR}/bin)
 
-#############################################################
 target_link_libraries(rtype_client ${CONAN_LIBS} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 target_link_libraries(rtype_server ${CONAN_LIBS} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
-
 message(${CONAN_LIBS})
