@@ -51,7 +51,7 @@ jobs:
         # Note the current convention is to use the -S and -B options here to specify source
         # and build directories, but this is only available with CMake 3.13 and higher.
         # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-        run: conan install $GITHUB_WORKSPACE --build=missing && cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_COMPILER=g++-10 -DCMAKE_C_COMPILER=gcc-10
+        run: conan install $GITHUB_WORKSPACE --build=missing && cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
@@ -82,4 +82,4 @@ jobs:
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
-        run: msbuild RType.sln
+        run: msbuild RType.sln /std:c++latest
