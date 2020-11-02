@@ -9,6 +9,10 @@ project(RType CXX)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY build/bin)
 set(CMAKE_CXX_STANDARD 20)
 
+# Find SFML
+set(SFML_STATIC_LIBRARIES TRUE)
+find_package(SFML REQUIRED COMPONENTS audio graphics window system)
+include_directories(${SFML_INCLUDE_DIR})
 
 if(MSVC)
     add_compile_options("/std:c++latest")
@@ -30,13 +34,13 @@ conan_basic_setup()
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 
-add_executable(r-type_client Client/main.cpp
+add_executable(rtype_client Client/main.cpp
         Client/src/window/Window.cpp
         Client/include/window/Window.hpp
         Client/src/window/AWindow.cpp
         Client/include/window/AWindow.hpp
         Common/Log.hpp Common/Log.cpp)
-add_executable(r-type_server Server/main.cpp Common/Log.hpp Common/Log.cpp)
+add_executable(rtype_server Server/main.cpp Common/Log.hpp Common/Log.cpp)
 
 if (MSVC)
     set_target_properties(r-type_client PROPERTIES LINK_FLAGS /MACHINE:X64)
@@ -47,7 +51,7 @@ install(TARGETS r-type_client DESTINATION ${PROJECT_SOURCE_DIR}/bin)
 install(TARGETS r-type_server DESTINATION ${PROJECT_SOURCE_DIR}/bin)
 
 #############################################################
-target_link_libraries(r-type_client ${CONAN_LIBS})
-#############################################################
-target_link_libraries(r-type_server ${CONAN_LIBS})
+target_link_libraries(r-type_client ${CONAN_LIBS} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+target_link_libraries(r-type_server ${CONAN_LIBS} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+
 message(${CONAN_LIBS})
