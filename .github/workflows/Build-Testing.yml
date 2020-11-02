@@ -23,8 +23,11 @@ jobs:
         run: |
           sudo apt install gcc-10 gcc-10-base gcc-10-doc
           sudo apt install libstdc++-10-dev libstdc++-10-doc
+          sudo rm /usr/bin/g++ -f
           sudo ln -s /usr/bin/g++-10 /usr/bin/g++
+          sudo rm /usr/bin/c++ -f
           sudo ln -s /usr/bin/g++-10 /usr/bin/c++
+          sudo rm /usr/bin/gcc -f
           sudo ln -s /usr/bin/gcc-10 /usr/bin/gcc
 
       - name: Add remote to conan
