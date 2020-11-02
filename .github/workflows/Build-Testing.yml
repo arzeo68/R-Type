@@ -1,4 +1,4 @@
-name: Cross-Platform build
+name: Cross platform build
 
 on: [push]
 
@@ -82,4 +82,4 @@ jobs:
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
-        run: msbuild Babel.sln
+        run: msbuild RType.sln
