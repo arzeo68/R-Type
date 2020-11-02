@@ -8,7 +8,7 @@ template<typename A>
 concept test_concept = std::is_integral_v<A>;
 
 template<typename A>
-void __attribute__((unused)) helloFunc() requires test_concept<A> {
+void helloFunc() requires test_concept<A> {
 }
 
 int main(int argc, char **argv)
