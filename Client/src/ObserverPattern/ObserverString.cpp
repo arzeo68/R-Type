@@ -3,33 +3,33 @@
 //
 
 #include "Client/include/ObserverPattern/ObserverString.hpp"
-#include "Client/include/ObserverPattern/Subject.hpp"
 
-ObserverString::ObserverString(Subject &subject): _subject(subject)
+ObserverString::ObserverString()
 {
-    this->_subject.Attach(this);
-    std::cout << "Hi, I'm the ObserverString \"" << ++ObserverString::_static_number << "\".\n";
-    this->_number = ObserverString::_static_number;
 }
 
 ObserverString::~ObserverString()
 {
-    std::cout << "Goodbye, I was the ObserverString \"" << this->_number << "\".\n";
+    std::cout << "destructor" << std::endl;
 }
 
 void ObserverString::Update(const std::string &message_from_subject)
 {
+    std::cout << "listener received: " << message_from_subject << std::endl;
     message_from_subject_ = message_from_subject;
-    PrintInfo();
 }
 
 void ObserverString::RemoveMeFromTheList()
 {
-//    _subject.Detach(this);
-    std::cout << "ObserverString \"" << _number << "\" removed from the list.\n";
+    if (_subject)
+    {
+        _subject->Detach(this);
+        std::cout << "remove from list" << std::endl;
+    }
 }
 
-void ObserverString::PrintInfo()
+void ObserverString::registerToSubject(std::shared_ptr<Subject> subject)
 {
-    std::cout << "ObserverString \"" << this->_number << "\": a new message is available --> " << this->message_from_subject_ << "\n";
+    _subject = subject;
+    this->_subject->Attach(this);
 }

@@ -10,17 +10,15 @@
 
 class ObserverString : public IObserver {
     public:
-    ObserverString(Subject &subject);
-    virtual ~ObserverString();
+    ObserverString();
+    void registerToSubject(std::shared_ptr<Subject>);
+    ~ObserverString() override;
     void Update(const std::string &message_from_subject) override;
     void RemoveMeFromTheList();
-    void PrintInfo();
 
     private:
     std::string message_from_subject_;
-    Subject &_subject;
-    static int _static_number ;
-    int _number;
+    std::shared_ptr<Subject> _subject;
 };
 
 

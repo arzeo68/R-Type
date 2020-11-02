@@ -14,12 +14,23 @@ class Subject {
     ~Subject();
     void Attach(IObserver *observer);
     void Detach(IObserver *observer);
-    template<typename T>
-    void Notify(T);
+    template <typename T>
+    void Notify(T message)
+    {
+        auto it = _list_observer.begin();
+        HowManyObserver();
+        while (it != _list_observer.end()) {
+            (*it)->Update(message);
+            ++it;
+        }
+    }
     void HowManyObserver();
 
     private:
     std::list<IObserver *> _list_observer;
 };
+
+
+
 
 #endif //BABEL_SUBJECT_HPP

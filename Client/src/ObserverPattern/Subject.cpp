@@ -13,17 +13,6 @@ void Subject::Detach(IObserver *observer)
     _list_observer.remove(observer);
 }
 
-template <typename T>
-void Subject::Notify(T message)
-{
-    auto it = _list_observer.begin();
-    HowManyObserver();
-    while (it != _list_observer.end()) {
-        (*it)->Update(message);
-        ++it;
-    }
-}
-
 void Subject::HowManyObserver()
 {
     std::cout << "There are " << _list_observer.size() << " observers in the list.\n";
