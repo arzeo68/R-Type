@@ -40,3 +40,8 @@ bool Rtype::Window::isOpen() const
 {
     return _window.isOpen();
 }
+
+Rtype::RenderTarget Rtype::Window::getRenderTarget()
+{
+    return RenderTarget(_window);
+}

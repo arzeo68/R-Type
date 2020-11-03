@@ -9,6 +9,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <memory>
+#include <Client/include/RenderTarget/RenderTarget.hpp>
 #include "AWindow.hpp"
 
 namespace Rtype
@@ -25,6 +26,8 @@ namespace Rtype
         bool open() override;
 
         bool close() override;
+
+        Rtype::RenderTarget getRenderTarget();
 
         private:
         sf::RenderWindow _window;
