@@ -1,66 +1,52 @@
-#include <iostream>
-#include <windows.h>
-#include <type_traits>
-#include <utility>
-#include <typeindex>
+#include <SFML/Graphics.hpp>
+#include <memory>
 #include "ECS/World.hpp"
-#include "ECS/SingletonComponentCollection.hpp"
 
 #include "Components/Transform.hpp"
-#include "Components/Velocity.hpp"
-#include "Components/Invisibility.hpp"
-#include "Components/Tag.hpp"
+#include "Components/Rectangle.hpp"
 
-#include "Systems/Move.hpp"
-#include "Systems/Print.hpp"
+#include "Systems/RenderSystem.hpp"
+
+float frand(float low, float high)
+{
+    return (low + static_cast<float>(rand()) / ( static_cast<float>(RAND_MAX / (high - low))));
+}
 
 int main()
 {
+    srand(static_cast<unsigned int>(time(0)));
     std::shared_ptr<ECS::World> world = std::make_shared<ECS::World>();
 
     world->initialize();
 
     world->registerComponent<TransformComponent>();
-    world->registerComponent<VelocityComponent>();
-    world->registerComponent<InvisibilityComponent>();
-    world->registerComponent<TagComponent>();
+    world->registerComponent<RectangleComponent>();
 
-    auto move_system = world->registerSystem<MoveSystem, InvisibilityComponent>();
-    {
-        world->setSystemSignature<MoveSystem, TransformComponent, VelocityComponent>();
+    auto render_sytem = world->registerSystem<RenderSystem>();
+    world->setSystemSignature<RenderSystem, TransformComponent, RectangleComponent>();
+    render_sytem->init();
+
+    sf::RenderWindow win(sf::VideoMode(1920, 1080), "ECS", sf::Style::Default);
+    sf::View view(sf::Vector2f(0, 0), sf::Vector2f(1920, 1080));
+
+    win.setView(view);
+    ECS::Entity entity = world->createEntity();
+
+    world->addComponents<TransformComponent, RectangleComponent>(
+        entity,
+        TransformComponent(sf::Vector2f(0, 0), frand(0, 360), sf::Vector2f(100, 100)),
+        RectangleComponent(sf::Color::Red)
+    );
+
+    while (win.isOpen()) {
+        sf::Event event;
+        while (win.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                win.close();
+        }
+        win.clear();
+        render_sytem->update(0.f, world, win, view.getTransform());
+        win.display();
     }
-    move_system->init();
-
-    auto print_system = world->registerSystem<PrintSystem>();
-    {
-        ECS::Signature signature;
-        signature.set(world->getComponentType<TransformComponent>());
-        world->setSystemSignature<PrintSystem>(signature);
-    }
-
-    std::vector<ECS::Entity> entities(20);
-    for (auto& entity : entities) {
-        entity = world->createEntity();
-
-        world->addComponents<TransformComponent, VelocityComponent>(
-            entity,
-            TransformComponent{3.5, 3.5},
-            VelocityComponent{1, 1}
-        );
-    }
-
-    world->addComponent<InvisibilityComponent>(entities[10], InvisibilityComponent{'a'});
-
-    int frame_count = 0;
-    while (1) {
-        move_system->update(world);
-        print_system->update(world);
-
-        if (frame_count == 3)
-            world->removeComponent<InvisibilityComponent>(entities[10]);
-        Sleep(1000);
-        frame_count += 1;
-    }
-
     return 0;
 }

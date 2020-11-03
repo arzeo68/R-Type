@@ -11,9 +11,9 @@ set(CMAKE_CXX_STANDARD 20)
 
 
 # Find SFML
-set(SFML_STATIC_LIBRARIES TRUE)
-find_package(SFML REQUIRED COMPONENTS audio graphics window system)
-include_directories(${SFML_INCLUDE_DIR})
+#set(SFML_STATIC_LIBRARIES TRUE)
+#find_package(SFML REQUIRED COMPONENTS audio graphics window system)
+#include_directories(${SFML_INCLUDE_DIR})
 
 if(MSVC)
     set(CMAKE_EXE_LINKER_FLAGS
@@ -36,7 +36,10 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_executable(GraphECS
     src/main.cpp
+    src/Systems/RenderSystem.cpp
 )
+
+target_include_directories(GraphECS PRIVATE ./src)
 
 if (MSVC)
     set_target_properties(GraphECS PROPERTIES LINK_FLAGS /MACHINE:X64)
@@ -45,6 +48,6 @@ endif()
 install(TARGETS GraphECS DESTINATION ${PROJECT_SOURCE_DIR}/bin)
 
 #############################################################
-target_link_libraries(GraphECS ${CONAN_LIBS} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+target_link_libraries(GraphECS ${CONAN_LIBS})
 #############################################################
-message(${CONAN_LIBS})
+message(${CONAN_INCLUDE_DIRS})
