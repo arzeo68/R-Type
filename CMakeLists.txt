@@ -30,7 +30,6 @@ conan_basic_setup()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-
 add_executable(rtype_client Client/main.cpp
         Client/src/window/Window.cpp
         Client/include/window/Window.hpp
@@ -50,3 +49,4 @@ install(TARGETS rtype_server DESTINATION ${PROJECT_SOURCE_DIR}/bin)
 target_link_libraries(rtype_client ${CONAN_LIBS})
 target_link_libraries(rtype_server ${CONAN_LIBS})
 message(${CONAN_LIBS})
+message(${CMAKE_BUILD_TYPE})
