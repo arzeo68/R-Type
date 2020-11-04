@@ -69,11 +69,7 @@ jobs:
       - name: Configure Conan && CMake
         shell: bash
         working-directory: ${{runner.workspace}}/build
-<<<<<<< HEAD
-        run: conan install .. --build=missing && cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-=======
         run: conan install $GITHUB_WORKSPACE --build=missing && cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
->>>>>>> 3e4a77cbabfd881bc5abc3bb42e95706427f3d0f
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
