@@ -39,7 +39,7 @@ jobs:
         # Note the current convention is to use the -S and -B options here to specify source
         # and build directories, but this is only available with CMake 3.13 and higher.
         # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-        run: conan install .. --build=missing && cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+        run: conan install $GITHUB_WORKSPACE --build=missing && cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
@@ -54,11 +54,14 @@ jobs:
       - name: setup-msbuild
         uses: microsoft/setup-msbuild@v1.0.1
 
-      - name: conan
+      - name: Install dependencies
         run: pip install configparser && pip install conan
 
-      - name: conan remotes
-        run: conan remote add conan_center https://api.bintray.com/conan/conan/conan-center && conan remote add epitech_conan https://api.bintray.com/conan/epitech/public-conan && conan remote add public_conan https://api.bintray.com/conan/bincrafters/public-conan
+      - name: Add remote to conan
+        run: |
+          conan profile new default --detect
+          conan profile update settings.compiler.libcxx=libstdc++11 default
+          conan remote add conan_center https://api.bintray.com/conan/conan/conan-center && conan remote add epitech_conan https://api.bintray.com/conan/epitech/public-conan && conan remote add public_conan https://api.bintray.com/conan/bincrafters/public-conan
 
       - name: Setup repository
         run: cmake -E make_directory ${{runner.workspace}}/build
@@ -66,7 +69,11 @@ jobs:
       - name: Configure Conan && CMake
         shell: bash
         working-directory: ${{runner.workspace}}/build
+<<<<<<< HEAD
         run: conan install .. --build=missing && cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+=======
+        run: conan install $GITHUB_WORKSPACE --build=missing && cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+>>>>>>> 3e4a77cbabfd881bc5abc3bb42e95706427f3d0f
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
