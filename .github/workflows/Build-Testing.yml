@@ -82,4 +82,4 @@ jobs:
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
-        run: msbuild RType.sln /p:Configuration=$BUILD_TYPE /p:Platform="x64"
+        run: msbuild RType.sln
