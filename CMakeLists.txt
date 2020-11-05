@@ -3,7 +3,7 @@ if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 endif ()
 
 cmake_minimum_required(VERSION 3.5.1)
-project(babel)
+project(Rtype)
 
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY build/bin)
@@ -33,7 +33,25 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # UI.h  PATH
 
-add_executable(r-type_client Client/main.cpp Client/src/window/Window.cpp Client/include/window/Window.hpp Client/src/window/AWindow.cpp Client/include/window/AWindow.hpp Client/include/typeEncapsulation.hpp Client/include/RenderTarget/IRenderTarget.hpp Client/include/RenderTarget/ARenderTarget.hpp Client/src/RenderTarget/RenderTarget.cpp Client/include/RenderTarget/RenderTarget.hpp Client/src/ObserverPattern/Subject.cpp Client/include/ObserverPattern/Subject.hpp Client/include/ObserverPattern/IObserver.hpp Client/src/ObserverPattern/ObserverString.cpp Client/include/ObserverPattern/ObserverString.hpp Client/src/Renderer/Renderer.cpp Client/include/Renderer/Renderer.hpp)
+add_executable(r-type_client
+    Client/main.cpp
+    Client/src/window/Window.cpp
+    Client/include/window/Window.hpp
+    Client/src/window/AWindow.cpp
+    Client/include/window/AWindow.hpp
+    Client/include/typeEncapsulation.hpp
+    Client/include/RenderTarget/IRenderTarget.hpp
+    Client/include/RenderTarget/ARenderTarget.hpp
+    Client/src/RenderTarget/RenderTarget.cpp
+    Client/include/RenderTarget/RenderTarget.hpp
+    Client/src/ObserverPattern/Subject.cpp
+    Client/include/ObserverPattern/Subject.hpp
+    Client/include/ObserverPattern/IObserver.hpp
+    Client/src/ObserverPattern/ObserverString.cpp
+    Client/include/ObserverPattern/ObserverString.hpp
+    Client/include/SceneManager/SceneManager.hpp
+    Client/src/SceneManager/SceneManager.cpp
+)
 add_executable(r-type_server Server/main.cpp)
 
 if (MSVC)
