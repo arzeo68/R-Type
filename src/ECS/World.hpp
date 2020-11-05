@@ -18,6 +18,8 @@ class World
             m_ComponentManager = std::make_shared<ComponentManager>();
             m_EntityManager = std::make_shared<EntityManager>();
             m_SystemManager = std::make_shared<SystemManager>();
+
+            m_SingletonComponent = createEntity();
         }
 
         Entity createEntity() { return m_EntityManager->createEntity(); }
@@ -41,6 +43,12 @@ class World
         void addComponents(Entity entity, Components... args)
         {
             addComponentsHelper(entity, args...);
+        }
+
+        template<typename... Components>
+        void addSingletonComponents(Components... args)
+        {
+            addComponents(m_SingletonComponent, args...);
         }
 
         template<typename T>
@@ -71,6 +79,12 @@ class World
         ComponentHandle<T> getComponent(Entity entity)
         {
             return m_ComponentManager->getComponent<T>(entity);
+        }
+
+        template<typename T>
+        ComponentHandle<T> getSingletonComponent()
+        {
+            return getComponent<T>(m_SingletonComponent);
         }
 
         template<typename T>
@@ -136,6 +150,8 @@ class World
         std::shared_ptr<EntityManager> m_EntityManager;
         std::shared_ptr<SystemManager> m_SystemManager;
         std::shared_ptr<std::vector<Entity>> m_cDeferedDestruction;
+
+        Entity m_SingletonComponent;
 
         template<typename T>
         void addComponentsHelper(Entity entity, T current)

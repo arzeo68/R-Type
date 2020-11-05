@@ -4,6 +4,7 @@
 
 #include "Components/Transform.hpp"
 #include "Components/Rectangle.hpp"
+#include "Components/Color.hpp"
 
 #include "Systems/RenderSystem.hpp"
 
@@ -21,6 +22,11 @@ int main()
 
     world->registerComponent<TransformComponent>();
     world->registerComponent<RectangleComponent>();
+    world->registerComponent<ColorComponent>();         // Singleton don't need to be registered to system (they must be constant)
+
+    world->addSingletonComponents<ColorComponent>(
+        ColorComponent{sf::Color::Blue}
+    );
 
     auto render_sytem = world->registerSystem<RenderSystem>();
     world->setSystemSignature<RenderSystem, TransformComponent, RectangleComponent>();
