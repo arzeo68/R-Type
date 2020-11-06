@@ -2,38 +2,79 @@
 // Created by arzeo on 10/26/2020.
 //
 
+#include <iostream>
 #include <Client/include/ObserverPattern/Subject.hpp>
-#include <Client/include/ObserverPattern/ObserverString.hpp>
 #include <Client/include/SceneManager/SceneManager.hpp>
+#include <Client/include/ObserverPattern/Subject.hpp>
+
+class EventMessage : public Observer::IEvent {
+public:
+    EventMessage(std::string const& msg)
+        : data(msg)
+    { }
+
+    ~EventMessage() = default;
+
+    std::string data;
+};
+
+class EventInteger : public Observer::IEvent {
+public:
+    EventInteger(int value)
+        : x(value)
+    { }
+
+    ~EventInteger() = default;
+
+    int x;
+};
+
+enum EventType {
+    Message,
+    Integer
+};
+
+void simple_callback(std::shared_ptr<Observer::IEvent> event)
+{
+    std::shared_ptr<EventMessage> message = std::dynamic_pointer_cast<EventMessage>(event);
+
+    std::cout << "Message : " << message->data << "\n";
+}
+
+class ObserverIntegerComponent {
+public:
+    ObserverIntegerComponent(Observer::Subject<EventType>& s, EventType type, int x)
+        : x(x)
+    { s.registerObserver(type, std::bind(&ObserverIntegerComponent::update, this, std::placeholders::_1)); }
+
+    void update(std::shared_ptr<Observer::IEvent> event)
+    {
+        std::shared_ptr<EventInteger> integer = std::dynamic_pointer_cast<EventInteger>(event);
+
+        x = integer->x;
+
+        std::cout << x << "\n";
+    }
+
+    int x;
+};
 
 void testObserverPattern()
 {
-    auto subject = std::make_shared<Subject>();
-    ObserverString *observer1 = new ObserverString();
-    ObserverString *observer2 = new ObserverString();
-    ObserverString *observer3 = new ObserverString();
-    observer1->registerToSubject(subject);
-    observer2->registerToSubject(subject);
-    observer3->registerToSubject(subject);
+    Observer::Subject<EventType> s;
 
-    ObserverString *observer4;
-    ObserverString *observer5;
-    subject->Notify("sdfsdfsdfsdf");
-    observer3->RemoveMeFromTheList();
-    subject->Notify<std::string>("hello");
-    observer4 = new ObserverString();
-    observer4->registerToSubject(subject);
-    observer5 = new ObserverString();
-    observer5->registerToSubject(subject);
-    subject->Notify<std::string>("good bye");
-    observer5->RemoveMeFromTheList();
-    observer4->RemoveMeFromTheList();
-    observer1->RemoveMeFromTheList();
-    delete observer5;
-    delete observer4;
-    delete observer3;
-    delete observer2;
-    delete observer1;
+    std::cout << "Exemple without a component\n";
+    s.registerObserver(Message, std::bind(simple_callback, std::placeholders::_1));
+
+    std::shared_ptr<EventMessage> message = std::make_shared<EventMessage>("Some message send with our new observer pattern");
+    s.notify(Message, message);
+
+    std::cout << "Exemple with a component\n";
+
+    ObserverIntegerComponent comp(s, Integer, 10);
+
+    std::shared_ptr<EventInteger> integer = std::make_shared<EventInteger>(10);
+    s.notify(Integer, integer);
 }
 
 /**
@@ -84,5 +125,4 @@ int main(int argc, char **argv)
     testObserverPattern();
     std::cout << "-----------------------------------------------------------------------------\n";
     SceneTest();
-    std::cout << "-----------------------------------------------------------------------------\n";
 }

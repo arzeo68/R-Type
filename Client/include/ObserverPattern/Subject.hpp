@@ -1,36 +1,46 @@
-//
-// Created by arzeo on 10/31/2020.
-//
+#pragma once
 
-#ifndef BABEL_SUBJECT_HPP
-#define BABEL_SUBJECT_HPP
+#include <functional>
+#include <map>
+#include <vector>
+#include <utility>
 
-#include <list>
-#include <iostream>
-#include "IObserver.hpp"
+namespace Observer
+{
 
-class Subject {
+    class IEvent {
     public:
-    ~Subject();
-    void Attach(IObserver *observer);
-    void Detach(IObserver *observer);
-    template <typename T>
-    void Notify(T message)
-    {
-        auto it = _list_observer.begin();
-        HowManyObserver();
-        while (it != _list_observer.end()) {
-            (*it)->Update(message);
-            ++it;
+        virtual ~IEvent() {}
+    };
+
+    template<typename Event>
+    class Subject {
+    public:
+        Subject() = default;
+
+        template<typename Observer>
+        void registerObserver(Event const& event, Observer&& observer)
+        {
+            m_cObservers[event].push_back(std::forward<Observer>(observer));
         }
-    }
-    void HowManyObserver();
+
+        template<typename Observer>
+        void registerObserver(Event&& event, Observer&& observer)
+        {
+            m_cObservers[std::move(event)].push_back(std::forward<Observer>(observer));
+        }
+
+        void notify(Event const& event, std::shared_ptr<IEvent> data) const
+        {
+            for (auto const& obs : m_cObservers.at(event))
+                obs(data);
+        }
+
+        Subject(Subject const&) = delete;
+        Subject& operator=(Subject const&) = delete;
 
     private:
-    std::list<IObserver *> _list_observer;
-};
+        std::map<Event, std::vector<std::function<void(std::shared_ptr<IEvent>)>>> m_cObservers;
+    };
 
-
-
-
-#endif //BABEL_SUBJECT_HPP
+} // namespace Observer

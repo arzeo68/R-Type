@@ -44,13 +44,9 @@ add_executable(r-type_client
     Client/include/RenderTarget/ARenderTarget.hpp
     Client/src/RenderTarget/RenderTarget.cpp
     Client/include/RenderTarget/RenderTarget.hpp
-    Client/src/ObserverPattern/Subject.cpp
-    Client/include/ObserverPattern/Subject.hpp
-    Client/include/ObserverPattern/IObserver.hpp
-    Client/src/ObserverPattern/ObserverString.cpp
-    Client/include/ObserverPattern/ObserverString.hpp
     Client/include/SceneManager/SceneManager.hpp
     Client/src/SceneManager/SceneManager.cpp
+    Client/include/ObserverPattern/Subject.hpp
 )
 add_executable(r-type_server Server/main.cpp)
 
