@@ -29,6 +29,9 @@ namespace Rtype
 
         Rtype::RenderTarget getRenderTarget();
 
+        sf::RenderWindow& getNativeHandle() { return _window; }
+        sf::RenderWindow const& getNativeHandle() const { return _window; }
+
         private:
         sf::RenderWindow _window;
         std::string _name;

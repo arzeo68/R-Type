@@ -47,6 +47,9 @@ add_executable(r-type_client
     Client/include/SceneManager/SceneManager.hpp
     Client/src/SceneManager/SceneManager.cpp
     Client/include/ObserverPattern/Subject.hpp
+    Client/include/EventManager/EventManager.hpp
+    Client/include/EventManager/SFMLEvents.hpp
+    Client/src/EventManager/EventManager.cpp
 )
 add_executable(r-type_server Server/main.cpp)
 
