@@ -73,7 +73,24 @@ add_executable(r-type_client
     Client/include/EventManager/SFMLEvents.hpp
     Client/src/EventManager/EventManager.cpp
 )
-add_executable(r-type_server Server/main.cpp)
+
+if (WIN32)
+    set(WINDOWS_SPECIFIC_SOURCES
+        Server/DynamicLoader/dlfcn.c
+        Server/DynamicLoader/dlfcn.h
+    )
+else (WIN32)
+    set(WINDOWS_SPECIFIC_SOURCES)
+endif (WIN32)
+
+add_executable(r-type_server 
+    Server/main.cpp
+    Server/DynamicLoader/Exceptions.cpp
+    Server/DynamicLoader/Exceptions.hpp
+    Server/DynamicLoader/SoLoader.hpp
+    ${WINDOWS_SPECIFIC_SOURCES}
+)
+
 
 if (MSVC)
     set_target_properties(r-type_client PROPERTIES LINK_FLAGS /MACHINE:X64)
