@@ -15,8 +15,6 @@ void RenderSystem::update(float delta, std::shared_ptr<ECS::World>& world, sf::R
         mat.scale((*transform.get())->scale);
         mat.rotate((*transform.get())->angle);
         states.transform = mat;
-        if (entity % 2 == 0)
-            (*rectangle.get())->shape.setFillColor((*color.get())->color);
 
         window.draw((*rectangle.get())->shape, states);
     }
