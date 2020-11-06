@@ -1,3 +1,7 @@
+/**
+ * @file Subject.hpp
+ * @brief Contains our Observer Pattern implementation
+ */
 #pragma once
 
 #include <functional>
@@ -5,12 +9,16 @@
 #include <vector>
 #include <utility>
 
+/**
+ * @namespace Observer
+ * @brief Contains the Observer pattern
+ */
 namespace Observer
 {
 
     /**
-     * @brief
-     * Interface used to represent any type of events send using the Observer Pattern
+     * @interface IEvent
+     * @brief Interface used to represent any type of events send using the Observer Pattern
      */
     class IEvent {
     public:
@@ -18,6 +26,8 @@ namespace Observer
     };
 
     /**
+     * @class Subject
+     *
      * @brief This class is the heart of the Observer Pattern, it register object to Events and notify them when an event is raised
      *
      * @tparam Event the type used to describe events (usually a enum)

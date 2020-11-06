@@ -1,3 +1,8 @@
+/**
+ * @file EventManager.hpp
+ * @brief Contains the class and enum used to create a EventManager
+ * @see Observer::Subject
+ */
 #pragma once
 
 #include <string>
@@ -7,9 +12,14 @@
 #include <Client/include/ObserverPattern/Subject.hpp>
 #include <Client/include/window/Window.hpp>
 
+/**
+ * @namespace Rtype
+ * @brief Global project namespace
+ */
 namespace Rtype
 {
     /**
+     * @enum EventType
      * @brief Generic event types
      */
     enum EventType {
@@ -25,6 +35,7 @@ namespace Rtype
     };
 
     /**
+     * @interface IEventManager
      * @brief EventManager Interface
      */
     class IEventManager {
@@ -35,6 +46,7 @@ namespace Rtype
     };
 
     /**
+     * @class EventManager
      * @brief SFML specification of IEventManager
      */
     class EventManager {
