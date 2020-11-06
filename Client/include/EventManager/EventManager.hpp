@@ -9,7 +9,9 @@
 
 namespace Rtype
 {
-
+    /**
+     * @brief Generic event types
+     */
     enum EventType {
         EClose,
         EResize,
@@ -22,6 +24,9 @@ namespace Rtype
         EMouseMoved
     };
 
+    /**
+     * @brief EventManager Interface
+     */
     class IEventManager {
     public:
         virtual ~IEventManager() {}
@@ -29,14 +34,25 @@ namespace Rtype
         virtual void update() = 0;
     };
 
+    /**
+     * @brief SFML specification of IEventManager
+     */
     class EventManager {
     public:
+        /**
+         * @brief Construct the EventManager from the Rtype::Window
+         * @see Rtype::Window
+         */
         EventManager(Rtype::Window& window)
             : m_Window(window.getNativeHandle())
         { }
 
         ~EventManager() = default;
 
+        /**
+         * @brief Called every frame, process all pending SFMLEvents
+         * @see SFMLEvents.hpp
+         */
         void update();
 
     private:

@@ -14,8 +14,6 @@ public:
     { }
 
     ~EventClose() = default;
-
-    size_t getMagicCode() const { return typeid(EventClose).hash_code(); }
 };
 
 class EventResized : public Observer::IEvent {
@@ -25,8 +23,6 @@ public:
     { }
 
     ~EventResized() = default;
-
-    size_t getMagicCode() const { return typeid(EventResized).hash_code(); }
 
     vec2i new_size;
 };
@@ -38,8 +34,6 @@ public:
     { }
 
     ~EventFocus() = default;
-
-    size_t getMagicCode() const { return typeid(EventFocus).hash_code(); }
 
     bool hasFocus;
 };
@@ -64,8 +58,6 @@ public:
     { }
 
     ~EventMouseWheel() = default;
-
-    size_t getMagicCode() const { return typeid(EventMouseWheel).hash_code(); }
 
     float delta;
     vec2i position;
@@ -106,8 +98,6 @@ public:
 
     ~EventMouseButton() = default;
 
-    size_t getMagicCode() const { return typeid(EventMouseButton).hash_code(); }
-
     State state;
     Button button;
     vec2i position;
@@ -120,8 +110,6 @@ public:
     { }
 
     ~EventMouseMove() = default;
-
-    size_t getMagicCode() const { return typeid(EventMouseMove).hash_code(); }
 
     vec2i position;
 };
