@@ -73,7 +73,7 @@ void testObserverPattern()
 
     ObserverIntegerComponent comp(s, Integer, 10);
 
-    std::shared_ptr<EventInteger> integer = std::make_shared<EventInteger>(10);
+    std::shared_ptr<EventInteger> integer = std::make_shared<EventInteger>(11);
     s.notify(Integer, integer);
 }
 

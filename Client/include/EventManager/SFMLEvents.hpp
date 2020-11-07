@@ -46,8 +46,6 @@ public:
 
     ~EventText() = default;
 
-    size_t getMagicCode() const { return typeid(EventText).hash_code(); }
-
     uint32_t unicode;
 };
 

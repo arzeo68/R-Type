@@ -49,7 +49,7 @@ namespace Rtype
      * @class EventManager
      * @brief SFML specification of IEventManager
      */
-    class EventManager {
+    class EventManager : public IEventManager {
     public:
         /**
          * @brief Construct the EventManager from the Rtype::Window
@@ -59,13 +59,13 @@ namespace Rtype
             : m_Window(window.getNativeHandle())
         { }
 
-        ~EventManager() = default;
+        ~EventManager() override = default;
 
         /**
          * @brief Called every frame, process all pending SFMLEvents
          * @see SFMLEvents.hpp
          */
-        void update();
+        void update() override;
 
     private:
         sf::RenderWindow& m_Window;
