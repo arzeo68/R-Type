@@ -26,6 +26,14 @@ conan_basic_setup()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+if (WIN32)
+    set(WINDOWS_SPECIFIC_SOURCES
+        Server/DynamicLoader/dlfcn.c
+        Server/DynamicLoader/dlfcn.h
+    )
+else (WIN32)
+    set(WINDOWS_SPECIFIC_SOURCES)
+endif (WIN32)
 
 add_executable(r-type_client Client/main.cpp Client/src/window/Window.cpp Client/include/window/Window.hpp Client/src/window/AWindow.cpp Client/include/window/AWindow.hpp)
 add_executable(r-type_server
@@ -46,7 +54,12 @@ add_executable(r-type_server
         Server/Network/Client/BoostClient.hpp
         Server/Network/Client/AClient.hpp
         Common/Network.hpp
-        Server/Server.hpp)
+        Server/Server.hpp
+        Server/DynamicLoader/Exceptions.cpp
+        Server/DynamicLoader/Exceptions.hpp
+        Server/DynamicLoader/SoLoader.hpp
+        ${WINDOWS_SPECIFIC_SOURCES})
+
 
 if (MSVC)
     set_target_properties(r-type_client PROPERTIES LINK_FLAGS /MACHINE:X64)
