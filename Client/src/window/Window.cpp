@@ -29,6 +29,7 @@ bool Rtype::Window::open()
  */
 bool Rtype::Window::close()
 {
+    _window.close();
     return false;
 }
 

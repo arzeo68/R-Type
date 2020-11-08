@@ -11,6 +11,7 @@ Application::Application(std::string const& title, unsigned int width, unsigned 
     m_pWindow = std::make_shared<Window>(title, width, height);
     m_pSceneManager = std::make_shared<SceneManager>();
     m_pEventManager = std::make_shared<EventManager>(*(std::static_pointer_cast<Window>(m_pWindow)));
+    std::cout << "Register 'catch_close' on 'EClose'\n";
     m_pEventManager->getSubject().registerObserver(EClose, std::bind(&Application::catch_close, this, std::placeholders::_1, std::placeholders::_2));
 }
 
@@ -42,7 +43,7 @@ void Application::run()
     std::shared_ptr<Window> w = std::dynamic_pointer_cast<Window>(m_pWindow);
     m_pWindow->open();
     while (m_pWindow->isOpen()) {
-        //m_pEventManager->update();
+        m_pEventManager->update();
         w->getNativeHandle().clear(sf::Color::Black);
         w->getNativeHandle().display();
     }

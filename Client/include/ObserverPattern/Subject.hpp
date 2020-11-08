@@ -81,8 +81,12 @@ namespace Observer
          */
         void notify(Event const& event, std::shared_ptr<IEvent> data) const
         {
-            for (auto const& obs : m_cObservers.at(event))
-                obs(event, data);
+            try {
+                for (auto const& obs : m_cObservers.at(event))
+                    obs(event, data);
+            } catch (...) {
+                return;
+            }
         }
 
         /**
