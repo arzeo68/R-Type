@@ -6,11 +6,12 @@
 */
 
 #include <memory>
+#include "../Client/AClient.hpp"
 #include "TCPBoostSocket.hpp"
 
 RType::Network::Socket::TCPBoostSocket::TCPBoostSocket(
     boost::asio::io_service& service,
-    const std::shared_ptr<Common::Log::Log>& log) {
+    const std::shared_ptr<Common::Log::Log>& log) : _last_error() {
     this->_socket = std::make_shared<socket_tcp_t>(service);
     this->_logger = log;
 }
@@ -36,14 +37,20 @@ void RType::Network::Socket::TCPBoostSocket::shutdown() noexcept {
 void RType::Network::Socket::TCPBoostSocket::start_read() {
     std::shared_ptr<MessageArr_t> raw_message = std::make_shared<MessageArr_t>();
 
+    if (this->_last_error)
+        throw SocketError<boost::system::error_code>(this->_last_error);
+    this->_logger->Debug("Waiting for a message...");
     this->_socket->async_receive(boost::asio::buffer(*raw_message),
                                  [self = this->shared_from_this(), raw_message](
                                      const boost::system::error_code& err,
                                      std::size_t bytes_transferred) {
-                                     if (err) {
+                                     self->_last_error = err;
+                                     if (self->_last_error) {
                                          self->_logger->Error(
                                              "(read tcp) An error occurred: ",
                                              err.message());
+                                        self->shutdown();
+                                        return;
                                      }
                                      self->_logger->Debug("(tcp) Message: '",
                                                           std::string(
@@ -69,4 +76,6 @@ void RType::Network::Socket::TCPBoostSocket::write(const std::string& input) {
                               });
 }
 
-
+bool RType::Network::Socket::TCPBoostSocket::socket_closed() {
+    return (this->_socket->is_open());
+}

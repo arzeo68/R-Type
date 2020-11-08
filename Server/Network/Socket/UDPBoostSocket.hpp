@@ -29,6 +29,7 @@ namespace RType::Network::Socket {
         void shutdown() noexcept final;
         void start_read() final;
         void write(const std::string& input) final;
+        bool socket_closed() final;
 
         private:
         Common::Log::Log::shared_log_t _logger;

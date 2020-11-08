@@ -29,10 +29,11 @@ namespace RType::Network::Socket {
         void start_read() final;
         void write(const std::string& input) final;
         void shutdown() noexcept final;
-
+        bool socket_closed() final;
 
         private:
         Common::Log::Log::shared_log_t _logger;
+        boost::system::error_code _last_error;
     };
 }
 

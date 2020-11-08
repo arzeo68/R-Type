@@ -10,7 +10,7 @@
 
 #include <memory>
 #include "Common/Log.hpp"
-#include "Server/Network/ANetwork.hpp"
+#include "Server/Network/Network/ANetwork.hpp"
 
 namespace RType::Server {
     /**
@@ -58,7 +58,7 @@ namespace RType::Server {
         void run() {
             this->_logger->Info("Server is now running.");
             try {
-                //this->_network->PreRun();
+                this->_network->pre_run();
                 this->_network->run();
             } catch (const std::exception &e) {
                 this->_logger->Error(e.what());

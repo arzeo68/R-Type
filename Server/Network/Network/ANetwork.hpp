@@ -10,6 +10,7 @@
 
 #include <mutex>
 #include <list>
+#include <algorithm>
 #include "Router.hpp"
 #include "INetwork.hpp"
 
@@ -21,7 +22,7 @@ namespace RType::Network {
         typename IOService = _nullTemplate,
         typename Acceptor = _nullTemplate,
         typename SignalSet = _nullTemplate>
-    class ANetwork : public INetwork<Client> {
+    class ANetwork : public INetwork {
         public:
         /**
          * Alias for std::shared_ptr<Client>
@@ -32,6 +33,24 @@ namespace RType::Network {
          * @return A list of smart pointer of clients
          */
         virtual std::list<client_shared_ptr> GetClients() = 0;
+
+        /**
+         * Wait for a client and add it to the list of clients
+         */
+        virtual void wait_for_client() = 0;
+
+        /**
+         * Remove a client from the network
+         */
+        virtual void remove_client(Client* client) {
+            std::remove_if(this->_clients.begin(),
+                           this->_clients.end(),
+                           [&] (const client_shared_ptr& registered_client) {
+                if (registered_client.get() == client)
+                    printf("Removing: %p\n", client);
+                return (registered_client.get() == client);
+            });
+        };
 
         protected:
         /**
@@ -52,6 +71,7 @@ namespace RType::Network {
          *
          */
         Router<IOService, Acceptor, SignalSet> _router;
+
     };
 
 

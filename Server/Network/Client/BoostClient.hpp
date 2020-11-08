@@ -11,6 +11,7 @@
 #include "AClient.hpp"
 #include "Server/Network/Socket/TCPBoostSocket.hpp"
 #include "Server/Network/Socket/UDPBoostSocket.hpp"
+#include "Server/Network/Worker/ThreadSafeQueue.hpp"
 
 namespace RType::Network {
     class BoostClient
@@ -24,6 +25,7 @@ namespace RType::Network {
 
         private:
         Common::Log::Log::shared_log_t _logger;
+        std::shared_ptr<ThreadSafeQueue<BoostClient*>> _remove_queue;
     };
 }
 

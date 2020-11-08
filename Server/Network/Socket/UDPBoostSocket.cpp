@@ -72,3 +72,7 @@ void RType::Network::Socket::UDPBoostSocket::write(const std::string& input) {
                                   }
                               });
 }
+
+bool RType::Network::Socket::UDPBoostSocket::socket_closed() {
+    return (this->_socket->is_open());
+}

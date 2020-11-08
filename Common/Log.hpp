@@ -10,6 +10,7 @@
 
 #include <string>
 #include <fstream>
+#include <sstream>
 #include <iostream>
 #include <memory>
 #include <map>
@@ -97,11 +98,9 @@ namespace RType::Common::Log {
 
         private:
         static std::string GetCurrentTime() {
-            auto timer = std::chrono::system_clock::to_time_t(
-                std::chrono::system_clock::now());
-            std::tm *bt = std::localtime(&timer);
+            auto timer = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
             std::ostringstream oss;
-            oss << std::put_time(bt, "%Y-%m-%d %H:%M:%S");
+            oss << std::put_time(std::localtime(&timer), "%Y-%m-%d %H:%M:%S");
             return oss.str();
         }
 

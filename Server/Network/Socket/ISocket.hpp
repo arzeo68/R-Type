@@ -33,6 +33,8 @@ namespace RType::Network {
          * @param input Input to write in the socket
          */
         virtual void write(const std::string& input) = 0;
+
+        virtual bool socket_closed() = 0;
     };
 }
 

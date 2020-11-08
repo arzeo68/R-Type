@@ -10,7 +10,9 @@
 
 #include <boost/asio.hpp>
 #include "ANetwork.hpp"
-#include "Client/BoostClient.hpp"
+#include "../Client/BoostClient.hpp"
+#include "ThreadPool.hpp"
+#include "../Worker/Worker.hpp"
 
 namespace RType::Network {
     using boost_asio_tcp = boost::asio::ip::tcp;
@@ -28,21 +30,17 @@ namespace RType::Network {
         BoostNetwork(const BoostNetwork&) = delete;
 
         void run() override;
-
         void stop() override;
-
-        void add_client(BoostClient&&) override {
-        };
-
-        void remove_client(BoostClient&&) override {
-        };
-
-        std::list<client_shared_ptr> GetClients() override {
-            return (std::list<client_shared_ptr> {});
-        };
+        void wait_for_client() override;
+        std::list<client_shared_ptr> GetClients() override;
+        void pre_run() override;
 
         private:
         Common::Log::Log::shared_log_t _logger;
+        ThreadPool _threadPool;
+        //Worker<BoostClient, boost::asio::io_service, boost_asio_tcp::acceptor,
+        //        boost::asio::signal_set> _worker;
+        ThreadSafeQueue<BoostClient*> _pending_client;
     };
 }
 

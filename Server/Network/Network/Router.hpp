@@ -19,6 +19,9 @@ namespace RType::Network {
      * Struct serve as a null parameter for the templates
      */
     struct _nullTemplate {
+        _nullTemplate() = delete;
+        ~_nullTemplate() = delete;
+        _nullTemplate(const _nullTemplate &) = delete;
     };
 
 
@@ -53,7 +56,6 @@ namespace RType::Network {
                 this->_acceptor = std::make_shared<Acceptor>();
             if constexpr (std::is_constructible_v<SignalSet>)
                 this->_signal_set = std::make_shared<SignalSet>();
-            printf("In default constr\n");
         };
 
         template<typename ...Arguments>
