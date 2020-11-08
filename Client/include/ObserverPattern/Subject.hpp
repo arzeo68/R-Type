@@ -40,7 +40,7 @@ namespace Observer
         /**
          * @brief Register a observer to this subject
          *
-         * @tparam The Observer type m_cObservers for more info on types
+         * @tparam Observer type m_cObservers for more info on types
          *
          * @param event [in] describe the event on which we are registering the observer
          *
