@@ -38,18 +38,24 @@ namespace Rtype
      * @interface IEventManager
      * @brief EventManager Interface
      */
-    class IEventManager {
+    class AEventManager {
     public:
-        virtual ~IEventManager() {}
+        virtual ~AEventManager() {}
 
         virtual void update() = 0;
+
+        Observer::Subject<EventType>& getSubject() { return m_Subject; }
+        Observer::Subject<EventType> const& getSubject() const { return m_Subject; }
+
+    protected:
+        Observer::Subject<EventType> m_Subject;
     };
 
     /**
      * @class EventManager
      * @brief SFML specification of IEventManager
      */
-    class EventManager : public IEventManager {
+    class EventManager : public AEventManager {
     public:
         /**
          * @brief Construct the EventManager from the Rtype::Window
@@ -69,7 +75,6 @@ namespace Rtype
 
     private:
         sf::RenderWindow& m_Window;
-        Observer::Subject<EventType> m_Subject;
     };
 
 } // namespace Rtype

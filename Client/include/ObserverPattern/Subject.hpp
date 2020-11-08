@@ -98,7 +98,7 @@ namespace Observer
         /**
          * @brief Map a event to a vector of function. Each function takes a std::shared_ptr<IEvent> as argument (it will contain event data)
          */
-        std::map<Event, std::vector<std::function<void(Event const&, std::shared_ptr<IEvent>)>>> m_cObservers;
+        std::map<Event, std::vector<std::function<void(Event, std::shared_ptr<IEvent>)>>> m_cObservers;
     };
 
 } // namespace Observer

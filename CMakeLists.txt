@@ -72,6 +72,8 @@ add_executable(r-type_client
     Client/include/EventManager/EventManager.hpp
     Client/include/EventManager/SFMLEvents.hpp
     Client/src/EventManager/EventManager.cpp
+    Client/src/Application/Application.cpp
+    Client/include/Application/Application.hpp
 )
 add_executable(r-type_server Server/main.cpp)
 
