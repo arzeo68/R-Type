@@ -34,7 +34,7 @@ enum EventType {
     Integer
 };
 
-void simple_callback(std::shared_ptr<Observer::IEvent> event)
+void simple_callback(EventType const& type, std::shared_ptr<Observer::IEvent> event)
 {
     std::shared_ptr<EventMessage> message = std::dynamic_pointer_cast<EventMessage>(event);
 
@@ -47,7 +47,7 @@ public:
         : x(x)
     { s.registerObserver(type, std::bind(&ObserverIntegerComponent::update, this, std::placeholders::_1)); }
 
-    void update(std::shared_ptr<Observer::IEvent> event)
+    void update(EventType const& type, std::shared_ptr<Observer::IEvent> event)
     {
         std::shared_ptr<EventInteger> integer = std::dynamic_pointer_cast<EventInteger>(event);
 
