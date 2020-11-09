@@ -28,9 +28,7 @@ namespace DynamicLoader {
         public:
             static constexpr const char *ENTRY_POINT_NAME = "entry";
 
-         LibraryLoader(uint16_t logLevel = RType::Common::Log::g_AllLogLevel) : _logger(std::make_shared<RType::Common::Log::Log>("server", "server.log",
-                                                              logLevel,
-                                                              std::ios_base::trunc)), _instance(nullptr), _dll(nullptr) {
+         LibraryLoader(RType::Common::Log::Log::shared_log_t& log) : _logger(log), _instance(nullptr), _dll(nullptr) {
             }
 
             /**
