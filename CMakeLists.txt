@@ -74,6 +74,10 @@ add_executable(r-type_client
     Client/src/EventManager/EventManager.cpp
     Client/src/Application/Application.cpp
     Client/include/Application/Application.hpp
+    Client/Components/Network.hpp
+    Client/include/unique_id.hpp
+    Client/include/Network/Client.hpp
+    Client/src/Network/Client.cpp
 )
 add_executable(r-type_server Server/main.cpp)
 
