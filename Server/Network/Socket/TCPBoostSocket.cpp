@@ -56,9 +56,9 @@ void RType::Network::Socket::TCPBoostSocket::start_read() {
                                      auto package = Common::Network::packet_unpack(std::string(raw_message->begin(), raw_message->end()));
                                      if (package.magic != Common::Network::g_MagicNumber)
                                          this->_logger->Error("(tcp) Wrong magic number for this message");
-                                     else
-                                         this->_logger->Info("(tcp) Message: '", package.message, "' w/ ",
-                                                              bytes_transferred);
+                                     //else
+                                     this->_logger->Info("(tcp) Message: '", package.message, "' w/ ",
+                                                          bytes_transferred);
                                      this->start_read();
                                  });
 }
