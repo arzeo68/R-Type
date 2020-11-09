@@ -2,7 +2,7 @@ if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
     message(FATAL_ERROR "Prevented in-tree built. Please create a build directory outside of the source code and call cmake from there")
 endif ()
 
-cmake_minimum_required(VERSION 3.5.1)
+cmake_minimum_required(VERSION 3.17.3)
 project(RType)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY build/bin)
@@ -16,7 +16,7 @@ else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${STANDARD_UNIX_CXX_FLAGS}")
 endif()
 
-if (EXISTS conanbuildinfo.cmake)
+if (EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 else()
     message(FATAL_ERROR "No conanbuildinfo.cmake file found please create a directory named \"build\" at the root of the repository then go inside your build folder and execute the following command \nconan install .. --build=missing")
@@ -35,14 +35,14 @@ else (WIN32)
     set(WINDOWS_SPECIFIC_SOURCES)
 endif (WIN32)
 
-add_executable(r-type_client Client/main.cpp Client/src/window/Window.cpp Client/include/window/Window.hpp Client/src/window/AWindow.cpp Client/include/window/AWindow.hpp)
+add_executable(r-type_client Client/main.cpp Client/src/window/Window.cpp Client/include/window/Window.hpp Client/src/window/AWindow.cpp Client/include/window/AWindow.hpp Server/Network/Room.hpp)
 add_executable(r-type_server
-        Server/Network/INetwork.hpp
+        Server/Network/Network/INetwork.hpp
         Server/Network/Socket/ISocket.hpp
-        Server/Network/Router.hpp
-        Server/Network/BoostNetwork.cpp
-        Server/Network/BoostNetwork.hpp
-        Server/Network/ANetwork.hpp
+        Server/Network/Network/Router.hpp
+        Server/Network/Network/BoostNetwork.cpp
+        Server/Network/Network/BoostNetwork.hpp
+        Server/Network/Network/ANetwork.hpp
         Server/Main.cpp
         Common/Log.hpp Common/Log.cpp
         Server/Network/Socket/TCPBoostSocket.cpp
@@ -55,11 +55,14 @@ add_executable(r-type_server
         Server/Network/Client/AClient.hpp
         Common/Network.hpp
         Server/Server.hpp
+        Server/Network/Network/ThreadPool.hpp
+        Server/Network/Worker/ThreadSafeQueue.hpp
+        Server/Network/Worker/Worker.hpp
         Server/DynamicLoader/Exceptions.cpp
         Server/DynamicLoader/Exceptions.hpp
         Server/DynamicLoader/DynamicLoader.hpp
         ${WINDOWS_SPECIFIC_SOURCES})
-
+)
 
 if (MSVC)
     set_target_properties(r-type_client PROPERTIES LINK_FLAGS /MACHINE:X64)
