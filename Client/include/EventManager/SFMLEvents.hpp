@@ -38,6 +38,17 @@ public:
     bool hasFocus;
 };
 
+class EventKeyPressed : public Observer::IEvent {
+    public:
+    EventKeyPressed(keys key)
+        : _key(key)
+    { }
+
+    ~EventKeyPressed() = default;
+
+    keys _key;
+};
+
 class EventText : public Observer::IEvent {
 public:
     EventText(uint32_t text)

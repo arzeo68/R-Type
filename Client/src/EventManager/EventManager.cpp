@@ -9,7 +9,11 @@ void EventManager::update()
     sf::Event event;
     while (m_Window.pollEvent(event)) {
         switch (event.type) {
-            case sf::Event::KeyPressed:             { break; }
+            case sf::Event::KeyPressed:             {
+                std::shared_ptr<EventKeyPressed> close = std::make_shared<EventKeyPressed>(event.key.code);
+                m_Subject.notify(EKeyPressed, close);
+                break;
+            }
             case sf::Event::KeyReleased:            { break; }
             case sf::Event::Closed:                 {
                 std::shared_ptr<EventClose> close = std::make_shared<EventClose>();

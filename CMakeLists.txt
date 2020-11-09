@@ -76,9 +76,13 @@ add_executable(r-type_client
     Client/include/Application/Application.hpp
     Client/Components/Network.hpp
     Client/include/unique_id.hpp
-    Client/include/Network/Client.hpp
-    Client/src/Network/Client.cpp
-)
+    Client/ClientNetwork/ISocket.hpp
+    Client/ClientNetwork/ASocket.hpp
+    Client/ClientNetwork/TcpNetwork.cpp
+    Client/ClientNetwork/TcpNetwork.hpp
+    Client/ClientNetwork/UdpNetwork.cpp
+    Client/ClientNetwork/UdpNetwork.hpp
+    Common/Network.hpp)
 add_executable(r-type_server Server/main.cpp)
 
 if (MSVC)

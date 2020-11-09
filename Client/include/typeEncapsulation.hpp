@@ -17,6 +17,8 @@ namespace Rtype
     typedef sf::IntRect iRect;
     typedef sf::FloatRect fRect;
     typedef sf::Color color;
+
+    typedef sf::Keyboard::Key keys;
 }
 
 #endif //BABEL_TYPEENCAPSULATION_HPP

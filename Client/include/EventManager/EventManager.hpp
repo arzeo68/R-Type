@@ -31,7 +31,8 @@ namespace Rtype
         EMouseWheelScrool,
         EMouseButtonPressed,
         EMouseButtonReleased,
-        EMouseMoved
+        EMouseMoved,
+        EKeyPressed
     };
 
     /**

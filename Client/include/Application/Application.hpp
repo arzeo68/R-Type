@@ -4,6 +4,7 @@
 #include <Client/include/window/IWindow.hpp>
 #include <Client/include/SceneManager/SceneManager.hpp>
 #include <Client/include/EventManager/EventManager.hpp>
+#include <Client/ClientNetwork/ASocket.hpp>
 
 namespace Rtype
 {
@@ -21,8 +22,12 @@ public:
 
 private:
     void catch_close(EventType type, std::shared_ptr<Observer::IEvent> data);
+    void catch_keyPressed(EventType type, std::shared_ptr<Observer::IEvent> data);
 
 private:
+    std::shared_ptr<std::deque<std::string>> tcpMessageReceived;
+    std::shared_ptr<Rtype::ASocket> tcpSocket;
+    std::shared_ptr<Rtype::ASocket> udpSocket;
     std::shared_ptr<IWindow> m_pWindow;
     std::shared_ptr<SceneManager> m_pSceneManager;
     std::shared_ptr<AEventManager> m_pEventManager;
