@@ -57,7 +57,7 @@ add_executable(r-type_server
         Server/Server.hpp
         Server/DynamicLoader/Exceptions.cpp
         Server/DynamicLoader/Exceptions.hpp
-        Server/DynamicLoader/SoLoader.hpp
+        Server/DynamicLoader/DynamicLoader.hpp
         ${WINDOWS_SPECIFIC_SOURCES})
 
 
