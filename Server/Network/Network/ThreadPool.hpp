@@ -14,10 +14,11 @@
 namespace RType::Network {
     class ThreadPool {
         public:
-        explicit ThreadPool(uint32_t number) : _number(number) {}
+        explicit ThreadPool(uint32_t number) : _number(number) {
+        }
         ThreadPool() = delete;
         ~ThreadPool() {
-            for (auto &i: this->_threadPool)
+            for (auto& i: this->_threadPool)
                 if (i.joinable()) {
                     printf("Waiting for %p to join\n", &i);
                     i.join();
@@ -28,9 +29,10 @@ namespace RType::Network {
         ThreadPool(ThreadPool&&) = delete;
 
         template<class func, typename ...variadic>
-        void run(func&& fn, variadic &&... args) {
+        void run(func&& fn, variadic&& ... args) {
             for (uint32_t i = 0; i < this->_number; ++i)
-                this->_threadPool.emplace_back(fn, std::forward<variadic>(args)...);
+                this->_threadPool.emplace_back(fn,
+                                               std::forward<variadic>(args)...);
         }
 
         private:

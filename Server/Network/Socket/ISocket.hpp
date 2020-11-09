@@ -21,7 +21,7 @@ namespace RType::Network {
         /**
          * The function shutdown the client. It must close the socket and stop all asynchronous operation.
          */
-        virtual void shutdown() noexcept = 0;
+        virtual void shutdown_socket() noexcept = 0;
 
         /**
          * Read an input from the the socket
@@ -34,7 +34,7 @@ namespace RType::Network {
          */
         virtual void write(const std::string& input) = 0;
 
-        virtual bool socket_closed() = 0;
+        virtual bool is_functional() = 0;
     };
 }
 

@@ -16,7 +16,8 @@ namespace RType::Server {
     /**
      * The class Server start and stop the server and provide a logger. The server must always exit gracefully.
      */
-    template<typename Client = RType::Network::_nullTemplate,
+    template<typename ClientUDPSocket,
+        typename ClientTCPSocket,
         typename IOService = RType::Network::_nullTemplate,
         typename Acceptor = RType::Network::_nullTemplate,
         typename SignalSet = RType::Network::_nullTemplate>
@@ -28,7 +29,8 @@ namespace RType::Server {
          */
         //explicit Server(uint32_t port) :
         explicit Server(uint16_t logLevel = Common::Log::g_AllLogLevel) :
-            _logger(std::make_shared<RType::Common::Log::Log>("server", "server.log",
+            _logger(std::make_shared<RType::Common::Log::Log>("server",
+                                                              "server.log",
                                                               logLevel,
                                                               std::ios_base::trunc)) {
             //_network(std::make_shared<RType::Network::BoostNetwork>(port,
@@ -41,14 +43,15 @@ namespace RType::Server {
         ~Server() {
             this->_logger->Info("Server exited gracefully.");
         }
-        Server(const Server &obj) = default;
+        Server(const Server& obj) = default;
 
 
         /**
          *
          * @param ptr
          */
-        void create_network(const std::shared_ptr<RType::Network::ANetwork<Client, IOService, Acceptor, SignalSet>>& ptr) {
+        void create_network(
+            const std::shared_ptr<RType::Network::ANetwork<ClientUDPSocket, ClientTCPSocket, IOService, Acceptor, SignalSet>>& ptr) {
             this->_network = ptr;
         }
 
@@ -60,14 +63,14 @@ namespace RType::Server {
             try {
                 this->_network->pre_run();
                 this->_network->run();
-            } catch (const std::exception &e) {
+            } catch (const std::exception& e) {
                 this->_logger->Error(e.what());
             }
         }
 
         private:
         RType::Common::Log::Log::shared_log_t _logger;
-        std::shared_ptr<RType::Network::ANetwork<Client, IOService, Acceptor, SignalSet>> _network;
+        std::shared_ptr<RType::Network::ANetwork<ClientUDPSocket, ClientTCPSocket, IOService, Acceptor, SignalSet>> _network;
     };
 }
 

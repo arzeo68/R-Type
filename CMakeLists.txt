@@ -27,7 +27,7 @@ conan_basic_setup()
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 
-add_executable(r-type_client Client/main.cpp Client/src/window/Window.cpp Client/include/window/Window.hpp Client/src/window/AWindow.cpp Client/include/window/AWindow.hpp)
+add_executable(r-type_client Client/main.cpp Client/src/window/Window.cpp Client/include/window/Window.hpp Client/src/window/AWindow.cpp Client/include/window/AWindow.hpp Server/Network/Room.hpp)
 add_executable(r-type_server
         Server/Network/Network/INetwork.hpp
         Server/Network/Socket/ISocket.hpp

@@ -11,15 +11,16 @@
 RType::Network::Socket::UDPBoostSocket::UDPBoostSocket(
     boost::asio::io_service& service,
     const std::shared_ptr<Common::Log::Log>& log) {
-    this->_socket = std::make_shared<socket_udp_t>(service);
+    this->_socket = std::make_shared<boost_socket_udp_t>(service);
     this->_logger = log;
 }
 
 RType::Network::Socket::UDPBoostSocket::~UDPBoostSocket() {
-    this->shutdown();
+    this->shutdown_socket();
 }
 
-void RType::Network::Socket::UDPBoostSocket::shutdown() noexcept {
+void RType::Network::Socket::UDPBoostSocket::shutdown_socket() noexcept {
+    this->_is_functional = false;
     if (this->_socket->is_open()) {
         boost::system::error_code ec;
         this->_socket->shutdown(
@@ -73,6 +74,6 @@ void RType::Network::Socket::UDPBoostSocket::write(const std::string& input) {
                               });
 }
 
-bool RType::Network::Socket::UDPBoostSocket::socket_closed() {
-    return (this->_socket->is_open());
+bool RType::Network::Socket::UDPBoostSocket::is_functional() {
+    return (this->_is_functional);
 }

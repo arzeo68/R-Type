@@ -5,28 +5,62 @@
 ** TODO: CHANGE DESCRIPTION.
 */
 
-#ifndef RTYPE_WORKERWORKER_HPP_
-#define RTYPE_WORKERWORKER_HPP_
+#ifndef RTYPE_WORKER_HPP
+#define RTYPE_WORKER_HPP
 
-#include "Server/Network/Network/ANetwork.hpp"
-#include "Server/Network/Network/Router.hpp"
+#include <condition_variable>
+#include <thread>
+#include <mutex>
+#include <iostream>
 #include "ThreadSafeQueue.hpp"
 
 namespace RType::Network {
-    template<typename Client>
     class Worker {
         public:
-        Worker() = delete;
-        void delete_pending_client() {
-            if (this->_pending_client.empty())
-                return;
+        Worker(const std::function<bool()>& unlock) :
+            _unlock_condition(unlock),
+            _cv(std::make_shared<std::condition_variable>()) {
+        };
+        Worker(const std::function<bool()>& unlock,
+               const std::function<bool()>& locker) :
+            _unlock_condition(unlock),
+            _cv(std::make_shared<std::condition_variable>()), _locker(locker) {
+        };
+        ~Worker() {
+            if (!this->_thread.joinable())
+                std::cerr << "[Worker - " << std::hex << this
+                          << "] is not joinable" << std::endl;
+            else
+                this->_thread.join();
+        }
 
+        void run(const std::function<void()>& work) {
+            this->_thread = std::thread([&, work]() {
+                printf("Runing worker: %p\n", this);
+                do {
+                    std::unique_lock<std::mutex> lock(this->_mutex);
+                    this->_cv->wait(lock, [&] {
+                        return (this->_unlock_condition());
+                    });
+                    printf("[W: %p] Waking up...\n", this);
+                    work();
+                    printf("[W: %p] Work done...\n", this);
+                } while (this->_locker && this->_locker.value());
+            });
+        }
+
+        std::shared_ptr<std::condition_variable> share_cv_from_this() {
+            return (this->_cv);
         }
 
         private:
-        ThreadSafeQueue<Client*> _pending_client;
-        ThreadSafeQueue<Client*> _notifications;
+        std::function<bool()> _unlock_condition;
+        std::shared_ptr<std::condition_variable> _cv;
+        std::thread _thread;
+        std::mutex _mutex;
+        std::optional<std::function<bool()>> _locker;
     };
 }
 
-#endif
+
+#endif //RTYPE_WORKER_HPP

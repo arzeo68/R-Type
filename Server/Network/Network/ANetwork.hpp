@@ -11,6 +11,7 @@
 #include <mutex>
 #include <list>
 #include <algorithm>
+#include "Server/Network/Room.hpp"
 #include "Router.hpp"
 #include "INetwork.hpp"
 
@@ -18,7 +19,8 @@ namespace RType::Network {
     /**
      * Abstract class for the network
      */
-    template<typename Client = _nullTemplate,
+    template<typename ClientUDPSocket,
+        typename ClientTCPSocket,
         typename IOService = _nullTemplate,
         typename Acceptor = _nullTemplate,
         typename SignalSet = _nullTemplate>
@@ -27,7 +29,7 @@ namespace RType::Network {
         /**
          * Alias for std::shared_ptr<Client>
          */
-        using client_shared_ptr = std::shared_ptr<Client>;
+        using client_shared_ptr = std::shared_ptr<AClient<ClientUDPSocket, ClientTCPSocket>>;
         /**
          * Get the list of all clients
          * @return A list of smart pointer of clients
@@ -42,14 +44,21 @@ namespace RType::Network {
         /**
          * Remove a client from the network
          */
-        virtual void remove_client(Client* client) {
-            std::remove_if(this->_clients.begin(),
-                           this->_clients.end(),
-                           [&] (const client_shared_ptr& registered_client) {
-                if (registered_client.get() == client)
-                    printf("Removing: %p\n", client);
-                return (registered_client.get() == client);
-            });
+        virtual void remove_client(AClient<ClientUDPSocket, ClientTCPSocket> *client) {
+            auto it = std::find_if(this->_clients.begin(), this->_clients.end(),
+                                   [&](const client_shared_ptr& registered_client) {
+                                       if (registered_client.get() == client)
+                                           printf(
+                                               "[remove_client] Removing: %p\n",
+                                               client);
+                                       return (
+                                           registered_client.get() == client
+                                       );
+                                   });
+            if (it == std::end(this->_clients))
+                throw std::exception();
+            else
+                this->_clients.erase(it);
         };
 
         protected:
@@ -72,6 +81,10 @@ namespace RType::Network {
          */
         Router<IOService, Acceptor, SignalSet> _router;
 
+        /**
+         *
+         */
+        Room::RoomManager<ClientUDPSocket, ClientTCPSocket> _rooms;
     };
 
 

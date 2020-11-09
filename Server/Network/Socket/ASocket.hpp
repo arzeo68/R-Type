@@ -9,6 +9,7 @@
 #ifndef SRC_RTYPE_ASOCKET_
 #define SRC_RTYPE_ASOCKET_
 
+#include <condition_variable>
 #include "Common/Network.hpp"
 #include "ISocket.hpp"
 
@@ -50,29 +51,8 @@ namespace RType::Network::Socket {
 
         protected:
         shared_ptr_socket_t _socket;
-    };
-
-    template <typename E>
-    class SocketError : public std::exception {
-        public:
-        explicit SocketError(const E& err) : _err(err) {}
-
-        const char *what() const noexcept override {
-            return ("An error occurred in a socket - You might use a build-in function "
-                    "to retrieve the error message instead of using what() from this class.");
-        }
-
-        // [[maybe_unused]] E get() requires std::is_default_constructible_v<E> {
-        [[maybe_unused]] E get() {
-            return (this->_err);
-        }
-        // [[maybe_unused]] E get() const requires std::is_default_constructible_v<E> {
-        [[maybe_unused]] E get() const {
-            return (this->_err);
-        }
-
-        private:
-        E _err;
+        bool _is_functional = true;
+        std::shared_ptr<std::condition_variable> _socket_error_notifier;
     };
 }
 
