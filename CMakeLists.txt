@@ -2,7 +2,7 @@ if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
     message(FATAL_ERROR "Prevented in-tree built. Please create a build directory outside of the source code and call cmake from there")
 endif ()
 
-cmake_minimum_required(VERSION 3.17.3)
+cmake_minimum_required(VERSION 3.17.0)
 project(RType)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY build/bin)
@@ -27,7 +27,7 @@ conan_basic_setup()
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 
-add_executable(r-type_client Client/main.cpp Client/src/window/Window.cpp Client/include/window/Window.hpp Client/src/window/AWindow.cpp Client/include/window/AWindow.hpp Server/Network/Room.hpp)
+add_executable(r-type_client Client/main.cpp Client/src/window/Window.cpp Client/include/window/Window.hpp Client/src/window/AWindow.cpp Client/include/window/AWindow.hpp Server/Network/Room/Room.hpp)
 add_executable(r-type_server
         Server/Network/Network/INetwork.hpp
         Server/Network/Socket/ISocket.hpp
@@ -49,7 +49,9 @@ add_executable(r-type_server
         Server/Server.hpp
         Server/Network/Network/ThreadPool.hpp
         Server/Network/Worker/ThreadSafeQueue.hpp
-        Server/Network/Worker/Worker.hpp)
+        Server/Network/Worker/Worker.hpp
+        Server/Network/Room/RoomManager.hpp
+        Server/Network/Room/Room.hpp Common/Network.cpp)
 
 if (MSVC)
     set_target_properties(r-type_client PROPERTIES LINK_FLAGS /MACHINE:X64)

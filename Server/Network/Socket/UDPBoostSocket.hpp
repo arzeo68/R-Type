@@ -28,7 +28,7 @@ namespace RType::Network::Socket {
 
         void shutdown_socket() noexcept final;
         void start_read() final;
-        void write(const std::string& input) final;
+        void write(const Common::Network::TCPPacket& input) final;
         bool is_functional() final;
 
         private:

@@ -11,7 +11,7 @@
 #include <mutex>
 #include <list>
 #include <algorithm>
-#include "Server/Network/Room.hpp"
+#include "../Room/RoomManager.hpp"
 #include "Router.hpp"
 #include "INetwork.hpp"
 

@@ -41,26 +41,27 @@ void RType::Network::Socket::UDPBoostSocket::shutdown_socket() noexcept {
 void RType::Network::Socket::UDPBoostSocket::start_read() {
     std::shared_ptr<MessageArr_t> raw_message = std::make_shared<MessageArr_t>();
 
+    this->_logger->Debug("(udp) Waiting for a message...");
     this->_socket->async_receive(boost::asio::buffer(*raw_message),
-                                 [self = this->shared_from_this(), raw_message](
+                                 [&, raw_message](
                                      const boost::system::error_code& err,
                                      std::size_t bytes_transferred) {
                                      if (err) {
-                                         self->_logger->Error(
+                                         this->_logger->Error(
                                              "(read udp) An error occurred: ",
                                              err.message());
                                      }
-                                     self->_logger->Debug("(udp) Message: '",
-                                                          std::string(
-                                                              raw_message->begin(),
-                                                              raw_message->end()),
-                                                          "' w/ ",
-                                                          bytes_transferred);
-                                     self->start_read();
+                                     auto package = Common::Network::packet_unpack(std::string(raw_message->begin(), raw_message->end()));
+                                     if (package.magic != Common::Network::g_MagicNumber)
+                                         this->_logger->Error("(udp) Wrong magic number for this message");
+                                     else
+                                         this->_logger->Info("(udp) Message: '", package.message, "' w/ ",
+                                                             bytes_transferred);
+                                     this->start_read();
                                  });
 }
 
-void RType::Network::Socket::UDPBoostSocket::write(const std::string& input) {
+void RType::Network::Socket::UDPBoostSocket::write(const Common::Network::TCPPacket& input) {
     std::vector<boost::asio::const_buffer> buffers;
     buffers.emplace_back(boost::asio::buffer(&input, sizeof(input)));
     this->_socket->async_send(buffers,

@@ -9,6 +9,7 @@
 #ifndef SRC_RTYPE_COMMON_NETWORK
 #define SRC_RTYPE_COMMON_NETWORK
 
+#include <string>
 #include <cstdint>
 
 namespace RType::Common::Network {
@@ -21,6 +22,8 @@ namespace RType::Common::Network {
         char message[g_maxMessageLength];
     };
     #pragma pack(pop)
+
+    TCPPacket packet_unpack(const std::string& data);
 }
 
 #endif

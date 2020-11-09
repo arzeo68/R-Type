@@ -9,7 +9,9 @@
 #ifndef SRC_ISOCKET_RTYPE_
 #define SRC_ISOCKET_RTYPE_
 
+#include <string>
 #include <memory>
+#include "Common/Network.hpp"
 
 namespace RType::Network {
     /**
@@ -32,7 +34,7 @@ namespace RType::Network {
          * Write input to a socket
          * @param input Input to write in the socket
          */
-        virtual void write(const std::string& input) = 0;
+        virtual void write(const Common::Network::TCPPacket&) = 0;
 
         virtual bool is_functional() = 0;
     };

@@ -12,7 +12,8 @@
 #include <thread>
 #include <mutex>
 #include <iostream>
-#include "ThreadSafeQueue.hpp"
+#include <optional>
+#include <functional>
 
 namespace RType::Network {
     class Worker {
@@ -36,15 +37,15 @@ namespace RType::Network {
 
         void run(const std::function<void()>& work) {
             this->_thread = std::thread([&, work]() {
-                printf("Runing worker: %p\n", this);
+                //printf("Runing worker: %p\n", this);
                 do {
                     std::unique_lock<std::mutex> lock(this->_mutex);
                     this->_cv->wait(lock, [&] {
                         return (this->_unlock_condition());
                     });
-                    printf("[W: %p] Waking up...\n", this);
+                    //printf("[W: %p] Waking up...\n", this);
                     work();
-                    printf("[W: %p] Work done...\n", this);
+                    //printf("[W: %p] Work done...\n", this);
                 } while (this->_locker && this->_locker.value());
             });
         }

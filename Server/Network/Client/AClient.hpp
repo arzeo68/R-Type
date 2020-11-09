@@ -17,6 +17,7 @@
 #include <condition_variable>
 #include <thread>
 #include <chrono>
+#include "../Worker/ThreadSafeQueue.hpp"
 #include "../Socket/ASocket.hpp"
 #include "../Worker/Worker.hpp"
 

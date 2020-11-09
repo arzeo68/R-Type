@@ -76,21 +76,19 @@ void RType::Network::BoostNetwork::wait_for_client() {
     this->_clients.emplace_back(client);
     this->_router.get_io_acceptor()->async_accept(
         *client->get_tcpsocket()->get_socket(),
-        [self = this->shared_from_this(), client = client](
+        [&, client](
             const boost::system::error_code& error) {
             if (error) {
-                self->_logger->Error("An error occurred: ", error.message());
+                this->_logger->Error("An error occurred: ", error.message());
                 return;
             }
-            std::cout << "Incoming connection" << std::endl;
-            self->_logger->Info("(", client, ") Incoming connection from: ",
+            this->_logger->Info("(", client, ") Incoming connection from: ",
                                 client->get_tcpsocket()->get_socket()->remote_endpoint().address().to_string());
-            //client->read();
-            //self->_rooms.add_participant(*client);
+            this->_rooms.add_user(client);
             client->get_tcpsocket()->start_read();
-            self->_logger->Debug(
+            this->_logger->Debug(
                 "I will recreate a client for the next connection");
-            self->wait_for_client();
+            this->wait_for_client();
         });
     this->_logger->Debug("Returning to main run");
 }
@@ -111,14 +109,16 @@ void RType::Network::BoostNetwork::pre_run() {
                         throw std::exception();
                     else {
                         this->remove_client(boost_client);
-                        //this->_rooms.remove_participant(boost_client);
+                        auto removed = this->_rooms.remove_user(boost_client);
+                        if (!removed)
+                            this->_logger->Error("Cannot remove client from a room");
+                        else
+                            this->_logger->Debug("Successfully removed client from a room");
                     }
                 })) {
                 this->_logger->Debug("A pending client has been removed");
-            } else {
+            } else
                 this->_logger->Error("A client cannot be removed");
-            }
-            this->_logger->Debug("New list size: ", this->_clients.size());
         }
     });
     this->_router.get_signal_set()->async_wait(

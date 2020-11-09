@@ -10,7 +10,6 @@
 #define SRC_RTYPE_ASOCKET_
 
 #include <condition_variable>
-#include "Common/Network.hpp"
 #include "ISocket.hpp"
 
 namespace RType::Network::Socket {
