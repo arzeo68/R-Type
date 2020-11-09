@@ -5,8 +5,8 @@
 ** Header class file for lib loading functions
 */
 
-#ifndef OOP_ARCADE_SOLOADER_HPP_
-#define OOP_ARCADE_SOLOADER_HPP_
+#ifndef OOP_ARCADE DynamicLoader_HPP_
+#define OOP_ARCADE_DYNAMICLOADER_HPP_
 
 #include <string>
 #ifdef __linux__
@@ -16,28 +16,31 @@
 #endif
 #include <iostream>
 #include "Exceptions.hpp"
+#include "../Common/Log.hpp"
 
-namespace SoLoader {
+namespace DynamicLoader {
     /**
      * The class allows to load a library and associate a type determined by the template T.
      * @tparam T Type which will be associated to the library.
      */
     template <typename T>
-    class SoLoader {
+    class LibraryLoader {
         public:
             static constexpr const char *ENTRY_POINT_NAME = "entry";
 
-            SoLoader() : _instance(nullptr), _dll(nullptr) {
+         LibraryLoader(uint16_t logLevel = Common::Log::g_AllLogLevel) : _logger(std::make_shared<RType::Common::Log::Log>("server", "server.log",
+                                                              logLevel,
+                                                              std::ios_base::trunc))) : _instance(nullptr), _dll(nullptr) {
             }
 
             /**
              * Change the current loaded library to the new one specified by the parameter.
              * If there was already a library loaded, it closes it before loading the new one.
              * @param DLLPath : The new library's path.
-             * @throw SoLoader::Exceptions::InvalidSO
-             * @throw SoLoader::Exceptions::InvalidEntryPoint
+             * @throw LibraryLoader::Exceptions::InvalidSO
+             * @throw LibraryLoader::Exceptions::InvalidEntryPoint
              */
-            void changeSo(const std::string &DLLPath) {
+            void changeLibrary(const std::string &DLLPath) {
                 if (this->_dll != nullptr)
                     dlclose(this->_dll);
                 this->loadSo(DLLPath);
@@ -46,7 +49,7 @@ namespace SoLoader {
             /**
              * The destructor closes the current loaded library if there is one
              */
-            ~SoLoader() {
+             LibraryLoader() {
                 if (this->_dll != nullptr)
                     dlclose(this->_dll);
             }
@@ -58,7 +61,7 @@ namespace SoLoader {
              */
             T *operator->() {
                 if (this->_instance == nullptr)
-                    std::cerr << "[SoLoader] The instance is null, you might not want to use that" << std::endl;
+                    this->_logger->Error(" LibraryLoader] The instance is null, you might not want to use that");
                 return (this->_instance);
             }
 
@@ -83,8 +86,10 @@ namespace SoLoader {
             T *_instance;
             void *_dll;
             std::string _libPath;
+            RType::Common::Log::Log::shared_log_t _logger;
 
-            void loadSo(const std::string &DLLPath) {
+
+            void loadLibrary(const std::string &DLLPath) {
                 EntryPointPtrFunc entryPointFunc;
 
                 this->_dll = dlopen(DLLPath.c_str(), RTLD_LAZY);
@@ -99,4 +104,4 @@ namespace SoLoader {
     };
 }
 
-#endif //OOP_ARCADE_SOLOADER_HPP_
+#endif //OOP_ARCADE DynamicLoader_HPP_
