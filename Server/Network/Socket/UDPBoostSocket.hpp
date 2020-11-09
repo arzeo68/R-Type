@@ -14,11 +14,11 @@
 #include "Common/Log.hpp"
 
 namespace RType::Network::Socket {
-    using socket_udp_t = boost::asio::ip::udp::socket;
+    using boost_socket_udp_t = boost::asio::ip::udp::socket;
 
     class UDPBoostSocket
         :
-            public ASocket<socket_udp_t>,
+            public ASocket<boost_socket_udp_t>,
             std::enable_shared_from_this<UDPBoostSocket> {
         public:
         UDPBoostSocket(boost::asio::io_service& service,
@@ -26,9 +26,10 @@ namespace RType::Network::Socket {
         UDPBoostSocket() = delete;
         ~UDPBoostSocket() override;
 
-        void shutdown() noexcept final;
+        void shutdown_socket() noexcept final;
         void start_read() final;
         void write(const std::string& input) final;
+        bool is_functional() final;
 
         private:
         Common::Log::Log::shared_log_t _logger;

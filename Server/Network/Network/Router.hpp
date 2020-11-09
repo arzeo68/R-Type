@@ -11,7 +11,9 @@
 #include <type_traits>
 
 #if __cplusplus > 201703L && __cpp_concepts >= 201907L
+
     #include <concepts>
+
 #endif
 
 namespace RType::Network {
@@ -19,6 +21,9 @@ namespace RType::Network {
      * Struct serve as a null parameter for the templates
      */
     struct _nullTemplate {
+        _nullTemplate() = delete;
+        ~_nullTemplate() = delete;
+        _nullTemplate(const _nullTemplate&) = delete;
     };
 
 
@@ -33,7 +38,8 @@ namespace RType::Network {
 
     #if __cplusplus > 201703L && __cpp_concepts >= 201907L
     template<typename T>
-    concept _isValidAssigment = !_isTemplateNull<T> && std::is_copy_constructible_v<T>;
+    concept _isValidAssigment = !_isTemplateNull<T> &&
+        std::is_copy_constructible_v<T>;
     #else
     template<typename T>
     constexpr inline bool _isValidAssigment =
@@ -53,7 +59,6 @@ namespace RType::Network {
                 this->_acceptor = std::make_shared<Acceptor>();
             if constexpr (std::is_constructible_v<SignalSet>)
                 this->_signal_set = std::make_shared<SignalSet>();
-            printf("In default constr\n");
         };
 
         template<typename ...Arguments>

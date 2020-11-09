@@ -14,22 +14,23 @@
 #include "Common/Log.hpp"
 
 namespace RType::Network::Socket {
-    using socket_tcp_t = boost::asio::ip::tcp::socket;
+    using boost_socket_tcp_t = boost::asio::ip::tcp::socket;
 
     class TCPBoostSocket :
-        public ASocket<socket_tcp_t>,
+        public ASocket<boost_socket_tcp_t>,
         public std::enable_shared_from_this<TCPBoostSocket> {
 
         public:
         TCPBoostSocket(boost::asio::io_service& service,
-                       const Common::Log::Log::shared_log_t& log);
+                       const Common::Log::Log::shared_log_t& log,
+                       const std::shared_ptr<std::condition_variable>& cv);
         TCPBoostSocket() = delete;
         ~TCPBoostSocket() override = default;
 
         void start_read() final;
         void write(const std::string& input) final;
-        void shutdown() noexcept final;
-
+        void shutdown_socket() noexcept final;
+        bool is_functional() final;
 
         private:
         Common::Log::Log::shared_log_t _logger;

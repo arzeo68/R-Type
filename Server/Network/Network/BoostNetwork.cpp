@@ -1,0 +1,134 @@
+/*
+** EPITECH PROJECT, 2020
+** r-type
+** File description:
+** TODO: CHANGE DESCRIPTION.
+*/
+
+#include "BoostNetwork.hpp"
+
+RType::Network::BoostNetwork::BoostNetwork(uint32_t port) : _logger(
+    std::make_shared<Common::Log::Log>("network", "network.log",
+                                       Common::Log::g_AllLogLevel,
+                                       std::ios::trunc)),
+                                                            _threadPool(1),
+                                                            _pending_client(
+                                                                std::make_shared<
+                                                                    ThreadSafeQueue <
+                                                                        AClient <
+                                                                        Socket::boost_socket_udp_t, Socket::boost_socket_tcp_t> *
+                                                                    >> ()),
+                                                            _worker_pending_client(
+                                                                [&]() {
+                                                                    return (!this->_pending_client->empty());
+                                                                }, [&]() {
+                                                                    return (this->_is_running);
+                                                                }
+                                                            ) {
+    this->_router.set_acceptor(*this->_router.get_io_service(),
+                               boost_asio_tcp::endpoint(boost_asio_tcp::v4(),
+                                                        port));
+    this->_router.set_signal_set(*this->_router.get_io_service(), SIGINT);
+
+}
+
+void RType::Network::BoostNetwork::run() {
+    this->_logger->Info("Network listening on port ",
+                        this->_router.get_io_acceptor()->local_endpoint().port(),
+                        " for a new client...");
+    this->wait_for_client();
+    this->_threadPool.run([&] {
+        this->_router.get_io_service()->run();
+    });
+    std::string input;
+    while (this->_is_running) {
+        input.clear();
+        std::cin >> input;
+        if (std::cin.eof())
+            this->stop();
+    }
+}
+
+void RType::Network::BoostNetwork::stop() {
+    if (!this->_is_running)
+        return;
+    this->_is_running = false;
+    this->_logger->Info("Server start to shut down.");
+    this->_logger->Info("Stopping all services...");
+    std::for_each(this->_clients.begin(), this->_clients.end(),
+                  [](const client_shared_ptr& client) {
+                      client->get_tcpsocket()->shutdown_socket();
+                      client->get_udpsocket()->shutdown_socket();
+                  });
+    this->_router.get_io_service()->stop();
+    this->_logger->Info("Clearing sockets...");
+    this->_clients.clear();
+    this->_logger->Info("Server stopped!");
+}
+
+void RType::Network::BoostNetwork::wait_for_client() {
+    this->_logger->Debug("Creating a client & waiting for connection");
+    auto client = std::make_shared<BoostClient>(
+        *this->_router.get_io_service(),
+        this->_logger,
+        this->_worker_pending_client.share_cv_from_this(),
+        this->_pending_client->shared_from_this());
+    this->_clients.emplace_back(client);
+    this->_router.get_io_acceptor()->async_accept(
+        *client->get_tcpsocket()->get_socket(),
+        [self = this->shared_from_this(), client = client](
+            const boost::system::error_code& error) {
+            if (error) {
+                self->_logger->Error("An error occurred: ", error.message());
+                return;
+            }
+            std::cout << "Incoming connection" << std::endl;
+            self->_logger->Info("(", client, ") Incoming connection from: ",
+                                client->get_tcpsocket()->get_socket()->remote_endpoint().address().to_string());
+            //client->read();
+            //self->_rooms.add_participant(*client);
+            client->get_tcpsocket()->start_read();
+            self->_logger->Debug(
+                "I will recreate a client for the next connection");
+            self->wait_for_client();
+        });
+    this->_logger->Debug("Returning to main run");
+}
+
+std::list<RType::Network::BoostNetwork::client_shared_ptr>
+RType::Network::BoostNetwork::GetClients() {
+    return (this->_clients);
+}
+
+void RType::Network::BoostNetwork::pre_run() {
+    this->_is_running = true;
+    this->_worker_pending_client.run([&]() {
+        while (!this->_pending_client->empty()) {
+            if (this->_pending_client->pop_with_effect(
+                [&](AClient<Socket::boost_socket_udp_t, Socket::boost_socket_tcp_t> *client) {
+                    auto boost_client = dynamic_cast<BoostClient *>(client);
+                    if (boost_client == nullptr)
+                        throw std::exception();
+                    else {
+                        this->remove_client(boost_client);
+                        //this->_rooms.remove_participant(boost_client);
+                    }
+                })) {
+                this->_logger->Debug("A pending client has been removed");
+            } else {
+                this->_logger->Error("A client cannot be removed");
+            }
+            this->_logger->Debug("New list size: ", this->_clients.size());
+        }
+    });
+    this->_router.get_signal_set()->async_wait(
+        [self = this->shared_from_this()](
+            const boost::system::error_code& error,
+            int /*signal*/) {
+            if (error)
+                self->_logger->Error("Error during catching signals: ",
+                                     error.message());
+            if (self->_is_running)
+                self->stop();
+        });
+}

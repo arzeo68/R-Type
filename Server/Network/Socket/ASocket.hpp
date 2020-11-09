@@ -9,6 +9,7 @@
 #ifndef SRC_RTYPE_ASOCKET_
 #define SRC_RTYPE_ASOCKET_
 
+#include <condition_variable>
 #include "Common/Network.hpp"
 #include "ISocket.hpp"
 
@@ -47,19 +48,11 @@ namespace RType::Network::Socket {
          * on a socket.
          */
         typedef std::array<char, sizeof(Common::Network::TCPPacket)> MessageArr_t;
-        /**
-         * Read an input from the the socket
-         */
-        void start_read() override = 0;
-
-        /**
-         * Write input to a socket
-         * @param input Input to write in the socket
-         */
-        void write(const std::string& input) override = 0;
 
         protected:
         shared_ptr_socket_t _socket;
+        bool _is_functional = true;
+        std::shared_ptr<std::condition_variable> _socket_error_notifier;
     };
 }
 
