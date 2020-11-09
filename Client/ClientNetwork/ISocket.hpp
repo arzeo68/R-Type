@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <string>
+#include "Common/Network.hpp"
 
 namespace Rtype {
     /**
@@ -33,7 +34,7 @@ namespace Rtype {
          * Write input to a socket
          * @param input Input to write in the socket
          */
-        virtual void write(const std::string& input) = 0;
+        virtual void write(const RType::Common::Network::TCPPacket& input) = 0;
     };
 }
 

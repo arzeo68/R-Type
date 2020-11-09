@@ -24,7 +24,7 @@ namespace Rtype{
 
         void start_read() override;
 
-        void write(const std::string &input) override;
+        void write(const RType::Common::Network::TCPPacket& input) override;
 
         private:
         void StartConnect(boost::asio::ip::udp::resolver::results_type::iterator endpoint);

@@ -53,11 +53,10 @@ namespace Rtype
         }
     }
 
-    void TCPBoostSocket::write(const std::string &input)
+    void TCPBoostSocket::write(const RType::Common::Network::TCPPacket& input)
     {
         std::vector<boost::asio::const_buffer> buffers;
-        std::cout << input.size() << std::endl;
-        buffers.emplace_back(boost::asio::buffer(&input, input.size()));
+        buffers.emplace_back(boost::asio::buffer(&input, sizeof(input)));
         this->m_tcpSocket.async_send(buffers, [this](const boost::system::error_code &error, std::size_t)
         {
             if (error)

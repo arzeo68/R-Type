@@ -53,11 +53,11 @@ namespace Rtype
         }
     }
 
-    void UDPBoostSocket::write(const std::string &input)
+    void UDPBoostSocket::write(const RType::Common::Network::TCPPacket& input)
     {
         std::vector<boost::asio::const_buffer> buffers;
-        std::cout << input.size() << std::endl;
-        buffers.emplace_back(boost::asio::buffer(&input, input.size()));
+        //std::cout << input.size() << std::endl;
+        buffers.emplace_back(boost::asio::buffer(&input, sizeof(input)));
         this->m_udpSocket.async_send(buffers, [this](const boost::system::error_code &error, std::size_t)
         {
             if (error)

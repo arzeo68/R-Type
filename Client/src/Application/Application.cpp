@@ -4,6 +4,7 @@
 #include <Client/include/EventManager/SFMLEvents.hpp>
 #include <Common/Network.hpp>
 #include <Client/ClientNetwork/TcpNetwork.hpp>
+#include <Client/ClientNetwork/UdpNetwork.hpp>
 
 namespace Rtype
 {
@@ -13,8 +14,9 @@ Application::Application(std::string const& title, unsigned int width, unsigned 
     m_pWindow = std::make_shared<Window>(title, width, height);
     m_pSceneManager = std::make_shared<SceneManager>();
     m_pEventManager = std::make_shared<EventManager>(*(std::static_pointer_cast<Window>(m_pWindow)));
-    std::cout << "Register 'catch_close' on 'EClose'\n";
+    std::cout << "Register 'catch_close' on 'EClose'" << std::endl;
     tcpSocket = std::make_shared<Rtype::TCPBoostSocket>("127.0.0.1", "4242", tcpMessageReceived);
+    udpSocket = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", "4242", tcpMessageReceived);
     m_pEventManager->getSubject().registerObserver(EClose, std::bind(&Application::catch_close, this, std::placeholders::_1, std::placeholders::_2));
     m_pEventManager->getSubject().registerObserver(EKeyPressed, std::bind(&Application::catch_keyPressed, this, std::placeholders::_1, std::placeholders::_2));
 }
@@ -45,6 +47,7 @@ void Application::switchScene(std::string const& title)
 void Application::run()
 {
     tcpSocket->start_socket();
+    udpSocket->start_socket();
     std::shared_ptr<Window> w = std::dynamic_pointer_cast<Window>(m_pWindow);
     m_pWindow->open();
     while (m_pWindow->isOpen()) {
@@ -64,10 +67,11 @@ void Application::catch_close(EventType type, std::shared_ptr<Observer::IEvent> 
 
 void Application::catch_keyPressed(EventType type, std::shared_ptr<Observer::IEvent> data)
 {
-    std::cout << "Caught key pressed";
+    std::cout << "Caught key pressed" << std::endl;
     std::shared_ptr<EventKeyPressed> key = std::dynamic_pointer_cast<EventKeyPressed>(data);
     RType::Common::Network::TCPPacket p{RType::Common::Network::g_MagicNumber, "il est vraiment bcp trop beau ruffinoni"};
-    std::string pack((char *)&p, sizeof(RType::Common::Network::TCPPacket));
-    tcpSocket->write(pack);
+    //std::string pack((char *)&p, sizeof(RType::Common::Network::TCPPacket));
+    //tcpSocket->write(p);
+    udpSocket->write(p);
 }
 } // namespace Rtype
