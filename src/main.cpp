@@ -2,14 +2,11 @@
 #include <memory>
 #include "ECS/World.hpp"
 
-#include "Components/Transform.hpp"
-#include "Components/Rectangle.hpp"
-#include "Components/Color.hpp"
-
 #include "Systems/RenderSystem.hpp"
 
-#include "ECS/RenderSystem.hpp"
-#include "Systems/RenderSystem_1.hpp"
+#include "Components/Texture.hpp"
+#include "Components/Transform.hpp"
+#include "Components/Sprite.hpp"
 
 float frand(float low, float high)
 {
@@ -18,48 +15,39 @@ float frand(float low, float high)
 
 int main()
 {
-    /*srand(static_cast<unsigned int>(time(0)));
     std::shared_ptr<ECS::World> world = std::make_shared<ECS::World>();
 
     world->initialize();
 
+    world->registerComponent<SpriteComponent>();
+    world->registerComponent<TextureReferenceComponent>();
+    world->registerComponent<TextureLibrarySingletonComponent>();
     world->registerComponent<TransformComponent>();
-    world->registerComponent<RectangleComponent>();
-    world->registerComponent<ColorComponent>();         // Singleton don't need to be registered to system (they must be constant)
 
-    world->addSingletonComponents<ColorComponent>(
-        ColorComponent{sf::Color::Blue}
+    world->addSingletonComponents<TextureLibrarySingletonComponent>(
+        TextureLibrarySingletonComponent()
     );
 
-    auto render_sytem1 = world->registerSystem<RenderSystem_Layer1>();
-    world->setSystemSignature<RenderSystem_Layer1, TransformComponent, RectangleComponent, LayerComponent_Layer1>();
+    auto render_system = world->registerSystem<RenderSystem>();
+    world->setSystemSignature<RenderSystem, SpriteComponent, TransformComponent>();
 
-    auto render_sytem2 = world->registerSystem<RenderSystem_Layer2>();
-    world->setSystemSignature<RenderSystem_Layer2, TransformComponent, RectangleComponent, LayerComponent_Layer2>();
+    TextureLibrarySingletonComponent *tmp = world->getSingletonComponent<TextureLibrarySingletonComponent>().get();
 
-    sf::RenderWindow win(sf::VideoMode(1920, 1080), "ECS", sf::Style::Default);
-    sf::View view(sf::Vector2f(0, 0), sf::Vector2f(1920, 1080));
+    tmp->add_default_fallback_texture();
+    tmp->add_texture("../src/res/Sprite_rtype.png");
 
-    win.setView(view);
-    for (int i = 0; i < 2; i += 1) {
-        ECS::Entity entity = world->createEntity();
+    for (int i = 0; i < 1; ++i) {
+        ECS::Entity e = world->createEntity();
 
-        if (entity % 2 == 0) {
-            world->addComponents<TransformComponent, RectangleComponent, LayerComponent_Layer1>(
-                entity,
-                TransformComponent(sf::Vector2f(0, 0), frand(0, 360), sf::Vector2f(100, 100)),
-                RectangleComponent(sf::Color::Red),
-                LayerComponent_Layer1{}
-            );
-        } else {
-            world->addComponents<TransformComponent, RectangleComponent, LayerComponent_Layer2>(
-                entity,
-                TransformComponent(sf::Vector2f(0, 0), frand(0, 360), sf::Vector2f(100, 100)),
-                RectangleComponent(sf::Color::Green),
-                LayerComponent_Layer2{}
-            );
-        }
+        world->addComponents<TransformComponent, SpriteComponent, TextureReferenceComponent>(
+            e,
+            TransformComponent(sf::Vector2f((1920 / 2), (1080 / 2)), 0, sf::Vector2f(1, 1)),
+            SpriteComponent(*world->getSingletonComponent<TextureLibrarySingletonComponent>().get(), "Fallback"),
+            TextureReferenceComponent(*world->getSingletonComponent<TextureLibrarySingletonComponent>().get(), "Fallback")
+        );
     }
+
+    sf::RenderWindow win(sf::VideoMode(1920, 1080), "ECS Test");
 
     while (win.isOpen()) {
         sf::Event event;
@@ -67,10 +55,10 @@ int main()
             if (event.type == sf::Event::Closed)
                 win.close();
         }
-        win.clear();
-        render_sytem1->update(0.f, world, win, view.getTransform());
-        render_sytem2->update(0.f, world, win, view.getTransform());
+        win.clear(sf::Color::Transparent);
+        render_system->update(0.f, world, win);
         win.display();
-    }*/
+    }
+
     return 0;
 }

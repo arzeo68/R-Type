@@ -5,16 +5,16 @@
 #include "ECS/World.hpp"
 
 #include "Components/Transform.hpp"
-#include "Components/Rectangle.hpp"
-#include "Components/Color.hpp"
+#include "Components/Sprite.hpp"
+#include "Components/Texture.hpp"
 
 class RenderSystem : public ECS::System {
     public:
         void init();
 
-        void update(float delta, std::shared_ptr<ECS::World>& world, sf::RenderWindow& window, sf::Transform camera);
+        void update(float delta, std::shared_ptr<ECS::World>& world, sf::RenderWindow& window);
 
-        typedef std::tuple<const ECS::ComponentHandle<TransformComponent>, ECS::ComponentHandle<RectangleComponent>, const ECS::ComponentHandle<ColorComponent>> Dependencies;
+        typedef std::tuple<const ECS::ComponentHandle<SpriteComponent>, const ECS::ComponentHandle<TransformComponent>> Dependencies;
 
         Dependencies getDependencies(ECS::Entity entity, std::shared_ptr<ECS::World>& world);
 };
