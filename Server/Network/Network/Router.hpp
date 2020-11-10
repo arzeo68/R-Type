@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2020
 ** r-type
 ** File description:
-** TODO: CHANGE DESCRIPTION.
+** Router class implementation
 */
 
 #ifndef SRC_RTYPE_ROUTER_
@@ -11,14 +11,13 @@
 #include <type_traits>
 
 #if __cplusplus > 201703L && __cpp_concepts >= 201907L
-
     #include <concepts>
-
 #endif
 
 namespace RType::Network {
     /**
-     * Struct serve as a null parameter for the templates
+     * Structure used as a null parameter for template
+     * You shouldn't use it for others purposes
      */
     struct _nullTemplate {
         _nullTemplate() = delete;
@@ -27,6 +26,9 @@ namespace RType::Network {
     };
 
 
+    /**
+     * We do support c++20 here
+     */
     #if __cplusplus > 201703L && __cpp_concepts >= 201907L
     template<typename T>
     concept _isTemplateNull = std::is_same_v<T, _nullTemplate>;
@@ -36,6 +38,9 @@ namespace RType::Network {
     #endif
 
 
+    /**
+     * @deprecated Doesn't works for some reasons - TODO: More debug needed
+     */
     #if __cplusplus > 201703L && __cpp_concepts >= 201907L
     template<typename T>
     concept _isValidAssigment = !_isTemplateNull<T> &&
@@ -46,6 +51,15 @@ namespace RType::Network {
         !_isTemplateNull<T> && std::is_copy_constructible_v<T>;
     #endif
 
+    /**
+     * The router basically hold generic type for main network part. The class target to be used only in a network.
+     * It is modular to adapt as well as possible.
+     * @attention I encourage you to complete this class to satisfy any more complex network implementation.
+     * @warning If you left a template parameter as '_nullTemplate', you can not use functions related to this template parameter.
+     * @tparam IOService The IO (Input/Output) service that should handle the work. Implementation is library dependant.
+     * @tparam Acceptor Acceptor system which accept incoming connection to the server. Implementation is library dependant.
+     * @tparam SignalSet SignalSet is used to handle signals. Implementation is library dependant.
+     */
     template<typename IOService = _nullTemplate, typename Acceptor = _nullTemplate,
         typename SignalSet = _nullTemplate>
     class Router {

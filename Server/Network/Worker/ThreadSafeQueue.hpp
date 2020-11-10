@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2020
 ** RType
 ** File description:
-** TODO: CHANGE DESCRIPTION.
+** ThreadSafeQueue class implementation
 */
 
 #ifndef RTYPE_THREADSAFEQUEUE_HPP
@@ -13,26 +13,45 @@
 #include <functional>
 
 namespace RType::Network {
+    /**
+     * Basic re-implementation of std::queue (FIFO queue)  in a thread safe manner.
+     * @tparam T Type of data contained in the queue
+     */
     template<typename T>
-    class ThreadSafeQueue
-        :
+    class ThreadSafeQueue:
             public std::enable_shared_from_this<ThreadSafeQueue<T>> {
         public:
         ThreadSafeQueue() = default;
         ~ThreadSafeQueue() = default;
 
+        /**
+         * Add an element to the queue
+         * @param element Element to add
+         */
         void add(T element) {
             std::lock_guard<std::mutex> l(this->_mutex);
             this->_queue.push(element);
         }
+
+        /**
+         * Pop the last added element and pass it to a custom user defined function
+         * @param function Function with the prototype: void (T)
+         * @return true: if the element has been removed
+         * @return false: if the element cannot be deleted
+         */
         bool pop_with_effect(const std::function<void(T)>& function) {
-            std::lock_guard<std::mutex> l(this->_mutex);
-            if (this->_queue.empty())
+            if (this->empty())
                 return (false);
+            std::lock_guard<std::mutex> l(this->_mutex);
             function(this->_queue.front());
             this->_queue.pop();
             return (true);
         }
+        /**
+         * Check if the queue is empty
+         * @return true: if the queue is empty
+         * @return false: if there is at least one element in the queue
+         */
         bool empty() {
             std::lock_guard<std::mutex> l(this->_mutex);
             return (this->_queue.empty());

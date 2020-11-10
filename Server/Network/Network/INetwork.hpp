@@ -1,15 +1,12 @@
 /*
 ** EPITECH PROJECT, 2020
-** babel
+** r-type
 ** File description:
-** TODO: CHANGE DESCRIPTION.
+** INetwork class implementation
 */
-
 
 #ifndef SRC_RTYPE_INETWORK_
 #define SRC_RTYPE_INETWORK_
-
-#include <memory>
 
 namespace RType::Network {
 
@@ -20,10 +17,13 @@ namespace RType::Network {
         public:
         virtual ~INetwork() = default;
 
+        /**
+         * A function that allows to pre_run things before the main run function.
+         */
         virtual void pre_run() = 0;
 
         /**
-         * run the network. This function might add client
+         * Run the network
          */
         virtual void run() = 0;
 

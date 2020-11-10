@@ -2,10 +2,9 @@
 ** EPITECH PROJECT, 2020
 ** r-type
 ** File description:
-** TODO: CHANGE DESCRIPTION.
+** BoostClient class implementation
 */
 
-#include "../Socket/ISocket.hpp"
 #include "BoostClient.hpp"
 
 RType::Network::BoostClient::BoostClient(boost::asio::io_service& service,
@@ -34,10 +33,3 @@ RType::Network::BoostClient::BoostClient(boost::asio::io_service& service,
 RType::Network::BoostClient::~BoostClient() {
     this->_logger->Info("Client ", this, " deleted");
 }
-
-//void RType::Network::BoostClient::read() {
-//    this->_tcpsocket->start_read();
-//    //this->_udpsocket->start_read();
-//    //this->_tcpsocket->write("hello world");
-//}
-

@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2020
 ** r-type
 ** File description:
-** TODO: CHANGE DESCRIPTION.
+** UDPBoostSocket class implementation
 */
 
 #ifndef R_TYPE_UDPBOOSTSOCKET_HPP
@@ -14,12 +14,18 @@
 #include "Common/Log.hpp"
 
 namespace RType::Network::Socket {
+    /**
+     * Helper alias used across the network
+     */
     using boost_socket_udp_t = boost::asio::ip::udp::socket;
 
-    class UDPBoostSocket
-        :
+    /**
+     * A boost implementation, of ASocket, for UDP communication.
+     * The class doesn't contains any other functions than described in ASocket & ISocket.
+     */
+    class UDPBoostSocket:
             public ASocket<boost_socket_udp_t>,
-            std::enable_shared_from_this<UDPBoostSocket> {
+            public std::enable_shared_from_this<UDPBoostSocket> {
         public:
         UDPBoostSocket(boost::asio::io_service& service,
                        const Common::Log::Log::shared_log_t& log);

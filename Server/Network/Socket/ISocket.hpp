@@ -2,15 +2,12 @@
 ** EPITECH PROJECT, 2020
 ** babel
 ** File description:
-** TODO: CHANGE DESCRIPTION.
+** ISocket class implementation
 */
-
 
 #ifndef SRC_ISOCKET_RTYPE_
 #define SRC_ISOCKET_RTYPE_
 
-#include <string>
-#include <memory>
 #include "Common/Network.hpp"
 
 namespace RType::Network {
@@ -36,6 +33,12 @@ namespace RType::Network {
          */
         virtual void write(const Common::Network::TCPPacket&) = 0;
 
+        /**
+         * Indicates if the socket is still functional. Functional, here, means
+         * the socket can be used.
+         * @return true if the socket is functional
+         * @return false if the socket is not functional
+         */
         virtual bool is_functional() = 0;
     };
 }

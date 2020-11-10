@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2020
 ** r-type
 ** File description:
-** TODO: CHANGE DESCRIPTION.
+** BoostNetwork class implementation
 */
 
 #ifndef R_TYPE_BOOSTNETWORK_HPP
@@ -17,6 +17,10 @@
 namespace RType::Network {
     using boost_asio_tcp = boost::asio::ip::tcp;
 
+    /**
+     * A boost implementation of the ANetwork. The class doesn't contains any
+     * other functions than described in ANetwork & INetwork.
+     */
     class BoostNetwork
         :
             public ANetwork<Socket::boost_socket_udp_t,
@@ -37,7 +41,6 @@ namespace RType::Network {
         void wait_for_client() override;
         std::list<client_shared_ptr> GetClients() override;
         void pre_run() override;
-        //void check_pending_client();
 
         private:
         Common::Log::Log::shared_log_t _logger;

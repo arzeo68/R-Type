@@ -14,7 +14,12 @@
 
 namespace RType::Server {
     /**
-     * The class Server start and stop the server and provide a logger. The server must always exit gracefully.
+     * The class Server start and stop the network. The server must always exit gracefully.
+     * @tparam ClientUDPSocket UDP Socket type for the client
+     * @tparam ClientTCPSocket TCP Socket type for the client
+     * @tparam IOService See Router documentation
+     * @tparam Acceptor See Router documentation
+     * @tparam SignalSet See Router documentation
      */
     template<typename ClientUDPSocket,
         typename ClientTCPSocket,
@@ -24,17 +29,14 @@ namespace RType::Server {
     class Server {
         public:
         /**
-         * The port for the network
-         * @param port
+         * Simple constructor for the class
+         * @param logLevel The log level which is by default: all log level.
          */
-        //explicit Server(uint32_t port) :
         explicit Server(uint16_t logLevel = Common::Log::g_AllLogLevel) :
             _logger(std::make_shared<RType::Common::Log::Log>("server",
                                                               "server.log",
                                                               logLevel,
                                                               std::ios_base::trunc)) {
-            //_network(std::make_shared<RType::Network::BoostNetwork>(port,
-            //                                            this->_logger->shared_from_this())) {
             this->_logger->Info("Launching server...");
         }
         /**
@@ -43,12 +45,11 @@ namespace RType::Server {
         ~Server() {
             this->_logger->Info("Server exited gracefully.");
         }
-        Server(const Server& obj) = default;
-
+        Server(const Server& obj) = delete;
 
         /**
-         *
-         * @param ptr
+         * Create a network from a shared pointer.
+         * @param ptr The shared pointer for the network
          */
         void create_network(
             const std::shared_ptr<RType::Network::ANetwork<ClientUDPSocket, ClientTCPSocket, IOService, Acceptor, SignalSet>>& ptr) {
@@ -56,7 +57,7 @@ namespace RType::Server {
         }
 
         /**
-         * Run the server. The server might be stopped by pressing CTRL+C (or sending SIGINT).
+         * Run the server. The server might be stopped by pressing CTRL+C (or sending SIGINT) or by typing the command "exit".
          */
         void run() {
             this->_logger->Info("Server is now running.");

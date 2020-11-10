@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2020
 ** r-type
 ** File description:
-** TODO: CHANGE DESCRIPTION.
+** BoostNetwork code class implementation
 */
 
 #include <io.h>
