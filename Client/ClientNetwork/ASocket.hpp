@@ -9,7 +9,9 @@
 #include "ISocket.hpp"
 
 namespace Rtype {
-
+    /**
+ * ASocket is an abstraction whith the basic function for any socket type
+ */
     class ASocket : public ISocket {
     };
 }

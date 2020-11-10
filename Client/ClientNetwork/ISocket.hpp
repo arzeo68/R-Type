@@ -8,10 +8,12 @@
 #include <memory>
 #include <string>
 #include "Common/Network.hpp"
-
+/**
+ * Rtype main namespace
+ */
 namespace Rtype {
     /**
-     * ISocket is an interface which basic function for any socket
+     * ISocket is an interface whith the basic function for any socket type
      */
     class ISocket {
         public:
@@ -26,7 +28,7 @@ namespace Rtype {
         virtual void shutdown_socket() noexcept = 0;
 
         /**
-         * Read an input from the the socket
+         * start the reading
          */
         virtual void start_read() = 0;
 
