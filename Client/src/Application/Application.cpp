@@ -71,7 +71,7 @@ void Application::catch_keyPressed(EventType type, std::shared_ptr<Observer::IEv
     std::shared_ptr<EventKeyPressed> key = std::dynamic_pointer_cast<EventKeyPressed>(data);
     RType::Common::Network::TCPPacket p{RType::Common::Network::g_MagicNumber, "il est vraiment bcp trop beau ruffinoni"};
     //std::string pack((char *)&p, sizeof(RType::Common::Network::TCPPacket));
-    //tcpSocket->write(p);
-    udpSocket->write(p);
+    tcpSocket->write(p);
+    //udpSocket->write(p);
 }
 } // namespace Rtype

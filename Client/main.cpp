@@ -7,7 +7,7 @@
 
 int main()
 {
-    Rtype::Application app("Rtype", 1920, 1080);
+    Rtype::Application app("Rtype", 800, 600);
 
     app.run();
 
