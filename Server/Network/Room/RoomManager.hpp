@@ -15,7 +15,6 @@
 #include "Room.hpp"
 
 namespace RType::Network::Room {
-
     /**
      * A class to manage rooms. See Room for further information.
      */

@@ -28,21 +28,22 @@ namespace RType::Network::Room {
      * - See AClient documentation for further details
      */
     template<typename UDPSocket, typename TCPSocket>
-    class Room
-        :
+    class Room:
             public std::enable_shared_from_this<Room<UDPSocket, TCPSocket>> {
         public:
         using room_user = AClient<UDPSocket, TCPSocket>;
         using room_user_sptr = std::shared_ptr<room_user>;
         using room_user_cptr = room_user *const;
-        Room() = default;
+        Room(): _world(std::make_shared<ECS::World>()) {
+            this->_world->initialize();
+        };
         /**
          * Allow to create a room with a set of predefined clients in it
          * @param clients Vector of clients
          */
-        Room(const std::vector<room_user_sptr>& clients) {
+        Room(const std::vector<room_user_sptr>& clients): _world(std::make_shared<ECS::World>()) {
             this->_users = clients;
-            _world->initialize();
+            this->_world->initialize();
         }
         ~Room() = default;
         Room(const Room&) = default;
@@ -156,8 +157,6 @@ namespace RType::Network::Room {
         std::mutex _mutex;
         std::vector<room_user_sptr> _users;
     };
-
-
 }
 
 #endif // SRC_RTYPE_ROOM_HPP_
