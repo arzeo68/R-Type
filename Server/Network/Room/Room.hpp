@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <iostream>
 #include <mutex>
+#include <src/ECS/World.hpp>
 #include "Server/Network/Client/AClient.hpp"
 
 namespace RType::Network::Room {
@@ -41,6 +42,7 @@ namespace RType::Network::Room {
          */
         Room(const std::vector<room_user_sptr>& clients) {
             this->_users = clients;
+            _world->initialize();
         }
         ~Room() = default;
         Room(const Room&) = default;
@@ -150,6 +152,7 @@ namespace RType::Network::Room {
         }
 
         private:
+        std::shared_ptr<ECS::World> _world;
         std::mutex _mutex;
         std::vector<room_user_sptr> _users;
     };
