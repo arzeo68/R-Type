@@ -9,6 +9,14 @@
 namespace Rtype
 {
 
+    void _strcpyC(char *dest, const char *source) {
+        #ifdef _WIN32
+        strcpy_s(dest, sizeof(dest), source);
+        #else
+        strcpy(dest, source);
+        #endif
+    }
+
 Application::Application(std::string const& title, unsigned int width, unsigned int height)
 {
     m_pWindow = std::make_shared<Window>(title, width, height);
@@ -69,9 +77,11 @@ void Application::catch_keyPressed(EventType type, std::shared_ptr<Observer::IEv
 {
     std::cout << "Caught key pressed" << std::endl;
     std::shared_ptr<EventKeyPressed> key = std::dynamic_pointer_cast<EventKeyPressed>(data);
-    RType::Common::Network::TCPPacket p{RType::Common::Network::g_MagicNumber, "il est vraiment bcp trop beau ruffinoni"};
+    std::string keyString= std::to_string(key->_key);
+    RType::Common::Network::TCPPacket p{RType::Common::Network::g_MagicNumber};
+    _strcpyC(p.message, keyString.c_str());
     //std::string pack((char *)&p, sizeof(RType::Common::Network::TCPPacket));
     tcpSocket->write(p);
-    //udpSocket->write(p);
+//    udpSocket->write(p);
 }
 } // namespace Rtype
