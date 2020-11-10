@@ -25,7 +25,7 @@ if (BUILD_DOC)
 endif(BUILD_DOC)
 
 cmake_minimum_required(VERSION 3.17.0)
-project(Rtype)
+project(RType)
 
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY build/bin)
@@ -51,7 +51,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(src/Client)
 include_directories(src/)
 
-add_executable(r-type_client
+add_executable(rtype_client
         src/Client/main.cpp
         src/Client/Window/Window.cpp
         src/Client/Window/Window.hpp
@@ -80,7 +80,7 @@ add_executable(r-type_client
         src/Client/ClientNetwork/UdpNetwork.hpp
         src/Common/Network.hpp
         src/Common/Systems/RenderSystem.cpp)
-add_executable(r-type_server
+add_executable(rtype_server
         src/Server/Network/Network/INetwork.hpp
         src/Server/Network/Socket/ISocket.hpp
         src/Server/Network/Network/Router.hpp
@@ -106,13 +106,12 @@ add_executable(r-type_server
         src/Common/Network.cpp)
 
 if (MSVC)
-    set_target_properties(r-type_client PROPERTIES LINK_FLAGS /MACHINE:X64)
-    set_target_properties(r-type_server PROPERTIES LINK_FLAGS /MACHINE:X64)
+    set_target_properties(rtype_client PROPERTIES LINK_FLAGS /MACHINE:X64)
+    set_target_properties(rtype_server PROPERTIES LINK_FLAGS /MACHINE:X64)
 endif ()
 
-install(TARGETS r-type_client DESTINATION ${PROJECT_SOURCE_DIR}/bin)
-install(TARGETS r-type_server DESTINATION ${PROJECT_SOURCE_DIR}/bin)
+install(TARGETS rtype_client DESTINATION ${PROJECT_SOURCE_DIR}/bin)
+install(TARGETS rtype_server DESTINATION ${PROJECT_SOURCE_DIR}/bin)
 
-#############################################################
-target_link_libraries(r-type_client ${CONAN_LIBS})
-target_link_libraries(r-type_server ${CONAN_LIBS})
+target_link_libraries(rtype_client ${CONAN_LIBS})
+target_link_libraries(rtype_server ${CONAN_LIBS})
