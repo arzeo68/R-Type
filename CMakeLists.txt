@@ -14,11 +14,11 @@ if (BUILD_DOC)
         configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
 
         add_custom_target(doc_doxygen ALL
-            COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
-            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-            COMMENT "Generating documentation with Doxygen"
-            VERBATIM
-        )
+                COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                COMMENT "Generating documentation with Doxygen"
+                VERBATIM
+                )
     else (DOXYGEN_FOUND)
         message("Doxygen need to be installed to generate the doxygen documentation")
     endif (DOXYGEN_FOUND)
@@ -48,60 +48,62 @@ endif()
 conan_basic_setup()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+include_directories(src/Client)
+include_directories(src/)
 
 add_executable(r-type_client
-    Client/main.cpp
-    Client/src/window/Window.cpp
-    Client/include/window/Window.hpp
-    Client/src/window/AWindow.cpp
-    Client/include/window/AWindow.hpp
-    Client/include/typeEncapsulation.hpp
-    Client/include/RenderTarget/IRenderTarget.hpp
-    Client/include/RenderTarget/ARenderTarget.hpp
-    Client/src/RenderTarget/RenderTarget.cpp
-    Client/include/RenderTarget/RenderTarget.hpp
-    Client/include/SceneManager/SceneManager.hpp
-    Client/src/SceneManager/SceneManager.cpp
-    Client/include/ObserverPattern/Subject.hpp
-    Client/include/EventManager/EventManager.hpp
-    Client/include/EventManager/SFMLEvents.hpp
-    Client/src/EventManager/EventManager.cpp
-    Client/src/Application/Application.cpp
-    Client/include/Application/Application.hpp
-    Client/Components/Network.hpp
-    Client/include/unique_id.hpp
-    Client/ClientNetwork/ISocket.hpp
-    Client/ClientNetwork/ASocket.hpp
-    Client/ClientNetwork/TcpNetwork.cpp
-    Client/ClientNetwork/TcpNetwork.hpp
-    Client/ClientNetwork/UdpNetwork.cpp
-    Client/ClientNetwork/UdpNetwork.hpp
-    Common/Network.hpp
-    src/Systems/RenderSystem.cpp)
+        src/Client/main.cpp
+        src/Client/Window/Window.cpp
+        src/Client/Window/Window.hpp
+        src/Client/Window/AWindow.cpp
+        src/Client/Window/AWindow.hpp
+        src/Client/typeEncapsulation.hpp
+        src/Client/RenderTarget/IRenderTarget.hpp
+        src/Client/RenderTarget/ARenderTarget.hpp
+        src/Client/RenderTarget/RenderTarget.cpp
+        src/Client/RenderTarget/RenderTarget.hpp
+        src/Client/SceneManager/SceneManager.hpp
+        src/Client/SceneManager/SceneManager.cpp
+        src/Client/ObserverPattern/Subject.hpp
+        src/Client/EventManager/EventManager.hpp
+        src/Client/EventManager/SFMLEvents.hpp
+        src/Client/EventManager/EventManager.cpp
+        src/Client/Application/Application.cpp
+        src/Client/Application/Application.hpp
+        src/Client/Components/Network.hpp
+        src/Client/unique_id.hpp
+        src/Client/ClientNetwork/ISocket.hpp
+        src/Client/ClientNetwork/ASocket.hpp
+        src/Client/ClientNetwork/TcpNetwork.cpp
+        src/Client/ClientNetwork/TcpNetwork.hpp
+        src/Client/ClientNetwork/UdpNetwork.cpp
+        src/Client/ClientNetwork/UdpNetwork.hpp
+        src/Common/Network.hpp
+        src/Common/Systems/RenderSystem.cpp)
 add_executable(r-type_server
-        Server/Network/Network/INetwork.hpp
-        Server/Network/Socket/ISocket.hpp
-        Server/Network/Network/Router.hpp
-        Server/Network/Network/BoostNetwork.cpp
-        Server/Network/Network/BoostNetwork.hpp
-        Server/Network/Network/ANetwork.hpp
-        Server/Main.cpp
-        Common/Log.hpp Common/Log.cpp
-        Server/Network/Socket/TCPBoostSocket.cpp
-        Server/Network/Socket/TCPBoostSocket.hpp
-        Server/Network/Socket/UDPBoostSocket.cpp
-        Server/Network/Socket/UDPBoostSocket.hpp
-        Server/Network/Client/BoostClient.cpp
-        Server/Network/Client/BoostClient.hpp
-        Server/Network/Client/AClient.hpp
-        Common/Network.hpp
-        Server/Server.hpp
-        Server/Network/Network/ThreadPool.hpp
-        Server/Network/Worker/ThreadSafeQueue.hpp
-        Server/Network/Worker/Worker.hpp
-        Server/Network/Room/RoomManager.hpp
-        Server/Network/Room/Room.hpp
-        Common/Network.cpp)
+        src/Server/Network/Network/INetwork.hpp
+        src/Server/Network/Socket/ISocket.hpp
+        src/Server/Network/Network/Router.hpp
+        src/Server/Network/Network/BoostNetwork.cpp
+        src/Server/Network/Network/BoostNetwork.hpp
+        src/Server/Network/Network/ANetwork.hpp
+        src/Server/Main.cpp
+        src/Common/Log.hpp src/Common/Log.cpp
+        src/Server/Network/Socket/TCPBoostSocket.cpp
+        src/Server/Network/Socket/TCPBoostSocket.hpp
+        src/Server/Network/Socket/UDPBoostSocket.cpp
+        src/Server/Network/Socket/UDPBoostSocket.hpp
+        src/Server/Network/Client/BoostClient.cpp
+        src/Server/Network/Client/BoostClient.hpp
+        src/Server/Network/Client/AClient.hpp
+        src/Common/Network.hpp
+        src/Server/Server.hpp
+        src/Server/Network/Network/ThreadPool.hpp
+        src/Server/Network/Worker/ThreadSafeQueue.hpp
+        src/Server/Network/Worker/Worker.hpp
+        src/Server/Network/Room/RoomManager.hpp
+        src/Server/Network/Room/Room.hpp
+        src/Common/Network.cpp)
 
 if (MSVC)
     set_target_properties(r-type_client PROPERTIES LINK_FLAGS /MACHINE:X64)
