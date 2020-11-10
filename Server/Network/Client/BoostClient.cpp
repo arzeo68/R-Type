@@ -33,8 +33,6 @@ RType::Network::BoostClient::BoostClient(boost::asio::io_service& service,
 
 RType::Network::BoostClient::~BoostClient() {
     this->_logger->Info("Client ", this, " deleted");
-    this->_logger->Info("[Client ", this,
-                        "] Waiting for client thread to join...");
 }
 
 //void RType::Network::BoostClient::read() {

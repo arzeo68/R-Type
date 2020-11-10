@@ -20,11 +20,11 @@ namespace RType::Network {
         ~ThreadPool() {
             for (auto& i: this->_threadPool)
                 if (i.joinable()) {
-                    printf("Waiting for %p to join\n", &i);
+                    //printf("Waiting for %p to join\n", &i);
                     i.join();
-                    printf("Thread %p joined\n", &i);
+                    //printf("Thread %p joined\n", &i);
                 } else
-                    printf("%p is not joinable\n", &i);
+                    printf("[Thread pool] %p is not joinable\n", &i);
         }
         ThreadPool(ThreadPool&) = delete;
         ThreadPool(ThreadPool&&) = delete;

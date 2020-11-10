@@ -21,22 +21,22 @@ namespace RType::Network {
         Worker(const std::function<bool()>& unlock) :
             _unlock_condition(unlock),
             _cv(std::make_shared<std::condition_variable>()) {
-            printf("Worker %p created\n", this);
+            //printf("Worker %p created\n", this);
         };
         Worker(const std::function<bool()>& unlock,
                const std::function<bool()>& locker) :
             _unlock_condition(unlock),
             _cv(std::make_shared<std::condition_variable>()), _locker(locker) {
-            printf("Worker %p created\n", this);
+            //printf("Worker %p created\n", this);
         };
         ~Worker() {
             if (!this->_thread.joinable())
                 std::cerr << "[Worker - " << std::hex << this
                           << "] is not joinable" << std::endl;
             else {
-                std::cout << "Waiting thread " << std::hex << this << " to join" << std::endl;
+                //std::cout << "Waiting thread " << std::hex << this << " to join" << std::endl;
                 this->_thread.join();
-                std::cout << "Thread joined for worker " << std::hex << this << std::endl;
+                //std::cout << "Thread joined for worker " << std::hex << this << std::endl;
             }
         }
 
@@ -50,11 +50,11 @@ namespace RType::Network {
                 do {
                     std::unique_lock<std::mutex> lock(this->_mutex);
                     this->_cv->wait(lock, [&] {
-                        return (this->_unlock_condition() || this->_must_exit);
+                        return (this->_must_exit || this->_unlock_condition());
                     });
                     if (!this->_must_exit)
                         work();
-                } while ((this->_locker && this->_locker.value()) && !this->_must_exit);
+                } while (!this->_must_exit && (this->_locker && this->_locker.value()));
             });
         }
 
