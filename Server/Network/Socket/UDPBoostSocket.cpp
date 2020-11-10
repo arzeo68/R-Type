@@ -51,17 +51,24 @@ void RType::Network::Socket::UDPBoostSocket::start_read() {
                                              "(read udp) An error occurred: ",
                                              err.message());
                                      }
-                                     auto package = Common::Network::packet_unpack(std::string(raw_message->begin(), raw_message->end()));
-                                     if (package.magic != Common::Network::g_MagicNumber)
-                                         this->_logger->Error("(udp) Wrong magic number for this message");
+                                     auto package = Common::Network::packet_unpack(
+                                         std::string(raw_message->begin(),
+                                                     raw_message->end()));
+                                     if (package.magic !=
+                                         Common::Network::g_MagicNumber)
+                                         this->_logger->Error(
+                                             "(udp) Wrong magic number for this message");
                                      else
-                                         this->_logger->Info("(udp) Message: '", package.message, "' w/ ",
+                                         this->_logger->Info("(udp) Message: '",
+                                                             package.message,
+                                                             "' w/ ",
                                                              bytes_transferred);
                                      this->start_read();
                                  });
 }
 
-void RType::Network::Socket::UDPBoostSocket::write(const Common::Network::TCPPacket& input) {
+void
+RType::Network::Socket::UDPBoostSocket::write(const Common::Network::TCPPacket& input) {
     std::vector<boost::asio::const_buffer> buffers;
     buffers.emplace_back(boost::asio::buffer(&input, sizeof(input)));
     this->_socket->async_send(buffers,

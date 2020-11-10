@@ -19,6 +19,7 @@ namespace RType::Network::Room {
      * The number of participant per room
      */
     const static constexpr uint16_t MAX_PARTICIPANT = 4;
+
     /**
      * The class create a room of AClient.
      * @tparam UDPSocket for the AClient
@@ -26,7 +27,9 @@ namespace RType::Network::Room {
      * - See AClient documentation for further details
      */
     template<typename UDPSocket, typename TCPSocket>
-    class Room : public std::enable_shared_from_this<Room<UDPSocket, TCPSocket>> {
+    class Room
+        :
+            public std::enable_shared_from_this<Room<UDPSocket, TCPSocket>> {
         public:
         using room_user = AClient<UDPSocket, TCPSocket>;
         using room_user_sptr = std::shared_ptr<room_user>;
@@ -47,11 +50,13 @@ namespace RType::Network::Room {
          * @param m The package to broadcast
          * @warning For now, everybody in a room get the message
          */
-        void tcp_broadcast(const Common::Network::TCPPacket& m){
+        void tcp_broadcast(const Common::Network::TCPPacket& m) {
             std::lock_guard<std::mutex> l(this->_mutex);
-            std::for_each(this->_users.begin(), this->_users.end(), [m](room_user_sptr& p) {
-                p->get_tcpsocket->write(m);
-            });
+            std::for_each(this->_users.begin(),
+                          this->_users.end(),
+                          [m](room_user_sptr& p) {
+                              p->get_tcpsocket->write(m);
+                          });
         }
         /**
          * Broadcast a package by using the UDP socket of a client
@@ -60,9 +65,11 @@ namespace RType::Network::Room {
          */
         void udp_broadcast(const Common::Network::TCPPacket& m) {
             std::lock_guard<std::mutex> l(this->_mutex);
-            std::for_each(this->_users.begin(), this->_users.end(), [m](room_user_sptr& p) {
-                p->get_udpsocket->write(m);
-            });
+            std::for_each(this->_users.begin(),
+                          this->_users.end(),
+                          [m](room_user_sptr& p) {
+                              p->get_udpsocket->write(m);
+                          });
         }
 
         /**
@@ -100,12 +107,15 @@ namespace RType::Network::Room {
          * @return false if the client cannot be removed. The client hasn't been found in the room
          */
         bool remove_user_from_ptr(const room_user_cptr p) {
-            std::lock_guard<std::mutex> l (this->_mutex);
-            auto k = std::find_if(this->_users.begin(), this->_users.end(), [p](room_user_sptr& p_ptr) {
-                return (p_ptr.get() == p);
-            });
+            std::lock_guard<std::mutex> l(this->_mutex);
+            auto k = std::find_if(this->_users.begin(),
+                                  this->_users.end(),
+                                  [p](room_user_sptr& p_ptr) {
+                                      return (p_ptr.get() == p);
+                                  });
             if (k == std::end(this->_users))
-                std::cerr << "Cannot remove user " << std::hex << p << std::endl;
+                std::cerr << "Cannot remove user " << std::hex << p
+                          << std::endl;
             else
                 this->_users.erase(k);
             return (k != std::end(this->_users));
@@ -118,8 +128,10 @@ namespace RType::Network::Room {
          * @return false if the client isn't in the room
          */
         bool has_participant(const room_user& p) {
-            std::lock_guard<std::mutex> l (this->_mutex);
-            return (std::find(this->_users.begin(), this->_users.end(), p) != std::end(this->_users));
+            std::lock_guard<std::mutex> l(this->_mutex);
+            return (
+                std::find(this->_users.begin(), this->_users.end(), p) !=
+                    std::end(this->_users));
         }
         /**
          * See has_participant function
@@ -128,10 +140,12 @@ namespace RType::Network::Room {
          * @return false if the client isn't in the room
          */
         bool has_participant(const room_user_cptr p) {
-            std::lock_guard<std::mutex> l (this->_mutex);
-            auto found = std::find_if(this->_users.begin(), this->_users.end(), [p](room_user_sptr& p_ptr) {
-                return (p_ptr.get() == p);
-            });
+            std::lock_guard<std::mutex> l(this->_mutex);
+            auto found = std::find_if(this->_users.begin(),
+                                      this->_users.end(),
+                                      [p](room_user_sptr& p_ptr) {
+                                          return (p_ptr.get() == p);
+                                      });
             return (found != std::end(this->_users));
         }
 
@@ -139,8 +153,6 @@ namespace RType::Network::Room {
         std::mutex _mutex;
         std::vector<room_user_sptr> _users;
     };
-
-
 
 
 }

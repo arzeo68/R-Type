@@ -52,10 +52,14 @@ namespace RType::Network {
          * This a basic implementation but MAY be override for a custom implementation
          * @param client The client to be removed from the list
          */
-        virtual void remove_client(AClient<ClientUDPSocket, ClientTCPSocket> *client) {
+        virtual void
+        remove_client(AClient<ClientUDPSocket, ClientTCPSocket> *client) {
+            std::lock_guard<std::mutex> lock(this->_mutex);
             auto it = std::find_if(this->_clients.begin(), this->_clients.end(),
                                    [&](const client_shared_ptr& registered_client) {
-                                       return (registered_client.get() == client);
+                                       return (
+                                           registered_client.get() == client
+                                       );
                                    });
             if (it != std::end(this->_clients))
                 this->_clients.erase(it);
@@ -71,6 +75,7 @@ namespace RType::Network {
          *List of shared pointer of clients
          */
         std::list<client_shared_ptr> _clients;
+
         /**
          * The mutex for the thread-safety of the list of clients
          */

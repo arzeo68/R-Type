@@ -53,22 +53,29 @@ void RType::Network::Socket::TCPBoostSocket::start_read() {
                                          this->_socket_error_notifier->notify_all();
                                          return;
                                      }
-                                     auto package = Common::Network::packet_unpack(std::string(raw_message->begin(), raw_message->end()));
-                                     if (package.magic != Common::Network::g_MagicNumber)
-                                         this->_logger->Error("(tcp) Wrong magic number for this message");
+                                     auto package = Common::Network::packet_unpack(
+                                         std::string(raw_message->begin(),
+                                                     raw_message->end()));
+                                     if (package.magic !=
+                                         Common::Network::g_MagicNumber)
+                                         this->_logger->Error(
+                                             "(tcp) Wrong magic number for this message");
                                      else
-                                         this->_logger->Info("(tcp) Message: '", package.message, "' w/ ",
-                                                              bytes_transferred);
+                                         this->_logger->Info("(tcp) Message: '",
+                                                             package.message,
+                                                             "' w/ ",
+                                                             bytes_transferred);
                                      this->start_read();
                                  });
 }
 
-void RType::Network::Socket::TCPBoostSocket::write(const Common::Network::TCPPacket& input) {
+void
+RType::Network::Socket::TCPBoostSocket::write(const Common::Network::TCPPacket& input) {
     std::vector<boost::asio::const_buffer> buffers;
     buffers.emplace_back(boost::asio::buffer(&input, sizeof(input)));
     this->_socket->async_send(buffers,
                               [&](const boost::system::error_code& error,
-                                     std::size_t) {
+                                  std::size_t) {
                                   if (error) {
                                       this->_logger->Error(
                                           "[client-> TCPBoostSocket] write ",

@@ -22,15 +22,19 @@ namespace RType::Network {
          * Create a pool of thread without starting them.
          * @param number of threads
          */
-        explicit ThreadPool(uint32_t number) : _number(number) {}
+        explicit ThreadPool(uint32_t number) : _number(number) {
+        }
         ThreadPool() = delete;
         ~ThreadPool() {
-            std::for_each(this->_thread_pool.begin(), this->_thread_pool.end(), [] (std::thread& t) {
-                if (t.joinable())
-                    t.join();
-                else // TODO: Add logger
-                    printf("[Thread pool] %p is not joinable\n", &t);
-            });
+            std::for_each(this->_thread_pool.begin(),
+                          this->_thread_pool.end(),
+                          [](std::thread& t) {
+                              if (t.joinable())
+                                  t.join();
+                              else // TODO: Add logger
+                                  printf("[Thread pool] %p is not joinable\n",
+                                         &t);
+                          });
         }
         ThreadPool(ThreadPool&) = delete;
         ThreadPool(ThreadPool&&) = delete;
@@ -41,7 +45,7 @@ namespace RType::Network {
          * @param args Function's arguments
          */
         template<class func, typename... variadic>
-        void run(func&& fn, variadic&&... args) {
+        void run(func&& fn, variadic&& ... args) {
             for (uint32_t i = 0; i < this->_number; ++i)
                 this->_thread_pool.emplace_back(fn,
                                                 std::forward<variadic>(args)...);

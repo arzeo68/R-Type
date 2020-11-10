@@ -23,9 +23,9 @@ namespace RType::Network::Socket {
      * A boost implementation, of ASocket, for TCP communication.
      * The class doesn't contains any other functions than described in ASocket & ISocket.
      */
-    class TCPBoostSocket:
-            public ASocket<boost_socket_tcp_t>,
-            public std::enable_shared_from_this<TCPBoostSocket> {
+    class TCPBoostSocket :
+        public ASocket<boost_socket_tcp_t>,
+        public std::enable_shared_from_this<TCPBoostSocket> {
         public:
         TCPBoostSocket(boost::asio::io_service& service,
                        const Common::Log::Log::shared_log_t& log,

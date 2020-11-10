@@ -80,7 +80,8 @@ namespace RType::Network {
                     });
                     if (!this->_must_exit)
                         work();
-                } while (!this->_must_exit && (this->_locker && this->_locker.value()));
+                } while (!this->_must_exit &&
+                    (this->_locker && this->_locker.value()));
             });
         }
 

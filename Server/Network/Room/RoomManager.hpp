@@ -25,7 +25,7 @@ namespace RType::Network::Room {
         RoomManager() = default;
         ~RoomManager() = default;
         RoomManager(const RoomManager&) = delete;
-        using room_sptr = std::shared_ptr<Room < UDPSocket, TCPSocket>>;
+        using room_sptr = std::shared_ptr<Room<UDPSocket, TCPSocket>>;
         using participant_sptr = typename Room<UDPSocket, TCPSocket>::room_user_sptr;
         using participant_cptr = typename Room<UDPSocket, TCPSocket>::room_user_cptr;
 
@@ -43,7 +43,7 @@ namespace RType::Network::Room {
             if (r == std::end(this->_rooms)) {
                 this->_rooms.emplace_back(
                     std::make_shared<Room<UDPSocket, TCPSocket>>
-                (std::vector<participant_sptr> {p}));
+                        (std::vector<participant_sptr> {p}));
             } else
                 (*r)->add_user(p);
         }

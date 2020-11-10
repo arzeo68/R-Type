@@ -18,8 +18,8 @@ namespace RType::Network {
      * @tparam T Type of data contained in the queue
      */
     template<typename T>
-    class ThreadSafeQueue:
-            public std::enable_shared_from_this<ThreadSafeQueue<T>> {
+    class ThreadSafeQueue :
+        public std::enable_shared_from_this<ThreadSafeQueue<T>> {
         public:
         ThreadSafeQueue() = default;
         ~ThreadSafeQueue() = default;

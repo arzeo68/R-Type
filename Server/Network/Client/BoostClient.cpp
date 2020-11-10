@@ -15,8 +15,7 @@ RType::Network::BoostClient::BoostClient(boost::asio::io_service& service,
     AClient<Socket::boost_socket_udp_t, Socket::boost_socket_tcp_t>([&]() {
         return (!this->_tcpsocket->is_functional());
     }),
-    _logger(log)
-{
+    _logger(log) {
     this->_logger->Debug("Create TCP socket");
     this->_tcpsocket = std::make_shared<Socket::TCPBoostSocket>(service, log,
                                                                 this->_worker_is_active.share_cv_from_this());
