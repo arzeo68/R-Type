@@ -14,9 +14,6 @@ namespace Rtype
     m_ioContext(), m_Resolver(m_ioContext), m_udpSocket(m_ioContext), SharedDataQueue(SharedQueue)
     {
         endpoints = m_Resolver.resolve(host, port);
-        boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), host, port);
-        boost::asio::ip::udp::resolver::iterator iter = m_Resolver.resolve(query);
-        this->_endpoint = *iter;
     }
 
     void UDPBoostSocket::start_socket() noexcept
@@ -42,24 +39,18 @@ namespace Rtype
 
     void UDPBoostSocket::HandleConnect(const std::error_code &error, boost::asio::ip::udp::resolver::results_type::iterator endpoint)
     {
-        if (stopped) {
-            std::cerr << "truc is stopped" << std::endl;
+        if (stopped)
             return;
-        }
-        if (!m_udpSocket.is_open()) {
-            std::cerr << "SOCKET IS NOT OPEN" << std::endl;
+        if (!m_udpSocket.is_open())
             StartConnect(++endpoint);
-        }
         else if (error)
         {
-            std::cerr << "HandleConnect err: " << error.message() << std::endl;
             m_udpSocket.close();
             StartConnect(++endpoint);
         } else
         {
-            std::cout << "SO THIS IS CONNECTED" << std::endl;
             // Start Read and Write
-            this->write({RType::Common::Network::g_MagicNumber, 66});
+            this->write({RType::Common::Network::g_MagicNumber, 123});
         }
     }
 
@@ -68,21 +59,18 @@ namespace Rtype
         std::vector<boost::asio::const_buffer> buffers;
         std::cout << "Writing smth" << std::endl;
         buffers.emplace_back(boost::asio::buffer(&input, sizeof(input)));
-        //boost::asio::ip::udp::endpoint endpoint = *m_Resolver.resolve(boost::asio::ip::udp::v4(), "127.0.0.1", "").begin();
-        //this->m_udpSocket.send_to(buffers, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), 4243));
-        auto k = this->m_udpSocket.send_to(buffers, this->_endpoint);
-        std::cout << "size: " << k << std::endl;
-        //this->m_udpSocket.send(buffers, [this](const boost::system::error_code &error, std::size_t)
-        //{
-        //    if (error)
-        //    {
-        //        std::cerr << "Err: " << error.message() << std::endl;
-        //        this->_logger->Error("[client-> UDPBoostSocket] write ",error.message());
-                //this->shutdown_socket();
-                //return;
-            //} else
-            //    std::cerr << "Message sent, no error" << std::endl;
-        //});
+        boost::asio::ip::udp::endpoint endpoint = *m_Resolver.resolve(boost::asio::ip::udp::v4(), "127.0.0.1", "").begin();
+        this->m_udpSocket.async_send(buffers, [this](const boost::system::error_code &error, std::size_t)
+        {
+            if (error)
+            {
+                std::cerr << "Err: " << error.message() << std::endl;
+                //this->_logger->Error("[client-> UDPBoostSocket] write ",error.message());
+                this->shutdown_socket();
+                return;
+            } else
+                std::cerr << "Message sent, no error" << std::endl;
+        });
     }
 
     void UDPBoostSocket::start_read()

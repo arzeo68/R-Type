@@ -16,7 +16,7 @@ RType::Network::Socket::UDPBoostSocket::UDPBoostSocket(
     this->_socket = std::make_shared<boost_socket_udp_t>(service);
     this->_socket->open(endpoint.protocol());
     this->_socket->set_option(boost::asio::ip::udp::socket::reuse_address(true));
-    //this->_socket->set_option(boost::asio::ip::multicast::enable_loopback(true));
+    this->_socket->bind(endpoint);
     this->_logger = log;
 }
 
