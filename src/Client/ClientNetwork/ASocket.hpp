@@ -13,6 +13,9 @@ namespace Rtype {
  * ASocket is an abstraction whith the basic function for any socket type
  */
     class ASocket : public ISocket {
+        protected:
+        typedef std::array<char, sizeof(RType::Common::Network::TCPPacket)> MessageArr_t;
+
     };
 }
 

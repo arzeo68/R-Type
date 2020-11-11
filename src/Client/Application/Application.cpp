@@ -55,7 +55,10 @@ void Application::switchScene(std::string const& title)
 void Application::run()
 {
     tcpSocket->start_socket();
+    tcpSocket->start_read();
     udpSocket->start_socket();
+    udpSocket->start_read();
+
     std::shared_ptr<Window> w = std::dynamic_pointer_cast<Window>(m_pWindow);
     m_pWindow->open();
     while (m_pWindow->isOpen()) {
@@ -83,4 +86,4 @@ void Application::catch_keyPressed(EventType type, std::shared_ptr<Observer::IEv
     tcpSocket->write(p);
 //    udpSocket->write(p);
 }
-} // namespace Rtype
+}

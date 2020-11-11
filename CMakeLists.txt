@@ -79,7 +79,8 @@ add_executable(rtype_client
         src/Client/ClientNetwork/UdpNetwork.cpp
         src/Client/ClientNetwork/UdpNetwork.hpp
         src/Common/Network.hpp
-        src/Common/Systems/RenderSystem.cpp)
+        src/Common/Systems/RenderSystem.cpp
+        src/Common/Network.cpp)
 add_executable(rtype_server
         src/Server/Network/Network/INetwork.hpp
         src/Server/Network/Socket/ISocket.hpp

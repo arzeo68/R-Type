@@ -71,5 +71,23 @@ namespace Rtype
 
     void UDPBoostSocket::start_read()
     {
+        std::shared_ptr<MessageArr_t> raw_message = std::make_shared<MessageArr_t>();
+
+        m_udpSocket.async_receive(boost::asio::buffer(*raw_message),
+            [&, raw_message](
+                const boost::system::error_code& err,
+                std::size_t bytes_transferred) {
+                if (err) {
+                    return;
+                }
+                auto package = RType::Common::Network::packet_unpack(
+                    std::string(raw_message->begin(),
+                        raw_message->end()));
+                if (package.magic == RType::Common::Network::g_MagicNumber)
+                {
+                    std::cout << "(tcp) Message: '" << package.command << "' w/ " << bytes_transferred << std::endl;
+                }
+                this->start_read();
+            });
     }
 }

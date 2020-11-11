@@ -52,7 +52,6 @@ namespace Rtype {
         boost::asio::io_context m_ioContext;
         boost::asio::ip::tcp::resolver m_Resolver;
         boost::asio::ip::tcp::resolver::results_type endpoints;
-
         boost::asio::ip::tcp::socket m_tcpSocket;
         std::shared_ptr<std::deque<std::string>> SharedDataQueue;
     };
