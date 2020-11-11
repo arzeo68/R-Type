@@ -6,6 +6,7 @@
 
 void MenuScene::onCreate()
 {
+    std::cout << "Creating MenuScene\n";
     m_World = std::make_shared<ECS::World>();
     m_World->initialize();
 
@@ -38,9 +39,7 @@ void MenuScene::onDeactivate()
 }
 
 void MenuScene::update(float delta, Rtype::RenderTarget& terminal_target)
-{
-    std::cout << "update at frametime " << delta << "\n";
-}
+{ }
 
 void MenuScene::lateUpdate(float delta, Rtype::RenderTarget& terminal_target)
 { }

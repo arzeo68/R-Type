@@ -31,7 +31,7 @@ Application::Application(std::string const& title, unsigned int width, unsigned 
     m_pEventManager->getSubject().registerObserver(EKeyPressed, std::bind(&Application::catch_keyPressed, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-void Application::addScene(std::string const& title, std::shared_ptr<IScene> scene)
+void Application::addScene(std::string const& title, std::shared_ptr<AScene> scene)
 {
     unsigned int id = m_pSceneManager->add(scene);
     m_cScenes.insert({title, id});
@@ -64,7 +64,7 @@ void Application::run()
     RenderTarget target = w->getRenderTarget();
 
     std::shared_ptr<MenuScene> menu = std::make_shared<MenuScene>();
-    m_pSceneManager->switch_to(m_pSceneManager->add(menu));
+    m_pSceneManager->add(menu);
     while (m_pWindow->isOpen()) {
         auto end = std::chrono::high_resolution_clock::now();
         float res = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();

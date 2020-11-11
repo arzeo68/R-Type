@@ -16,7 +16,7 @@ namespace Rtype {
                     unsigned int height);
         ~Application() = default;
 
-        void addScene(std::string const& title, std::shared_ptr<IScene> scene);
+        void addScene(std::string const& title, std::shared_ptr<AScene> scene);
         void removeScene(std::string const& title);
         void switchScene(std::string const& title);
 
