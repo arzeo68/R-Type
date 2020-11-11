@@ -24,6 +24,8 @@ namespace Rtype {
     typedef sf::Texture Texture;
     typedef sf::Image Image;
     typedef sf::Sprite Sprite;
+    typedef sf::Transform Transform;
+    typedef sf::RenderStates RenderState;
 
     template< typename T>
     class ITexture {
@@ -89,6 +91,46 @@ namespace Rtype {
         }
         private:
         Sprite _image;
+    };
+
+    template< typename T>
+    class ITransform {
+        public:
+        virtual ~ITransform() = default;
+        virtual T &getNativ() = 0;
+    };
+
+    class sfmlTransform: public ITransform<Transform> {
+        public:
+        sfmlTransform()
+        {
+        };
+        Transform &getNativ() override
+        {
+            return _image;
+        }
+        private:
+        Transform _image;
+    };
+
+    template< typename T>
+    class IRenderState {
+        public:
+        virtual ~IRenderState() = default;
+        virtual T &getNativ() = 0;
+    };
+
+    class sfmlRenderState: public IRenderState<RenderState> {
+        public:
+        sfmlRenderState()
+        {
+        };
+        RenderState &getNativ() override
+        {
+            return _image;
+        }
+        private:
+        RenderState _image;
     };
 }  // namespace Rtype
 
