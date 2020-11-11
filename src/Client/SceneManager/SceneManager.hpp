@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <memory>
 #include <Client/RenderTarget/RenderTarget.hpp>
+#include <Common/ECS/World.hpp>
 
 namespace Rtype
 {
@@ -19,6 +20,22 @@ namespace Rtype
 
         virtual void update(float delta, RenderTarget& terminal_target) {}
         virtual void lateUpdate(float delta, RenderTarget& terminal_target) {}
+    };
+
+    class AScene : public IScene {
+    public:
+        virtual ~AScene() {}
+
+        virtual void onCreate() = 0;
+        virtual void onDestroy() = 0;
+
+        virtual void onActivate() {}
+        virtual void onDeactivate() {}
+
+        virtual void update(float delta, RenderTarget& terminal_target) {}
+        virtual void lateUpdate(float delta, RenderTarget& terminal_target) {}
+    protected:
+        std::shared_ptr<ECS::World> m_World;
     };
 
     class SceneManager {

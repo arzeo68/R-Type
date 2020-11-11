@@ -79,7 +79,10 @@ add_executable(rtype_client
         src/Client/ClientNetwork/TcpNetwork.hpp
         src/Client/ClientNetwork/UdpNetwork.cpp
         src/Client/ClientNetwork/UdpNetwork.hpp
-        src/Common/Network.hpp)
+        src/Common/Network.hpp
+        src/Client/Game/Scenes/Menu.hpp
+        src/Client/Game/Scenes/Menu.cpp
+)
 
 add_executable(rtype_server
         src/Server/Network/Network/INetwork.hpp

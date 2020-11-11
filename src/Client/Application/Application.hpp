@@ -6,7 +6,6 @@
 #include <Client/SceneManager/SceneManager.hpp>
 #include <Client/EventManager/EventManager.hpp>
 #include <Client/ClientNetwork/ASocket.hpp>
-#include <Common/ECS/World.hpp>
 
 namespace Rtype {
 
@@ -29,9 +28,6 @@ namespace Rtype {
         void catch_keyPressed(EventType type,
                               std::shared_ptr<Observer::IEvent> data);
 
-        void initialize_ecs_components(std::vector<std::pair<std::string, std::string>> const& textures);
-        void initialize_ecs_systems();
-
     private:
         std::shared_ptr<std::deque<std::string>> tcpMessageReceived;
         std::shared_ptr<Rtype::ASocket> tcpSocket;
@@ -40,7 +36,6 @@ namespace Rtype {
         std::shared_ptr<SceneManager> m_pSceneManager;
         std::shared_ptr<AEventManager> m_pEventManager;
         std::unordered_map<std::string, unsigned int> m_cScenes;
-        std::shared_ptr<ECS::World> m_World;
     };
 
 }  // namespace Rtype

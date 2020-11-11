@@ -10,6 +10,7 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Image.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 
 namespace Rtype {
     typedef sf::Vector2i vec2i;
@@ -22,6 +23,7 @@ namespace Rtype {
     typedef sf::Keyboard::Key keys;
     typedef sf::Texture Texture;
     typedef sf::Image Image;
+    typedef sf::Sprite Sprite;
 }  // namespace Rtype
 
 #endif  // BABEL_TYPEENCAPSULATION_HPP
