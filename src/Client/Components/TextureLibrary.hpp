@@ -7,15 +7,14 @@ typedef uint32_t TextureID;
 struct TextureLibraryComponent {
     std::unordered_map<TextureID, std::shared_ptr<Rtype::Texture>> TextureMap;
     std::unordered_map<std::string, TextureID> TextureNameMap;
-    size_t NextTextureID = 1;
+    TextureID NextTextureID = 1;
 
     TextureLibraryComponent() = default;
 
     TextureID load_texture(std::string const& name, std::string const& path)
     {
         TextureID save = NextTextureID;
-        std::shared_ptr<Rtype::Texture> tex =
-            new std::make_shared<Rtype::Texture>();
+        std::shared_ptr<Rtype::Texture> tex = std::make_shared<Rtype::Texture>();
 
         if (!tex->loadFromFile(path))
             return 0;
@@ -27,32 +26,42 @@ struct TextureLibraryComponent {
     void load_default_texture(std::string const& name, std::string const& path)
     {
         TextureID save = 0;
-        std::shared_ptr<Rtype::Texture> tex =
-            new std::make_shared<Rtype::Texture>();
+        std::shared_ptr<Rtype::Texture> tex = std::make_shared<Rtype::Texture>();
 
         if (!tex->loadFromFile(path))
-            return 0;
+            return;
         TextureNameMap.insert({name, save});
         TextureMap.insert({save, std::move(tex)});
-        return save;
+        return;
     }
 
     void load_default_texture(std::string const& name)
     {
         Rtype::Image img;
         TextureID save = 0;
-        std::shared_ptr<Rtype::Texture> tex =
-            new std::make_shared<Rtype::Texture>();
+        std::shared_ptr<Rtype::Texture> tex = std::make_shared<Rtype::Texture>();
 
         img.create(256, 256, Rtype::color::White);
         if (!tex->loadFromImage(img))
-            return UINT32_MAX;
+            return;
         TextureNameMap.insert({name, save});
         TextureMap.insert({save, std::move(tex)});
-        return save;
+        return;
+    }
+
+    TextureID get_texture_id(std::string const& name)
+    {
+        auto ite = TextureNameMap.find(name);
+        if (ite != TextureNameMap.end()) {
+            return ite->second;
+        }
+        return 0;
     }
 };
 
 struct TextureComponent {
     TextureID id;
+
+    TextureComponent() : id(0) {}
+    TextureComponent(TextureID id) : id(id) {}
 };

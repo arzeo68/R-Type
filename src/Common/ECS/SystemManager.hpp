@@ -70,6 +70,17 @@ class SystemManager
                     system->m_cEntities.erase(entity);
             }
         }
+
+        template<typename T>
+        std::shared_ptr<System> getSystem()
+        {
+            std::size_t id = typeid(T).hash_code();
+            auto ite = m_cSystems.find(id);
+
+            if (ite == m_cSystems.end())
+                return nullptr;
+            return ite->second;
+        }
     private:
         std::unordered_map<std::size_t, Signature> m_cSignatures { };
         std::unordered_map<std::size_t, std::shared_ptr<System>> m_cSystems { };

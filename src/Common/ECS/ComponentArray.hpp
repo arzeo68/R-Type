@@ -18,15 +18,15 @@ class ComponentHandle {
         { }
         ~ComponentHandle() { m_Handle = nullptr; }
 
-        void set(T *ref) { m_Handle = std::make_shared<T *>(ref); }
+        void set(T *ref) { m_Handle = ref; }
 
-        std::shared_ptr<T *> get() { return m_Handle; }
+        T *get() { return m_Handle; }
 
-        std::shared_ptr<T *> const get() const { return m_Handle; }
+        T *const get() const { return m_Handle; }
 
         operator bool() const { return m_Handle != nullptr; }
     private:
-        std::shared_ptr<T *> m_Handle;
+        T *m_Handle;
 };
 
 class IComponentArray {

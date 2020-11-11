@@ -9,6 +9,8 @@ namespace ECS
 class System
 {
     public:
+        virtual ~System() {}
+
         std::set<Entity> m_cEntities;
         std::vector<ComponentType> m_cIgnoredComponents;
 };

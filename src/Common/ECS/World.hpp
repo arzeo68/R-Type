@@ -133,6 +133,12 @@ class World
             m_SystemManager->setSignature<T>(signature);
         }
 
+        template<typename T>
+        std::shared_ptr<T> getSystem()
+        {
+            return std::dynamic_pointer_cast<T>(m_SystemManager->getSystem<T>());
+        }
+
         void deferEntityDestruction(Entity entity)
         {
             m_cDeferedDestruction->push_back(entity);

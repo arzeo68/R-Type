@@ -1,5 +1,6 @@
 #pragma once
 
+#include <utility>
 #include <memory>
 #include <Window/IWindow.hpp>
 #include <Client/SceneManager/SceneManager.hpp>
@@ -28,7 +29,8 @@ namespace Rtype {
         void catch_keyPressed(EventType type,
                               std::shared_ptr<Observer::IEvent> data);
 
-        void initialize_ecs();
+        void initialize_ecs_components(std::vector<std::pair<std::string, std::string>> const& textures);
+        void initialize_ecs_systems();
 
     private:
         std::shared_ptr<std::deque<std::string>> tcpMessageReceived;
