@@ -27,18 +27,20 @@ namespace RType::Network::Socket {
         public ASocket<boost_socket_udp_t>,
         public std::enable_shared_from_this<UDPBoostSocket> {
         public:
-        UDPBoostSocket(boost::asio::io_service& service,
-                       const Common::Log::Log::shared_log_t& log);
+        UDPBoostSocket(const Common::Log::Log::shared_log_t& log,
+                       boost::asio::io_service& service,
+                       const boost::asio::ip::udp::endpoint& endpoint);
         UDPBoostSocket() = delete;
         ~UDPBoostSocket() override;
 
         void shutdown_socket() noexcept final;
-        void start_read() final;
+        void read() final;
         void write(const Common::Network::TCPPacket& input) final;
         bool is_functional() final;
 
         private:
         Common::Log::Log::shared_log_t _logger;
+        boost::asio::ip::udp::endpoint _endpoint;
     };
 }
 

@@ -17,6 +17,7 @@ namespace RType::Common::Network {
     const static constexpr uint16_t g_maxMessageLength = 256u;
     enum tcpAnswer {
         accept = 0,
+        TCP_FORBIDDEN,
         denied
     };
     enum tcpCommand {
@@ -30,7 +31,6 @@ namespace RType::Common::Network {
         uint16_t magic;
         int command;
     };
-
     #pragma pack(pop)
     TCPPacket packet_unpack(const std::string& data);
 }

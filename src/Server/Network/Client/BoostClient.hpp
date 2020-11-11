@@ -31,6 +31,7 @@ namespace RType::Network {
          * The network MUST create and pass a shared pointer to this client
          */
         BoostClient(boost::asio::io_service& service,
+                    boost::asio::ip::udp::endpoint& endpoint,
                     const Common::Log::Log::shared_log_t& log,
                     const std::shared_ptr<std::condition_variable>& parent_worker_cv,
                     const std::shared_ptr<ThreadSafeQueue<AClient<Socket::boost_socket_udp_t, Socket::boost_socket_tcp_t> *>>& error_queue);

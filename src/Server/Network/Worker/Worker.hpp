@@ -86,6 +86,20 @@ namespace RType::Network {
         }
 
         /**
+         *
+         * @param work
+         */
+        void run_awake(const std::function<void()>& work) {
+            this->_thread = std::thread([&, work]() {
+                do {
+                    std::unique_lock<std::mutex> lock(this->_mutex);
+                    if (!this->_must_exit)
+                        work();
+                } while (!this->_must_exit && !this->_unlock_condition());
+            });
+        }
+
+        /**
          * Share the condition variable by using a shared pointer.
          * The condition variable may be used to notify the thread to wake up.
          * The logic behind is similar to std::enable_shared_from_this.

@@ -24,9 +24,11 @@ RType::Network::BoostNetwork::BoostNetwork(uint32_t port) : _logger(
     }, [&]() {
         return (this->_is_running);
     }) {
-    this->_router.set_acceptor(*this->_router.get_io_service(),
-                               boost_asio_tcp::endpoint(boost_asio_tcp::v4(),
-                                                        port));
+    this->_rooms.emplace(this->_logger->shared_from_this());// Room::RoomManager<Socket::boost_socket_udp_t, Socket::boost_socket_tcp_t>(this->_logger->shared_from_this());
+    auto endpoint = boost_asio_tcp::endpoint(boost_asio_tcp::v4(), port);
+    this->_router.set_tcp_acceptor(*this->_router.get_io_service(), endpoint);
+    printf("Addr: '%s' & port: %i\n", endpoint.address().to_string().c_str(), endpoint.port());
+    this->_router.set_udp_endpoint(boost_asio_udp::endpoint(boost_asio_udp::v4(), 4243));
     this->_router.set_signal_set(*this->_router.get_io_service(), SIGINT);
 }
 
@@ -70,6 +72,7 @@ void RType::Network::BoostNetwork::stop() {
 void RType::Network::BoostNetwork::wait_for_client() {
     this->_logger->Debug("Creating a client & waiting for connection");
     auto client = std::make_shared<BoostClient>(*this->_router.get_io_service(),
+                                                *this->_router.get_udp_endpoint(),
                                                 this->_logger,
                                                 this->_worker_pending_client.share_cv_from_this(),
                                                 this->_pending_client->shared_from_this());
@@ -86,9 +89,8 @@ void RType::Network::BoostNetwork::wait_for_client() {
                                                                           client,
                                                                           ") Incoming connection from: ",
                                                                           client->get_tcpsocket()->get_socket()->remote_endpoint().address().to_string());
-                                                      this->_rooms.add_user(
-                                                          client);
-                                                      client->get_tcpsocket()->start_read();
+                                                      this->_rooms->add_user(client);
+                                                      client->get_tcpsocket()->read();
                                                       this->_logger->Debug(
                                                           "I will recreate a client for the next connection");
                                                       this->wait_for_client();
@@ -111,7 +113,7 @@ void RType::Network::BoostNetwork::pre_run() {
                     throw std::exception();
                 else {
                     this->remove_client(boost_client);
-                    auto removed = this->_rooms.remove_user(boost_client);
+                    auto removed = this->_rooms->remove_user(boost_client);
                     if (!removed)
                         this->_logger->Error("Cannot remove client from a room");
                     else

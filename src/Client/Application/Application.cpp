@@ -24,7 +24,7 @@ Application::Application(std::string const& title, unsigned int width, unsigned 
     m_pEventManager = std::make_shared<EventManager>(*(std::static_pointer_cast<Window>(m_pWindow)));
     std::cout << "Register 'catch_close' on 'EClose'" << std::endl;
     tcpSocket = std::make_shared<Rtype::TCPBoostSocket>("127.0.0.1", "4242", tcpMessageReceived);
-    udpSocket = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", "4242", tcpMessageReceived);
+    udpSocket = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", "4243", tcpMessageReceived);
     m_pEventManager->getSubject().registerObserver(EClose, std::bind(&Application::catch_close, this, std::placeholders::_1, std::placeholders::_2));
     m_pEventManager->getSubject().registerObserver(EKeyPressed, std::bind(&Application::catch_keyPressed, this, std::placeholders::_1, std::placeholders::_2));
 }
@@ -80,7 +80,7 @@ void Application::catch_keyPressed(EventType type, std::shared_ptr<Observer::IEv
     std::string keyString= std::to_string(key->_key);
     RType::Common::Network::TCPPacket p{RType::Common::Network::g_MagicNumber, key->_key};
     //std::string pack((char *)&p, sizeof(RType::Common::Network::TCPPacket));
-    tcpSocket->write(p);
-//    udpSocket->write(p);
+    //tcpSocket->write(p);
+    udpSocket->write(p);
 }
 } // namespace Rtype

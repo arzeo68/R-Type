@@ -5,18 +5,23 @@
 ** TODO: CHANGE DESCRIPTION.
 */
 
+#include <boost/asio/ip/multicast.hpp>
 #include <memory>
 #include "UDPBoostSocket.hpp"
 
 RType::Network::Socket::UDPBoostSocket::UDPBoostSocket(
+    const std::shared_ptr<Common::Log::Log>& log,
     boost::asio::io_service& service,
-    const std::shared_ptr<Common::Log::Log>& log) {
+    const boost::asio::ip::udp::endpoint& endpoint) : _endpoint(endpoint) {
     this->_socket = std::make_shared<boost_socket_udp_t>(service);
+    this->_socket->open(endpoint.protocol());
+    this->_socket->set_option(boost::asio::ip::udp::socket::reuse_address(true));
+    //this->_socket->set_option(boost::asio::ip::multicast::enable_loopback(true));
     this->_logger = log;
 }
 
 RType::Network::Socket::UDPBoostSocket::~UDPBoostSocket() {
-    this->shutdown_socket();
+    //this->shutdown_socket();
 }
 
 void RType::Network::Socket::UDPBoostSocket::shutdown_socket() noexcept {
@@ -38,11 +43,12 @@ void RType::Network::Socket::UDPBoostSocket::shutdown_socket() noexcept {
         this->_logger->Debug(this, " socket (udp) already closed");
 }
 
-void RType::Network::Socket::UDPBoostSocket::start_read() {
+void RType::Network::Socket::UDPBoostSocket::read() {
     std::shared_ptr<MessageArr_t> raw_message = std::make_shared<MessageArr_t>();
 
     this->_logger->Debug("(udp) Waiting for a message...");
-    this->_socket->async_receive(boost::asio::buffer(*raw_message),
+    this->_socket->async_receive_from(boost::asio::buffer(*raw_message),
+                                 this->_endpoint,
                                  [&, raw_message](
                                      const boost::system::error_code& err,
                                      std::size_t bytes_transferred) {
@@ -50,6 +56,7 @@ void RType::Network::Socket::UDPBoostSocket::start_read() {
                                          this->_logger->Error(
                                              "(read udp) An error occurred: ",
                                              err.message());
+                                         return;
                                      }
                                      auto package = Common::Network::packet_unpack(
                                          std::string(raw_message->begin(),
@@ -59,11 +66,11 @@ void RType::Network::Socket::UDPBoostSocket::start_read() {
                                          this->_logger->Error(
                                              "(udp) Wrong magic number for this message");
                                      else
-                                         this->_logger->Info("(udp) Message: '",
+                                         this->_logger->Info("(udp) Command: '",
                                                              package.command,
                                                              "' w/ ",
                                                              bytes_transferred);
-                                     this->start_read();
+                                     this->read();
                                  });
 }
 

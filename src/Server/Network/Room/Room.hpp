@@ -12,6 +12,8 @@
 #include <algorithm>
 #include <iostream>
 #include <mutex>
+#include <thread>
+#include "Common/Log.hpp"
 #include "Common/ECS/World.hpp"
 #include "Server/Network/Client/AClient.hpp"
 
@@ -19,7 +21,18 @@ namespace RType::Network::Room {
     /**
      * The number of participant per room
      */
-    const static constexpr uint16_t MAX_PARTICIPANT = 4;
+    const static constexpr uint16_t MAX_PARTICIPANT = 1;
+
+    typedef uint16_t GameState_t;
+    enum class GameState_e : GameState_t {
+        PENDING,
+        RUNNING,
+        EXITING
+    };
+    [[maybe_unused]] static std::ostream& operator<<(std::ostream& os, const GameState_e& gs) {
+        os << std::to_string(static_cast<GameState_t>(gs));
+        return (os);
+    }
 
     /**
      * The class create a room of AClient.
@@ -29,23 +42,45 @@ namespace RType::Network::Room {
      */
     template<typename UDPSocket, typename TCPSocket>
     class Room:
-            public std::enable_shared_from_this<Room<UDPSocket, TCPSocket>> {
+        public std::enable_shared_from_this<Room<UDPSocket, TCPSocket>> {
         public:
         using room_user = AClient<UDPSocket, TCPSocket>;
         using room_user_sptr = std::shared_ptr<room_user>;
         using room_user_cptr = room_user *const;
-        Room(): _world(std::make_shared<ECS::World>()) {
+
+        Room() = delete;
+        /**
+         * Basic constructor with a logger. ECS is initialized here.
+         * @param logger A simple logger. You must pass a shared instance of an another logger
+         */
+        Room(const Common::Log::Log::shared_log_t& logger):
+            _world(std::make_shared<ECS::World>()),
+            _logger(logger),
+            _worker_game_loop([&] () {
+                return (this->_state != GameState_e::RUNNING);
+            }) {
             this->_world->initialize();
         };
         /**
-         * Allow to create a room with a set of predefined clients in it
+         * Allow to create a room with a set of predefined clients in it. ECS is initialized here.
+         * @param logger A simple logger. You must pass a shared instance of an another logger
          * @param clients Vector of clients
          */
-        Room(const std::vector<room_user_sptr>& clients): _world(std::make_shared<ECS::World>()) {
-            this->_users = clients;
+        Room(const Common::Log::Log::shared_log_t& logger,
+             const room_user_sptr& user):
+            _world(std::make_shared<ECS::World>()),
+            _logger(logger),
+            _worker_game_loop([&] () {
+                return (this->_state != GameState_e::RUNNING);
+            }) {
             this->_world->initialize();
+            this->add_user(user);
         }
-        ~Room() = default;
+        ~Room() {
+            std::lock_guard<std::mutex> l(this->_mutex);
+            this->_state = GameState_e::EXITING;
+            this->_worker_game_loop.terminate();
+        }
         Room(const Room&) = default;
 
         /**
@@ -102,6 +137,9 @@ namespace RType::Network::Room {
         void add_user(const room_user_sptr& p) {
             std::lock_guard<std::mutex> l(this->_mutex);
             this->_users.emplace_back(p);
+            this->_logger->Debug("Number of user: ", this->_users.size());
+            if (this->_users.size() >= MAX_PARTICIPANT)
+                this->launch_game();
         }
         /**
          * Remove a user from the room by using his pointer.
@@ -153,7 +191,22 @@ namespace RType::Network::Room {
         }
 
         private:
+        void launch_game() {
+            this->_logger->Debug("[Room ", this, "] Room completed, launching the game");
+            this->_state = GameState_e::RUNNING;
+            std::for_each(this->_users.begin(), this->_users.end(), [](room_user_sptr &u) {
+                u->get_udpsocket()->read();
+            });
+            this->_worker_game_loop.run_awake([&] () {
+                //this->_logger->Debug("[Room ", this, "] State: ", this->_state);
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+            });
+        }
+
         std::shared_ptr<ECS::World> _world;
+        Common::Log::Log::shared_log_t _logger;
+        Worker _worker_game_loop;
+        GameState_e _state;
         std::mutex _mutex;
         std::vector<room_user_sptr> _users;
     };

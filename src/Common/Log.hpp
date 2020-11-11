@@ -112,8 +112,13 @@ namespace RType::Common::Log {
             std::string prefix("[" + Common::Log::Log::GetCurrentTime() + "/" +
                                    this->_title + "/" +
                                    _map.find(level)->second + "] ");
-            std::cout << prefix;
-            (std::cout << ... << args) << std::endl;
+            if (level != LOG_ERROR_E) {
+                std::cout << prefix;
+                (std::cout << ... << args) << std::endl;
+            } else {
+                std::cerr << prefix;
+                (std::cerr << ... << args) << std::endl;
+            }
             this->_file << prefix;
             (this->_file << ... << args) << std::endl;
         }

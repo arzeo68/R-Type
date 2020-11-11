@@ -53,6 +53,8 @@ namespace Rtype{
         boost::asio::ip::udp::resolver m_Resolver;
         boost::asio::ip::udp::resolver::results_type endpoints;
 
+        boost::asio::ip::udp::endpoint _endpoint;
+
         boost::asio::ip::udp::socket m_udpSocket;
         std::shared_ptr<std::deque<std::string>> SharedDataQueue;
     };
