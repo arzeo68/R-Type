@@ -54,8 +54,12 @@ void Application::switchScene(std::string const& title)
 
 void Application::run()
 {
-    tcpSocket->start_socket();
-    udpSocket->start_socket();
+    std::thread client_thead([=](){
+        tcpSocket->start_socket();
+        udpSocket->start_socket();
+    });
+    //tcpSocket->start_socket();
+    //udpSocket->start_socket();
     std::shared_ptr<Window> w = std::dynamic_pointer_cast<Window>(m_pWindow);
     m_pWindow->open();
     while (m_pWindow->isOpen()) {
@@ -63,6 +67,9 @@ void Application::run()
         w->getNativeHandle().clear(sf::Color::Black);
         w->getNativeHandle().display();
     }
+    tcpSocket->shutdown_socket();
+    udpSocket->shutdown_socket();
+    client_thead.join();
 }
 
 void Application::catch_close(EventType type, std::shared_ptr<Observer::IEvent> data)
