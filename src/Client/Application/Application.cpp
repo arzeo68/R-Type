@@ -87,6 +87,7 @@ void Application::run()
     initialize_ecs_components({});
     initialize_ecs_systems();
     auto e = m_World->createEntity();
+    auto start = std::chrono::high_resolution_clock::now();
 
     m_World->addComponent<MonitorComponent>(e, MonitorComponent());
     tcpSocket->start_socket();
@@ -94,10 +95,13 @@ void Application::run()
     std::shared_ptr<Window> w = std::dynamic_pointer_cast<Window>(m_pWindow);
     m_pWindow->open();
     while (m_pWindow->isOpen()) {
+        auto end = std::chrono::high_resolution_clock::now();
+        float res = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
         m_pEventManager->update();
-        m_World->getSystem<TestSystem>()->update(0.f, m_World);
+        m_World->getSystem<TestSystem>()->update(res, m_World);
         w->getNativeHandle().clear(sf::Color::Black);
         w->getNativeHandle().display();
+        start = end;
     }
 }
 
