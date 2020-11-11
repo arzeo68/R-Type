@@ -48,8 +48,9 @@ endif()
 conan_basic_setup()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-include_directories(src/Client)
-include_directories(src/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/Client)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/)
+include_directories(${CONAN_INCLUDE_DIRS})
 
 add_executable(rtype_client
         src/Client/main.cpp
@@ -80,6 +81,7 @@ add_executable(rtype_client
         src/Client/ClientNetwork/UdpNetwork.hpp
         src/Common/Network.hpp
         src/Common/Systems/RenderSystem.cpp)
+
 add_executable(rtype_server
         src/Server/Network/Network/INetwork.hpp
         src/Server/Network/Socket/ISocket.hpp
@@ -115,3 +117,5 @@ install(TARGETS rtype_server DESTINATION ${PROJECT_SOURCE_DIR}/bin)
 
 target_link_libraries(rtype_client ${CONAN_LIBS})
 target_link_libraries(rtype_server ${CONAN_LIBS})
+
+message(${CONAN_INCLUDE_DIRS})

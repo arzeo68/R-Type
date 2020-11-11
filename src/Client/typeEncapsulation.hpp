@@ -8,9 +8,10 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Image.hpp>
 
-namespace Rtype
-{
+namespace Rtype {
     typedef sf::Vector2i vec2i;
     typedef sf::Vector2f vec2f;
     typedef sf::Vector3f vec3f;
@@ -19,6 +20,8 @@ namespace Rtype
     typedef sf::Color color;
 
     typedef sf::Keyboard::Key keys;
-}
+    typedef sf::Texture Texture;
+    typedef sf::Image Image;
+}  // namespace Rtype
 
-#endif //BABEL_TYPEENCAPSULATION_HPP
+#endif  // BABEL_TYPEENCAPSULATION_HPP

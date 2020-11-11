@@ -22,11 +22,18 @@ Application::Application(std::string const& title, unsigned int width, unsigned 
     m_pWindow = std::make_shared<Window>(title, width, height);
     m_pSceneManager = std::make_shared<SceneManager>();
     m_pEventManager = std::make_shared<EventManager>(*(std::static_pointer_cast<Window>(m_pWindow)));
+    m_World = std::make_shared<ECS::World>();
+    initialize_ecs();
     std::cout << "Register 'catch_close' on 'EClose'" << std::endl;
     tcpSocket = std::make_shared<Rtype::TCPBoostSocket>("127.0.0.1", "4242", tcpMessageReceived);
     udpSocket = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", "4242", tcpMessageReceived);
     m_pEventManager->getSubject().registerObserver(EClose, std::bind(&Application::catch_close, this, std::placeholders::_1, std::placeholders::_2));
     m_pEventManager->getSubject().registerObserver(EKeyPressed, std::bind(&Application::catch_keyPressed, this, std::placeholders::_1, std::placeholders::_2));
+}
+
+void Application::initialize_ecs()
+{
+    m_World->initialize();
 }
 
 void Application::addScene(std::string const& title, std::shared_ptr<IScene> scene)
