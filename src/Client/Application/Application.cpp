@@ -78,8 +78,7 @@ void Application::catch_keyPressed(EventType type, std::shared_ptr<Observer::IEv
     std::cout << "Caught key pressed" << std::endl;
     std::shared_ptr<EventKeyPressed> key = std::dynamic_pointer_cast<EventKeyPressed>(data);
     std::string keyString= std::to_string(key->_key);
-    RType::Common::Network::TCPPacket p{RType::Common::Network::g_MagicNumber};
-    _strcpyC(p.message, keyString.c_str());
+    RType::Common::Network::TCPPacket p{RType::Common::Network::g_MagicNumber, key->_key};
     //std::string pack((char *)&p, sizeof(RType::Common::Network::TCPPacket));
     tcpSocket->write(p);
 //    udpSocket->write(p);

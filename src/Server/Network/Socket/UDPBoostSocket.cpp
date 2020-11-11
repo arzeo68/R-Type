@@ -60,7 +60,7 @@ void RType::Network::Socket::UDPBoostSocket::start_read() {
                                              "(udp) Wrong magic number for this message");
                                      else
                                          this->_logger->Info("(udp) Message: '",
-                                                             package.message,
+                                                             package.command,
                                                              "' w/ ",
                                                              bytes_transferred);
                                      this->start_read();

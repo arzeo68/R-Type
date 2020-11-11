@@ -62,7 +62,7 @@ void RType::Network::Socket::TCPBoostSocket::start_read() {
                                              "(tcp) Wrong magic number for this message");
                                      else
                                          this->_logger->Info("(tcp) Message: '",
-                                                             package.message,
+                                                             package.command,
                                                              "' w/ ",
                                                              bytes_transferred);
                                      this->start_read();
