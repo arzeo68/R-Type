@@ -27,7 +27,7 @@ unsigned int SceneManager::add(std::shared_ptr<AScene> scene)
 
     inserted.first->second->onCreate();
 
-    if (m_pCurrentScene = nullptr) {
+    if (m_pCurrentScene == nullptr) {
         m_pCurrentScene = inserted.first->second;
         inserted.first->second->onActivate();
     }
@@ -50,7 +50,6 @@ void SceneManager::remove(unsigned int id)
 void SceneManager::switch_to(unsigned int id)
 {
     auto it = m_cScenes.find(id);
-    std::cout << "Trying to " << id << "\n";
     if (it != m_cScenes.end()) {
         if (m_pCurrentScene)
             m_pCurrentScene->onDeactivate();

@@ -82,6 +82,24 @@ add_executable(rtype_client
         src/Common/Network.hpp
         src/Client/Game/Scenes/Menu.hpp
         src/Client/Game/Scenes/Menu.cpp
+        src/Common/Component/Transform.hpp
+        src/Client/Game/Systems/RenderSystem.hpp
+        src/Client/Game/Systems/RenderSystem.cpp
+
+        src/Client/Game/Systems/RotationSystem.hpp
+        src/Client/Game/Systems/RotationSystem.cpp
+
+        # ECS
+        src/Common/ECS/ComponentArray.hpp
+        src/Common/ECS/ComponentManager.hpp
+        src/Common/ECS/EntityManager.hpp
+        src/Common/ECS/RenderSystem.hpp
+        src/Common/ECS/SingletonComponentCollection.hpp
+        src/Common/ECS/System.hpp
+        src/Common/ECS/SystemManager.hpp
+        src/Common/ECS/Types.h
+        src/Common/ECS/World.hpp
+        # -ECS
 )
 
 add_executable(rtype_server

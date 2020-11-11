@@ -28,31 +28,6 @@ namespace Rtype {
     typedef sf::RenderStates RenderState;
 
     template< typename T>
-    class ITexture {
-        public:
-        virtual ~ITexture() = default;
-        virtual bool loadFromFile(std::string filepath) = 0;
-        virtual T &getNativ() = 0;
-    };
-
-    class sfmlTexture: public ITexture<Texture> {
-        public:
-        sfmlTexture() {
-
-        }
-        bool loadFromFile(std::string filepath) override
-        {
-            _tex.loadFromFile(filepath);
-        }
-        Texture &getNativ() override
-        {
-            return _tex;
-        }
-        private:
-        Texture _tex;
-    };
-
-    template< typename T>
     class IImage {
         public:
         virtual ~IImage() = default;
@@ -74,9 +49,37 @@ namespace Rtype {
     };
 
     template< typename T>
+    class ITexture {
+        public:
+        virtual ~ITexture() = default;
+        virtual bool loadFromFile(std::string filepath) = 0;
+        virtual T &getNativ() = 0;
+    };
+
+    class sfmlTexture: public ITexture<Texture> {
+        public:
+        sfmlTexture() {
+
+        }
+
+        bool loadFromFile(std::string filepath) override
+        {
+            return _tex.loadFromFile(filepath);
+        }
+
+        Texture &getNativ() override
+        {
+            return _tex;
+        }
+        private:
+        Texture _tex;
+    };
+
+    template< typename T>
     class ISprite {
         public:
         virtual ~ISprite() = default;
+        virtual void setTexture(Rtype::Texture& tex) = 0;
         virtual T &getNativ() = 0;
     };
 
@@ -85,10 +88,17 @@ namespace Rtype {
         sfmlSprite()
         {
         };
+
         Sprite &getNativ() override
         {
             return _image;
         }
+
+        void setTexture(Rtype::Texture& tex)
+        {
+            _image.setTexture(tex);
+        }
+
         private:
         Sprite _image;
     };
@@ -97,6 +107,9 @@ namespace Rtype {
     class ITransform {
         public:
         virtual ~ITransform() = default;
+        virtual ITransform<T>& translate(vec2f) = 0;
+        virtual ITransform<T>& scale(vec2f) = 0;
+        virtual ITransform<T>& rotate(float) = 0;
         virtual T &getNativ() = 0;
     };
 
@@ -105,18 +118,39 @@ namespace Rtype {
         sfmlTransform()
         {
         };
+
         Transform &getNativ() override
         {
-            return _image;
+            return _mat;
         }
+
+        sfmlTransform& translate(vec2f trans) override
+        {
+            _mat.translate(trans);
+            return *this;
+        }
+
+        sfmlTransform& scale(vec2f scale) override
+        {
+            _mat.scale(scale);
+            return *this;
+        }
+
+        sfmlTransform& rotate(float angle) override
+        {
+            _mat.rotate(angle);
+            return *this;
+        }
+
         private:
-        Transform _image;
+        Transform _mat;
     };
 
     template< typename T>
     class IRenderState {
         public:
         virtual ~IRenderState() = default;
+        virtual void setMatrix(Rtype::Transform mat) = 0;
         virtual T &getNativ() = 0;
     };
 
@@ -125,12 +159,19 @@ namespace Rtype {
         sfmlRenderState()
         {
         };
+
         RenderState &getNativ() override
         {
-            return _image;
+            return _state;
         }
+
+        void setMatrix(Rtype::Transform mat)
+        {
+            _state.transform = mat;
+        }
+
         private:
-        RenderState _image;
+        RenderState _state;
     };
 }  // namespace Rtype
 

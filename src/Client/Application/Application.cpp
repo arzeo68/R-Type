@@ -62,17 +62,15 @@ void Application::run()
     m_pWindow->open();
     auto start = std::chrono::high_resolution_clock::now();
     RenderTarget target = w->getRenderTarget();
-
     std::shared_ptr<MenuScene> menu = std::make_shared<MenuScene>();
     m_pSceneManager->add(menu);
     while (m_pWindow->isOpen()) {
         auto end = std::chrono::high_resolution_clock::now();
-        float res = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+        float res = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         m_pEventManager->update();
         m_pSceneManager->update(res, target);
         m_pSceneManager->lateUpdate(res, target);
         // to remove
-        w->getNativeHandle().clear(sf::Color::Black);
         w->getNativeHandle().display();
         // --
         start = end;

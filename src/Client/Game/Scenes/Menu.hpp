@@ -14,8 +14,8 @@ public:
     void onActivate()  override;
     void onDeactivate() override;
 
-    void update(float delta, Rtype::RenderTarget& terminal_target) override;
-    void lateUpdate(float delta, Rtype::RenderTarget& terminal_target) override;
+    void update(float delta, Rtype::RenderTarget& target) override;
+    void lateUpdate(float delta, Rtype::RenderTarget& target) override;
 
 private:
 };
