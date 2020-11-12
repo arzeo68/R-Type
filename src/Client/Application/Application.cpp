@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ratio>
 #include <Window/Window.hpp>
 #include <Client/Application/Application.hpp>
 #include <Client/EventManager/SFMLEvents.hpp>
@@ -10,6 +11,11 @@
 
 namespace Rtype
 {
+extern float __aggregated_time = 0.f;
+
+void updateAggregatedTime(float delta) { __aggregated_time += delta; }
+
+float getAggregatedTime(float delta) { return __aggregated_time; }
 
     void _strcpyC(char *dest, const char *source) {
         #ifdef _WIN32
@@ -66,7 +72,9 @@ void Application::run()
     m_pSceneManager->add(menu);
     while (m_pWindow->isOpen()) {
         auto end = std::chrono::high_resolution_clock::now();
-        float res = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+        std::chrono::duration<float, std::milli> duration = end - start;
+        float res = duration.count();
+        updateAggregatedTime(res);
         m_pEventManager->update();
         m_pSceneManager->update(res, target);
         m_pSceneManager->lateUpdate(res, target);
@@ -96,4 +104,5 @@ void Application::catch_keyPressed(EventType type, std::shared_ptr<Observer::IEv
     tcpSocket->write(p);
 //    udpSocket->write(p);
 }
+
 } // namespace Rtype

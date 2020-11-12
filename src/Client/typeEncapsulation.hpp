@@ -80,6 +80,9 @@ namespace Rtype {
         public:
         virtual ~ISprite() = default;
         virtual void setTexture(Rtype::Texture& tex) = 0;
+        virtual void setTextureRect(Rtype::iRect& rect) = 0;
+        virtual void setOrigin(Rtype::vec2f& vec) = 0;
+        virtual void centerOrigin() = 0;
         virtual T &getNativ() = 0;
     };
 
@@ -97,6 +100,22 @@ namespace Rtype {
         void setTexture(Rtype::Texture& tex)
         {
             _image.setTexture(tex);
+        }
+
+        void setTextureRect(Rtype::iRect& rect)
+        {
+            _image.setTextureRect(rect);
+        }
+
+        void setOrigin(Rtype::vec2f& vec)
+        {
+            _image.setOrigin(vec);
+        }
+
+        void centerOrigin()
+        {
+            sf::IntRect bound = _image.getTextureRect();
+            _image.setOrigin(bound.width / 2.f, bound.height / 2.f);
         }
 
         private:

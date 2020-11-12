@@ -82,7 +82,6 @@ add_executable(rtype_client
         src/Common/Network.hpp
         src/Client/Game/Scenes/Menu.hpp
         src/Client/Game/Scenes/Menu.cpp
-        src/Common/Component/Transform.hpp
         src/Client/Game/Systems/RenderSystem.hpp
         src/Client/Game/Systems/RenderSystem.cpp
 
@@ -99,7 +98,19 @@ add_executable(rtype_client
         src/Common/ECS/SystemManager.hpp
         src/Common/ECS/Types.h
         src/Common/ECS/World.hpp
+
         # -ECS
+
+        # - Common Components and Systems
+
+        src/Common/Systems/MovementUpdateSystem.hpp
+        src/Common/Systems/MovementUpdateSystem.cpp
+        src/Common/Systems/TransformSystem.hpp
+        src/Common/Systems/TransformSystem.cpp
+        src/Common/Component/Movement.hpp
+        src/Common/Component/Transform.hpp
+
+        # - Common Components and Systems
 )
 
 add_executable(rtype_server

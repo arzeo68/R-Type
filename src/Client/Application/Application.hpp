@@ -9,6 +9,8 @@
 
 namespace Rtype {
 
+    extern float __aggregated_time;
+
     class Application
     {
     public:

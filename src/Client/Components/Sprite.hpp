@@ -13,9 +13,12 @@ struct SpriteComponent {
 
     SpriteComponent() = default;
 
-    SpriteComponent(std::shared_ptr<Rtype::ITexture<Rtype::Texture>> tex)
+    SpriteComponent(std::shared_ptr<Rtype::ITexture<Rtype::Texture>> tex, Rtype::iRect *base)
     {
         sprite = std::make_shared<Rtype::sfmlSprite>();
         sprite->setTexture(tex->getNativ());
+        if (base != 0)
+            sprite->setTextureRect(*base);
+        sprite->centerOrigin();
     }
 };

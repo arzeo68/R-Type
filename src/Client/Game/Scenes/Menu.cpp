@@ -4,9 +4,14 @@
 #include <Client/Components/Sprite.hpp>
 #include <Client/Components/Rotation.hpp>
 #include <Common/Component/Transform.hpp>
+#include <Common/Component/Movement.hpp>
 
 #include <Client/Game/Systems/RenderSystem.hpp>
-#include <Client/Game/Systems/RotationSystem.hpp>
+#include <Common/Systems/MovementUpdateSystem.hpp>
+#include <Common/Systems/TransformSystem.hpp>
+
+static void base_update_routine(float delta, ECS::ComponentHandle<Rtype::MovementComponent> comp)
+{ }
 
 void MenuScene::onCreate()
 {
@@ -18,7 +23,7 @@ void MenuScene::onCreate()
     m_World->registerComponent<SpriteComponent>();
     m_World->registerComponent<TextureComponent>();
     m_World->registerComponent<Rtype::TransformComponent>();
-    m_World->registerComponent<RotationComponent>();
+    m_World->registerComponent<Rtype::MovementComponent>();
 
     m_World->addSingletonComponents<TextureLibraryComponent>(
         TextureLibraryComponent()
@@ -27,8 +32,11 @@ void MenuScene::onCreate()
     m_World->registerSystem<RenderSystem>();
     m_World->setSystemSignature<RenderSystem, SpriteComponent, Rtype::TransformComponent>();
 
-    m_World->registerSystem<RotationSystem>();
-    m_World->setSystemSignature<RotationSystem, RotationComponent, Rtype::TransformComponent>();
+    m_World->registerSystem<Rtype::MovementUpdateSystem>();
+    m_World->setSystemSignature<Rtype::MovementUpdateSystem, Rtype::MovementComponent>();
+
+    m_World->registerSystem<Rtype::TransformSystem>();
+    m_World->setSystemSignature<Rtype::TransformSystem, Rtype::TransformComponent, Rtype::MovementComponent>();
 
     auto texlib = m_World->getSingletonComponent<TextureLibraryComponent>();
 
@@ -36,15 +44,12 @@ void MenuScene::onCreate()
 
     ECS::Entity e = m_World->createEntity();
 
-    m_World->addComponents<SpriteComponent, Rtype::TransformComponent, RotationComponent>(
+    m_World->addComponents<SpriteComponent, Rtype::TransformComponent, Rtype::MovementComponent>(
         e,
-        SpriteComponent(texlib.get()->get_texture("<default>")),
+        SpriteComponent(texlib.get()->get_texture("<default>"), 0),
         Rtype::TransformComponent({1920 / 2, 1080 / 2}, 0, {1, 1}),
-        RotationComponent(0.01f)
+        Rtype::MovementComponent({0, 0}, 0.1f, std::bind(base_update_routine, std::placeholders::_1, std::placeholders::_2))
     );
-
-    std::cerr << "Creating Scene with :\n";
-    std::cerr << "\t" << texlib.get()->TextureMap.size() << " textures\n";
 }
 
 void MenuScene::onDestroy()
@@ -65,7 +70,8 @@ void MenuScene::onDeactivate()
 void MenuScene::update(float delta, Rtype::RenderTarget& target)
 {
     target.expose().clear(Rtype::color::Black);
-    m_World->getSystem<RotationSystem>()->update(delta, m_World);
+    m_World->getSystem<Rtype::MovementUpdateSystem>()->update(delta, m_World);
+    m_World->getSystem<Rtype::TransformSystem>()->update(delta, m_World);
     m_World->getSystem<RenderSystem>()->update(delta, m_World, target);
 }
 
