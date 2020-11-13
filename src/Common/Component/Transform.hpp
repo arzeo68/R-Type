@@ -12,7 +12,7 @@ public:
 
     TransformComponent(vec2f position, float angle, vec2f scale)
         : position(position), angle(angle), scale(scale)
-    { }
+    { std::cout << position.x << ", " << position.y << "\n"; }
 
     vec2f position;
     float angle;

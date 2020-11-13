@@ -161,6 +161,11 @@ namespace Rtype {
             return *this;
         }
 
+        Rtype::fRect transformRect(Rtype::fRect rect)
+        {
+            return _mat.transformRect(rect);
+        }
+
         private:
         Transform _mat;
     };

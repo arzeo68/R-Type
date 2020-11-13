@@ -107,8 +107,11 @@ add_executable(rtype_client
         src/Common/Systems/MovementUpdateSystem.cpp
         src/Common/Systems/TransformSystem.hpp
         src/Common/Systems/TransformSystem.cpp
+        src/Common/Systems/PhysicSystem.hpp
+        src/Common/Systems/PhysicSystem.cpp
         src/Common/Component/Movement.hpp
         src/Common/Component/Transform.hpp
+        src/Common/Component/Hitbox.hpp
 
         # - Common Components and Systems
 )

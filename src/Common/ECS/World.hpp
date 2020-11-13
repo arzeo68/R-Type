@@ -18,6 +18,7 @@ class World
             m_ComponentManager = std::make_shared<ComponentManager>();
             m_EntityManager = std::make_shared<EntityManager>();
             m_SystemManager = std::make_shared<SystemManager>();
+            m_cDeferedDestruction = std::make_shared<std::vector<Entity>>();
 
             m_SingletonComponent = createEntity();
         }

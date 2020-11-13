@@ -11,6 +11,7 @@ void RenderSystem::update(float delta, std::shared_ptr<ECS::World>& world, Rtype
     for (auto entity : m_cEntities) {
         auto [ sprite, transform ] = getDependencies(entity, world);
 
+        mat->getNativ() = sf::Transform::Identity;
         mat->translate(transform.get()->position);
         mat->scale(transform.get()->scale);
         mat->rotate(transform.get()->angle);
