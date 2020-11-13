@@ -23,7 +23,7 @@ static void base_physic_handler(ECS::ComponentHandle<Rtype::HitboxComponent>& hi
 
 void MenuScene::onCreate()
 {
-    std::cout << "Creating MenuScene\n";
+/*     std::cout << "Creating MenuScene\n";
     m_World = std::make_shared<ECS::World>();
     m_World->initialize();
 
@@ -70,7 +70,7 @@ void MenuScene::onCreate()
         Rtype::TransformComponent({1920, 1080 / 2}, 0, {1, 1}),
         Rtype::MovementComponent({-1, 0}, 0, std::bind(base_update_routine, std::placeholders::_1, std::placeholders::_2)),
         Rtype::HitboxComponent({0, 0, 64, 64}, std::bind(base_physic_handler, std::placeholders::_1,std::placeholders::_2, std::placeholders::_3, std::placeholders::_4))
-    );
+    ); */
 }
 
 void MenuScene::onDestroy()
@@ -90,12 +90,12 @@ void MenuScene::onDeactivate()
 
 void MenuScene::update(float delta, Rtype::RenderTarget& target)
 {
-    m_World->clearDeferList();
+/*     m_World->clearDeferList();
     target.expose().clear(Rtype::color::Black);
     m_World->getSystem<Rtype::MovementUpdateSystem>()->update(delta, m_World);
     m_World->getSystem<Rtype::TransformSystem>()->update(delta, m_World);
     m_World->getSystem<Rtype::PhysicSystem>()->update(delta, m_World);
-    m_World->getSystem<RenderSystem>()->update(delta, m_World, target);
+    m_World->getSystem<RenderSystem>()->update(delta, m_World, target); */
 }
 
 void MenuScene::lateUpdate(float delta, Rtype::RenderTarget& target)

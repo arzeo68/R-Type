@@ -8,6 +8,8 @@
 #ifndef SRC_RTYPE_ROOM_HPP_
 #define SRC_RTYPE_ROOM_HPP_
 
+#include <ratio>
+#include <chrono>
 #include <vector>
 #include <algorithm>
 #include <iostream>
@@ -16,6 +18,17 @@
 #include "Common/Log.hpp"
 #include "Common/ECS/World.hpp"
 #include "Server/Network/Client/AClient.hpp"
+
+#include "Common/Component/Transform.hpp"
+#include "Common/Component/Movement.hpp"
+#include "Common/Component/Hitbox.hpp"
+
+#include "Common/Systems/TransformSystem.hpp"
+#include "Common/Systems/PhysicSystem.hpp"
+#include "Common/Systems/MovementUpdateSystem.hpp"
+
+static void base_update_routine(float delta, ECS::ComponentHandle<Rtype::MovementComponent> comp)
+{ std::cout << "base_update_routine\n"; }
 
 namespace RType::Network::Room {
     /**
@@ -206,6 +219,25 @@ namespace RType::Network::Room {
 
         private:
         void init_ecs() {
+            this->_world->registerComponent<Rtype::TransformComponent>();
+            this->_world->registerComponent<Rtype::HitboxComponent>();
+            this->_world->registerComponent<Rtype::MovementComponent>();
+
+            this->_world->registerSystem<Rtype::MovementUpdateSystem>();
+            this->_world->setSystemSignature<Rtype::MovementUpdateSystem, Rtype::MovementComponent>();
+
+            this->_world->registerSystem<Rtype::TransformSystem>();
+            this->_world->setSystemSignature<Rtype::TransformSystem, Rtype::TransformComponent, Rtype::MovementComponent>();
+
+            this->_world->registerSystem<Rtype::PhysicSystem>();
+            this->_world->setSystemSignature<Rtype::PhysicSystem, Rtype::TransformComponent>();
+
+            ECS::Entity entity = this->_world->createEntity();
+
+            this->_world->addComponent<Rtype::MovementComponent>(
+                entity,
+                Rtype::MovementComponent({0, 0}, 0, std::bind(base_update_routine, std::placeholders::_1, std::placeholders::_2))
+            );
         }
 
         void launch_game() {
@@ -215,12 +247,20 @@ namespace RType::Network::Room {
             std::for_each(this->_users.begin(), this->_users.end(), [](room_user_sptr &u) {
                 u->get_udpsocket()->read();
             });
+            _start = std::chrono::high_resolution_clock::now();
             this->_worker_game_loop.run_awake([&] () {
+                auto end = std::chrono::high_resolution_clock::now();
+                std::chrono::duration<float, std::milli> duration = end - _start;
+                float res = duration.count();
                 this->_logger->Debug("[Room ", this, "] State: ", this->_state);
-                std::this_thread::sleep_for(std::chrono::seconds(1));
+                this->_world->getSystem<Rtype::MovementUpdateSystem>()->update(res, this->_world);
+                /*this->_world->getSystem<Rtype::TransformSystem>()->update(res, this->_world);
+                this->_world->getSystem<Rtype::PhysicSystem>()->update(res, this->_world); */
+                std::this_thread::sleep_for(std::chrono::milliseconds(16));
             });
         }
 
+        std::chrono::high_resolution_clock::time_point _start;
         std::shared_ptr<ECS::World> _world;
         Common::Log::Log::shared_log_t _logger;
         Worker _worker_game_loop;
