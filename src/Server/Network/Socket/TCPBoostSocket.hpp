@@ -33,7 +33,7 @@ namespace RType::Network::Socket {
         TCPBoostSocket() = delete;
         ~TCPBoostSocket() override = default;
 
-        void start_read() final;
+        void read() final;
         void write(const Common::Network::TCPPacket& input) final;
         void shutdown_socket() noexcept final;
         bool is_functional() final;

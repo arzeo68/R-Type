@@ -17,6 +17,7 @@
 #include <ctime>
 #include <iomanip>
 #include <mutex>
+#include <thread>
 
 namespace RType::Common::Log {
     enum LogLevel_e : uint16_t {
@@ -111,9 +112,18 @@ namespace RType::Common::Log {
             std::unique_lock<std::mutex> lock(this->_mutex);
             std::string prefix("[" + Common::Log::Log::GetCurrentTime() + "/" +
                                    this->_title + "/" +
-                                   _map.find(level)->second + "] ");
-            std::cout << prefix;
-            (std::cout << ... << args) << std::endl;
+                                   _map.find(level)->second + "/"); // "] "
+            if (level != LOG_ERROR_E) {
+                std::cout << prefix;
+                std::cout << std::hex << std::this_thread::get_id();
+                std::cout << "] ";
+                (std::cout << ... << args) << std::endl;
+            } else {
+                std::cerr << prefix;
+                std::cerr << std::hex << std::this_thread::get_id();
+                std::cerr << "] ";
+                (std::cerr << ... << args) << std::endl;
+            }
             this->_file << prefix;
             (this->_file << ... << args) << std::endl;
         }

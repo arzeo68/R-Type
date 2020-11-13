@@ -16,7 +16,10 @@ int main(const int ac, const char **av) {
         port = std::stoi(av[1], nullptr);
 
     try {
-        RType::Server::Server<RType::Network::Socket::boost_socket_udp_t, RType::Network::Socket::boost_socket_tcp_t, boost::asio::io_service, boost::asio::ip::tcp::acceptor,
+        RType::Server::Server<RType::Network::Socket::boost_socket_udp_t, RType::Network::Socket::boost_socket_tcp_t,
+            boost::asio::io_service,
+            boost::asio::ip::tcp::acceptor,
+            boost::asio::ip::udp::endpoint,
             boost::asio::signal_set> server;
         server.create_network(
             std::make_shared<RType::Network::BoostNetwork>(port));

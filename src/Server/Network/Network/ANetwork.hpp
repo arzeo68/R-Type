@@ -12,7 +12,9 @@
 #include <list>
 #include <memory>
 #include <algorithm>
+#include <optional>
 #include "INetwork.hpp"
+#include "Common/Log.hpp"
 #include "Router.hpp"
 #include "../Room/RoomManager.hpp"
 
@@ -23,25 +25,26 @@ namespace RType::Network {
      * @tparam ClientUDPSocket UDP Socket type for the client
      * @tparam ClientTCPSocket TCP Socket type for the client
      * @tparam IOService See Router documentation
-     * @tparam Acceptor See Router documentation
+     * @tparam TCPAcceptor See Router documentation
      * @tparam SignalSet See Router documentation
      */
     template<typename ClientUDPSocket,
         typename ClientTCPSocket,
         typename IOService = _nullTemplate,
-        typename Acceptor = _nullTemplate,
+        typename TCPAcceptor = _nullTemplate,
+        typename UDPEndpoint = _nullTemplate,
         typename SignalSet = _nullTemplate>
     class ANetwork : public INetwork {
         public:
+        //ANetwork() = delete;
+        //ANetwork(const Common::Log::Log::shared_log_t& log) : _rooms(log) {}
+        //~ANetwork() = default;
+        //ANetwork(const ANetwork<ClientUDPSocket, ClientTCPSocket, IOService, Acceptor, SignalSet>&) = delete;
+
         /**
          * Alias for std::shared_ptr<AClient<...>>
          */
         using client_shared_ptr = std::shared_ptr<AClient<ClientUDPSocket, ClientTCPSocket>>;
-        /**
-         * Get the list of all clients
-         * @return A list of shared pointer of AClient<...>
-         */
-        virtual std::list<client_shared_ptr> GetClients() = 0;
         /**
          * Wait for a client and add it to the list of clients. The function MAY accept further incoming connection
          */
@@ -84,12 +87,12 @@ namespace RType::Network {
         /**
          * Explicit, see the class Router for further details
          */
-        Router<IOService, Acceptor, SignalSet> _router;
+        Router<IOService, TCPAcceptor, UDPEndpoint, SignalSet> _router;
 
         /**
          * Explicit, see the class RoomManager for further details
          */
-        Room::RoomManager<ClientUDPSocket, ClientTCPSocket> _rooms;
+        std::optional<Room::RoomManager<ClientUDPSocket, ClientTCPSocket>> _rooms;
     };
 
 

@@ -27,7 +27,7 @@ namespace RType::Network {
          * - If the function returns FALSE, the thread fall back to sleep
          */
         AClient() = delete;
-        AClient(const std::function<bool()>& u) : _worker_is_active(u) {
+        AClient(const std::function<bool()>& u) : _worker(u) {
         }
         /**
          *
@@ -38,13 +38,14 @@ namespace RType::Network {
          * - The thread must be awake and the function @link{u} must have returned TRUE
          */
         AClient(const std::function<bool()>& u,
-                const std::function<bool()>& l) : _worker_is_active(u, l) {
+                const std::function<bool()>& l) : _worker(u, l) {
         }
+        AClient(const AClient<UDPSocket, TCPSocket>&) = delete;
         /**
          * Virtual destructor which terminate the worker's thread.
          */
         virtual ~AClient() {
-            this->_worker_is_active.terminate();
+            this->_worker.terminate();
         };
         /**
          * Get the client's TCP socket
@@ -63,7 +64,7 @@ namespace RType::Network {
         }
 
         protected:
-        Worker _worker_is_active;
+        Worker _worker;
         std::shared_ptr<Socket::ASocket<UDPSocket>> _udpsocket;
         std::shared_ptr<Socket::ASocket<TCPSocket>> _tcpsocket;
         std::shared_ptr<ThreadSafeQueue<AClient<UDPSocket, TCPSocket> *>> _socket_error;

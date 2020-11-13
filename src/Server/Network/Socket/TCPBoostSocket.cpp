@@ -37,7 +37,7 @@ void RType::Network::Socket::TCPBoostSocket::shutdown_socket() noexcept {
         this->_logger->Debug(this, " socket (tcp) already closed");
 }
 
-void RType::Network::Socket::TCPBoostSocket::start_read() {
+void RType::Network::Socket::TCPBoostSocket::read() {
     std::shared_ptr<MessageArr_t> raw_message = std::make_shared<MessageArr_t>();
 
     this->_logger->Debug("(tcp) Waiting for a message...");
@@ -61,11 +61,11 @@ void RType::Network::Socket::TCPBoostSocket::start_read() {
                                          this->_logger->Error(
                                              "(tcp) Wrong magic number for this message");
                                      else
-                                         this->_logger->Info("(tcp) Message: '",
-                                                             package.message,
+                                         this->_logger->Info("(tcp) Command: '",
+                                                             package.command,
                                                              "' w/ ",
                                                              bytes_transferred);
-                                     this->start_read();
+                                     this->read();
                                  });
 }
 

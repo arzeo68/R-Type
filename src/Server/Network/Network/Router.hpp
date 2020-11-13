@@ -59,10 +59,12 @@ namespace RType::Network {
      * @attention I encourage you to complete this class to satisfy any more complex network implementation.
      * @warning If you left a template parameter as '_nullTemplate', you can not use functions related to this template parameter.
      * @tparam IOService The IO (Input/Output) service that should handle the work. Implementation is library dependant.
-     * @tparam Acceptor Acceptor system which accept incoming connection to the server. Implementation is library dependant.
+     * @tparam TCPAcceptor Acceptor system which accept incoming connection to the server. Implementation is library dependant.
      * @tparam SignalSet SignalSet is used to handle signals. Implementation is library dependant.
      */
-    template<typename IOService = _nullTemplate, typename Acceptor = _nullTemplate,
+    template<typename IOService = _nullTemplate,
+        typename TCPAcceptor = _nullTemplate,
+        typename UDPEndpoint = _nullTemplate,
         typename SignalSet = _nullTemplate>
     class Router {
         private:
@@ -71,8 +73,10 @@ namespace RType::Network {
         Router() {
             if constexpr (std::is_constructible_v<IOService>)
                 this->_service = std::make_shared<IOService>();
-            if constexpr (std::is_constructible_v<Acceptor>)
-                this->_acceptor = std::make_shared<Acceptor>();
+            if constexpr (std::is_constructible_v<TCPAcceptor>)
+                this->_tcp_acceptor = std::make_shared<TCPAcceptor>();
+            if constexpr (std::is_constructible_v<UDPEndpoint>)
+                this->_udp_endpoint = std::make_shared<UDPEndpoint>();
             if constexpr (std::is_constructible_v<SignalSet>)
                 this->_signal_set = std::make_shared<SignalSet>();
         };
@@ -85,9 +89,16 @@ namespace RType::Network {
         };
 
         template<typename ...Arguments>
-        [[maybe_unused]] typename std::enable_if_t<!_isTemplateNull<Acceptor>>
-        set_acceptor(Arguments&& ...arguments) {
-            this->_acceptor = std::make_shared<Acceptor>(
+        [[maybe_unused]] typename std::enable_if_t<!_isTemplateNull<TCPAcceptor>>
+        set_tcp_acceptor(Arguments&& ...arguments) {
+            this->_tcp_acceptor = std::make_shared<TCPAcceptor>(
+                std::forward<Arguments>(arguments)...);
+        };
+
+        template<typename ...Arguments>
+        [[maybe_unused]] typename std::enable_if_t<!_isTemplateNull<UDPEndpoint>>
+        set_udp_endpoint(Arguments&& ...arguments) {
+            this->_udp_endpoint = std::make_shared<UDPEndpoint>(
                 std::forward<Arguments>(arguments)...);
         };
 
@@ -108,13 +119,13 @@ namespace RType::Network {
             return (this->_service);
         };
 
-        [[maybe_unused]] typename std::enable_if_t<!_isTemplateNull<Acceptor>, std::shared_ptr<Acceptor>>
+        [[maybe_unused]] typename std::enable_if_t<!_isTemplateNull<TCPAcceptor>, std::shared_ptr<TCPAcceptor>>
         get_io_acceptor() const {
-            return (this->_acceptor);
+            return (this->_tcp_acceptor);
         };
-        [[maybe_unused]] typename std::enable_if_t<!_isTemplateNull<Acceptor>, std::shared_ptr<Acceptor>>
+        [[maybe_unused]] typename std::enable_if_t<!_isTemplateNull<TCPAcceptor>, std::shared_ptr<TCPAcceptor>>
         get_io_acceptor() {
-            return (this->_acceptor);
+            return (this->_tcp_acceptor);
         };
 
         [[maybe_unused]] typename std::enable_if_t<!_isTemplateNull<SignalSet>, std::shared_ptr<SignalSet>>
@@ -126,12 +137,22 @@ namespace RType::Network {
             return (this->_signal_set);
         };
 
+        [[maybe_unused]] typename std::enable_if_t<!_isTemplateNull<SignalSet>, std::shared_ptr<UDPEndpoint>>
+        get_udp_endpoint() const {
+            return (this->_udp_endpoint);
+        };
+        [[maybe_unused]] typename std::enable_if_t<!_isTemplateNull<SignalSet>, std::shared_ptr<UDPEndpoint>>
+        get_udp_endpoint() {
+            return (this->_udp_endpoint);
+        };
+
         ~Router() noexcept = default;
         Router(Router&&) noexcept = delete;
 
         private:
         std::shared_ptr<IOService> _service;
-        std::shared_ptr<Acceptor> _acceptor;
+        std::shared_ptr<TCPAcceptor> _tcp_acceptor;
+        std::shared_ptr<UDPEndpoint> _udp_endpoint;
         std::shared_ptr<SignalSet> _signal_set;
     };
 }

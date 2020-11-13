@@ -50,22 +50,27 @@ namespace Rtype
         } else
         {
             // Start Read and Write
+            this->write({RType::Common::Network::g_MagicNumber, 123});
         }
     }
 
     void UDPBoostSocket::write(const RType::Common::Network::TCPPacket& input)
     {
         std::vector<boost::asio::const_buffer> buffers;
-        //std::cout << input.size() << std::endl;
+        std::cout << "Writing smth" << std::endl;
         buffers.emplace_back(boost::asio::buffer(&input, sizeof(input)));
+        boost::asio::ip::udp::endpoint endpoint = *m_Resolver.resolve(boost::asio::ip::udp::v4(), "127.0.0.1", "").begin();
         this->m_udpSocket.async_send(buffers, [this](const boost::system::error_code &error, std::size_t)
         {
+            printf("error? %i\n", error.value());
             if (error)
             {
-//                this->_logger->Error("[client-> UDPBoostSocket] write ",error.message());
+                std::cerr << "Err: " << error.message() << std::endl;
+                //this->_logger->Error("[client-> UDPBoostSocket] write ",error.message());
                 this->shutdown_socket();
                 return;
-            }
+            } else
+                std::cout << "Message sent, no error" << std::endl;
         });
     }
 

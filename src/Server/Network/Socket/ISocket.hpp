@@ -25,7 +25,7 @@ namespace RType::Network {
         /**
          * Read an input from the the socket
          */
-        virtual void start_read() = 0;
+        virtual void read() = 0;
 
         /**
          * Write input to a socket

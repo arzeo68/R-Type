@@ -139,7 +139,17 @@ add_executable(rtype_server
         src/Server/Network/Worker/Worker.hpp
         src/Server/Network/Room/RoomManager.hpp
         src/Server/Network/Room/Room.hpp
-        src/Common/Network.cpp)
+        src/Common/Network.cpp
+
+        src/Common/Systems/MovementUpdateSystem.hpp
+        src/Common/Systems/MovementUpdateSystem.cpp
+        src/Common/Systems/TransformSystem.hpp
+        src/Common/Systems/TransformSystem.cpp
+        src/Common/Systems/PhysicSystem.hpp
+        src/Common/Systems/PhysicSystem.cpp
+        src/Common/Component/Movement.hpp
+        src/Common/Component/Transform.hpp
+        src/Common/Component/Hitbox.hpp)
 
 if (MSVC)
     set_target_properties(rtype_client PROPERTIES LINK_FLAGS /MACHINE:X64)

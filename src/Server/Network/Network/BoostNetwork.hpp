@@ -16,6 +16,7 @@
 
 namespace RType::Network {
     using boost_asio_tcp = boost::asio::ip::tcp;
+    using boost_asio_udp = boost::asio::ip::udp;
 
     /**
      * A boost implementation of the ANetwork. The class doesn't contains any
@@ -27,6 +28,7 @@ namespace RType::Network {
                 Socket::boost_socket_tcp_t,
                 boost::asio::io_service,
                 boost_asio_tcp::acceptor,
+                boost_asio_udp::endpoint,
                 boost::asio::signal_set>,
             public std::enable_shared_from_this<BoostNetwork> {
 
@@ -39,12 +41,11 @@ namespace RType::Network {
         void run() override;
         void stop() override;
         void wait_for_client() override;
-        std::list<client_shared_ptr> GetClients() override;
         void pre_run() override;
 
         private:
         Common::Log::Log::shared_log_t _logger;
-        ThreadPool _threadPool;
+        ThreadPool _thread_pool;
         std::shared_ptr<ThreadSafeQueue<AClient<Socket::boost_socket_udp_t, Socket::boost_socket_tcp_t> *>> _pending_client;
         Worker _worker_pending_client;
     };

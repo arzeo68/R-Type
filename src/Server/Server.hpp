@@ -18,13 +18,14 @@ namespace RType::Server {
      * @tparam ClientUDPSocket UDP Socket type for the client
      * @tparam ClientTCPSocket TCP Socket type for the client
      * @tparam IOService See Router documentation
-     * @tparam Acceptor See Router documentation
+     * @tparam TCPAcceptor See Router documentation
      * @tparam SignalSet See Router documentation
      */
     template<typename ClientUDPSocket,
         typename ClientTCPSocket,
         typename IOService = RType::Network::_nullTemplate,
-        typename Acceptor = RType::Network::_nullTemplate,
+        typename TCPAcceptor = RType::Network::_nullTemplate,
+        typename UDPEndpoint = RType::Network::_nullTemplate,
         typename SignalSet = RType::Network::_nullTemplate>
     class Server {
         public:
@@ -52,7 +53,7 @@ namespace RType::Server {
          * @param ptr The shared pointer for the network
          */
         void create_network(
-            const std::shared_ptr<RType::Network::ANetwork<ClientUDPSocket, ClientTCPSocket, IOService, Acceptor, SignalSet>>& ptr) {
+            const std::shared_ptr<RType::Network::ANetwork<ClientUDPSocket, ClientTCPSocket, IOService, TCPAcceptor, UDPEndpoint, SignalSet>>& ptr) {
             this->_network = ptr;
         }
 
@@ -71,7 +72,7 @@ namespace RType::Server {
 
         private:
         RType::Common::Log::Log::shared_log_t _logger;
-        std::shared_ptr<RType::Network::ANetwork<ClientUDPSocket, ClientTCPSocket, IOService, Acceptor, SignalSet>> _network;
+        std::shared_ptr<RType::Network::ANetwork<ClientUDPSocket, ClientTCPSocket, IOService, TCPAcceptor, UDPEndpoint, SignalSet>> _network;
     };
 }
 
