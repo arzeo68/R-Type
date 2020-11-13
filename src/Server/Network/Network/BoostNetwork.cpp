@@ -16,7 +16,7 @@ RType::Network::BoostNetwork::BoostNetwork(uint32_t port) : _logger(
     std::make_shared<Common::Log::Log>("network",
                                        "network.log",
                                        Common::Log::g_AllLogLevel,
-                                       std::ios::trunc)), _threadPool(1),
+                                       std::ios::trunc)), _thread_pool(1),
     _pending_client(std::make_shared<ThreadSafeQueue<AClient<
         Socket::boost_socket_udp_t, Socket::boost_socket_tcp_t>*>> ()),
     _worker_pending_client([&]() {
@@ -24,11 +24,11 @@ RType::Network::BoostNetwork::BoostNetwork(uint32_t port) : _logger(
     }, [&]() {
         return (this->_is_running);
     }) {
-    this->_rooms.emplace(this->_logger->shared_from_this());// Room::RoomManager<Socket::boost_socket_udp_t, Socket::boost_socket_tcp_t>(this->_logger->shared_from_this());
+    this->_rooms.emplace(this->_logger->shared_from_this());
     auto endpoint = boost_asio_tcp::endpoint(boost_asio_tcp::v4(), port);
     this->_router.set_tcp_acceptor(*this->_router.get_io_service(), endpoint);
     printf("Addr: '%s' & port: %i\n", endpoint.address().to_string().c_str(), endpoint.port());
-    this->_router.set_udp_endpoint(boost_asio_udp::endpoint(boost_asio_udp::v4(), 4243));
+    this->_router.set_udp_endpoint(boost_asio_udp::endpoint(boost_asio_udp::v4(), endpoint.port() + 1));
     this->_router.set_signal_set(*this->_router.get_io_service(), SIGINT);
 }
 
@@ -37,7 +37,7 @@ void RType::Network::BoostNetwork::run() {
                         this->_router.get_io_acceptor()->local_endpoint().port(),
                         " for a new client...");
     this->wait_for_client();
-    this->_threadPool.run([&] {
+    this->_thread_pool.run([&] {
         this->_router.get_io_service()->run();
     });
     std::string input;
@@ -96,11 +96,6 @@ void RType::Network::BoostNetwork::wait_for_client() {
                                                       this->wait_for_client();
                                                   });
     this->_logger->Debug("Returning to main run");
-}
-
-std::list<RType::Network::BoostNetwork::client_shared_ptr>
-RType::Network::BoostNetwork::GetClients() {
-    return (this->_clients);
 }
 
 void RType::Network::BoostNetwork::pre_run() {

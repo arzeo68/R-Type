@@ -19,13 +19,13 @@ RType::Network::BoostClient::BoostClient(boost::asio::io_service& service,
     _logger(log) {
     this->_logger->Debug("Create TCP socket");
     this->_tcpsocket = std::make_shared<Socket::TCPBoostSocket>(service, log,
-                                                                this->_worker_is_active.share_cv_from_this());
+                                                                this->_worker.share_cv_from_this());
     this->_logger->Debug("Create UDP Socket");
     this->_udpsocket = std::make_shared<Socket::UDPBoostSocket>(log, service, endpoint);
     //this->_udpsocket->get_socket()->set_option(boost::asio::ip::udp::socket::reuse_address(true));
     this->_logger->Info("Client ", this, " created");
     this->_socket_error = error_queue;
-    this->_worker_is_active.run([&, parent_worker_cv]() {
+    this->_worker.run([&, parent_worker_cv]() {
         this->_socket_error->add(this);
         parent_worker_cv->notify_all();
     });

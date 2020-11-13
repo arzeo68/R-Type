@@ -46,11 +46,6 @@ namespace RType::Network {
          */
         using client_shared_ptr = std::shared_ptr<AClient<ClientUDPSocket, ClientTCPSocket>>;
         /**
-         * Get the list of all clients
-         * @return A list of shared pointer of AClient<...>
-         */
-        virtual std::list<client_shared_ptr> GetClients() = 0;
-        /**
          * Wait for a client and add it to the list of clients. The function MAY accept further incoming connection
          */
         virtual void wait_for_client() = 0;

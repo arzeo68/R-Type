@@ -62,6 +62,7 @@ namespace Rtype
         boost::asio::ip::udp::endpoint endpoint = *m_Resolver.resolve(boost::asio::ip::udp::v4(), "127.0.0.1", "").begin();
         this->m_udpSocket.async_send(buffers, [this](const boost::system::error_code &error, std::size_t)
         {
+            printf("error? %i\n", error.value());
             if (error)
             {
                 std::cerr << "Err: " << error.message() << std::endl;
@@ -69,7 +70,7 @@ namespace Rtype
                 this->shutdown_socket();
                 return;
             } else
-                std::cerr << "Message sent, no error" << std::endl;
+                std::cout << "Message sent, no error" << std::endl;
         });
     }
 

@@ -16,7 +16,7 @@ RType::Network::Socket::UDPBoostSocket::UDPBoostSocket(
     this->_socket = std::make_shared<boost_socket_udp_t>(service);
     this->_socket->open(endpoint.protocol());
     this->_socket->set_option(boost::asio::ip::udp::socket::reuse_address(true));
-    this->_socket->bind(endpoint);
+    //this->_socket->bind(this->_endpoint);
     this->_logger = log;
 }
 
@@ -47,6 +47,10 @@ void RType::Network::Socket::UDPBoostSocket::read() {
     std::shared_ptr<MessageArr_t> raw_message = std::make_shared<MessageArr_t>();
 
     this->_logger->Debug("(udp) Waiting for a message...");
+    boost::system::error_code err;
+    this->_socket->bind(this->_endpoint, err);
+    if (err)
+        std::cerr << "err: " << err.message() << std::endl;
     this->_socket->async_receive_from(boost::asio::buffer(*raw_message),
                                  this->_endpoint,
                                  [&, raw_message](

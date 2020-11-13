@@ -76,6 +76,10 @@ namespace RType::Network::Room {
             this->_world->initialize();
             this->add_user(user);
         }
+        /**
+         * The destructor set the game state on "exiting" and terminate the associate
+         * worker.
+         */
         ~Room() {
             std::lock_guard<std::mutex> l(this->_mutex);
             this->_state = GameState_e::EXITING;
@@ -188,6 +192,16 @@ namespace RType::Network::Room {
                                           return (p_ptr.get() == p);
                                       });
             return (found != std::end(this->_users));
+        }
+
+        /**
+         * Let know if the current game of the room is on running state or exiting,
+         * which is, considered as running.
+         * @return true if the game is running or exiting
+         * @return false if the game is not running or exiting
+         */
+        bool is_game_running() const {
+            return (this->_state == GameState_e::EXITING || this->_state == GameState_e::RUNNING);
         }
 
         private:

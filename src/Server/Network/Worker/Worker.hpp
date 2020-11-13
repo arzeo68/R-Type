@@ -69,7 +69,10 @@ namespace RType::Network {
 
         /**
          * Run the worker and attributing a task/work to do. The occurrence of the
-         * task depends of if the a locker has been set in the constructor or not
+         * task depends of if the a locker has been set in the constructor or not.
+         * The worker goes sleep before doing the ask and basically wait for the
+         * unlock condition.
+         * @param work The work to do
          */
         void run(const std::function<void()>& work) {
             this->_thread = std::thread([&, work]() {
@@ -86,8 +89,10 @@ namespace RType::Network {
         }
 
         /**
-         *
-         * @param work
+         * The main difference between @run and this function is that, this function
+         * never sleep and will quit when the unlock condition function returns true.
+         * @warning It's strongly advice to set a timer that make the function work sleep to avoid your CPU burn out
+         * @param work The work to do
          */
         void run_awake(const std::function<void()>& work) {
             this->_thread = std::thread([&, work]() {

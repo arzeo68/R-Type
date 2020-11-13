@@ -1,4 +1,5 @@
 #include <iostream>
+#include <thread>
 #include <Window/Window.hpp>
 #include <Client/Application/Application.hpp>
 #include <Client/EventManager/SFMLEvents.hpp>

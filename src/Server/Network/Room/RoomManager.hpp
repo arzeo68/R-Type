@@ -22,8 +22,8 @@ namespace RType::Network::Room {
     template<typename UDPSocket, typename TCPSocket>
     class RoomManager {
         public:
-        RoomManager(const Common::Log::Log::shared_log_t& logger): _logger(logger) {}
         RoomManager() = delete;
+        RoomManager(const Common::Log::Log::shared_log_t& logger): _logger(logger) {}
         ~RoomManager() = default;
         RoomManager(const RoomManager&) = delete;
         using room_sptr = std::shared_ptr<Room<UDPSocket, TCPSocket>>;
@@ -39,7 +39,7 @@ namespace RType::Network::Room {
             std::lock_guard<std::mutex> l(this->_mutex);
             auto r = std::find_if(this->_rooms.begin(), this->_rooms.end(),
                                   [&](room_sptr& room) {
-                                      return (!room->is_full());
+                                      return (!room->is_full()); // TODO: Check if the game is running
                                   });
             if (r == std::end(this->_rooms)) {
                 this->_rooms.emplace_back(
@@ -59,7 +59,7 @@ namespace RType::Network::Room {
             std::lock_guard<std::mutex> l(this->_mutex);
             auto it = std::find_if(this->_rooms.begin(), this->_rooms.end(),
                                    [p](room_sptr& room) {
-                                       return (room->has_participant(p));
+                                       return (room->has_participant(p) && !room->is_game_running());
                                    });
             if (it == std::end(this->_rooms))
                 this->_logger->Error("Cannot find user '", p, "' in any room");
