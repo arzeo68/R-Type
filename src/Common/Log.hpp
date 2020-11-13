@@ -115,12 +115,12 @@ namespace RType::Common::Log {
                                    _map.find(level)->second + "/"); // "] "
             if (level != LOG_ERROR_E) {
                 std::cout << prefix;
-                std::cout << std::this_thread::get_id();
+                std::cout << std::hex << std::this_thread::get_id();
                 std::cout << "] ";
                 (std::cout << ... << args) << std::endl;
             } else {
                 std::cerr << prefix;
-                std::cerr << std::this_thread::get_id();
+                std::cerr << std::hex << std::this_thread::get_id();
                 std::cerr << "] ";
                 (std::cerr << ... << args) << std::endl;
             }

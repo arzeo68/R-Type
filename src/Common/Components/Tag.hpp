@@ -3,5 +3,7 @@
 #include <string>
 
 struct TagComponent {
-    const char *tag;
+    TagComponent() = default;
+    TagComponent(const std::string& s) : tag(s) {};
+    std::string tag;
 };

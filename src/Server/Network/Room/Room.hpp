@@ -13,6 +13,8 @@
 #include <iostream>
 #include <mutex>
 #include <thread>
+#include <src/Common/Components/Tag.hpp>
+#include <src/Common/Systems/TagSystem.hpp>
 #include "Common/Log.hpp"
 #include "Common/ECS/World.hpp"
 #include "Server/Network/Client/AClient.hpp"
@@ -205,14 +207,24 @@ namespace RType::Network::Room {
         }
 
         private:
+        void init_ecs() {
+            this->_world->template registerComponent<TagComponent>();
+            this->_world->template registerSystem<TagSystem>();
+            this->_world->template setSystemSignature<TagSystem, TagComponent>();
+            ECS::Entity entity = this->_world->createEntity();
+            this->_world->template addComponent<TagComponent>(entity, TagComponent("hello world"));
+        }
+
         void launch_game() {
             this->_logger->Debug("[Room ", this, "] Room completed, launching the game");
+            //this->init_ecs();
             this->_state = GameState_e::RUNNING;
             std::for_each(this->_users.begin(), this->_users.end(), [](room_user_sptr &u) {
                 u->get_udpsocket()->read();
             });
             this->_worker_game_loop.run_awake([&] () {
-                //this->_logger->Debug("[Room ", this, "] State: ", this->_state);
+                this->_logger->Debug("[Room ", this, "] State: ", this->_state);
+                //this->_world->get
                 std::this_thread::sleep_for(std::chrono::seconds(1));
             });
         }

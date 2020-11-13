@@ -39,7 +39,7 @@ namespace RType::Network::Room {
             std::lock_guard<std::mutex> l(this->_mutex);
             auto r = std::find_if(this->_rooms.begin(), this->_rooms.end(),
                                   [&](room_sptr& room) {
-                                      return (!room->is_full()); // TODO: Check if the game is running
+                                      return (!room->is_full()  && !room->is_game_running());
                                   });
             if (r == std::end(this->_rooms)) {
                 this->_rooms.emplace_back(
@@ -59,7 +59,7 @@ namespace RType::Network::Room {
             std::lock_guard<std::mutex> l(this->_mutex);
             auto it = std::find_if(this->_rooms.begin(), this->_rooms.end(),
                                    [p](room_sptr& room) {
-                                       return (room->has_participant(p) && !room->is_game_running());
+                                       return (room->has_participant(p));
                                    });
             if (it == std::end(this->_rooms))
                 this->_logger->Error("Cannot find user '", p, "' in any room");

@@ -80,6 +80,7 @@ add_executable(rtype_client
         src/Client/ClientNetwork/UdpNetwork.hpp
         src/Common/Network.hpp
         src/Common/Systems/RenderSystem.cpp)
+
 add_executable(rtype_server
         src/Server/Network/Network/INetwork.hpp
         src/Server/Network/Socket/ISocket.hpp
@@ -103,7 +104,10 @@ add_executable(rtype_server
         src/Server/Network/Worker/Worker.hpp
         src/Server/Network/Room/RoomManager.hpp
         src/Server/Network/Room/Room.hpp
-        src/Common/Network.cpp)
+        src/Common/Network.cpp
+
+        src/Common/Components/Tag.hpp
+        src/Common/Systems/TagSystem.cpp src/Common/Systems/TagSystem.hpp)
 
 if (MSVC)
     set_target_properties(rtype_client PROPERTIES LINK_FLAGS /MACHINE:X64)
