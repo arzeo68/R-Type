@@ -27,9 +27,6 @@
 #include "Common/Systems/PhysicSystem.hpp"
 #include "Common/Systems/MovementUpdateSystem.hpp"
 
-static void base_update_routine(float delta, ECS::ComponentHandle<Rtype::MovementComponent> comp)
-{ std::cout << "base_update_routine\n"; }
-
 namespace RType::Network::Room {
     /**
      * The number of participant per room
@@ -231,18 +228,11 @@ namespace RType::Network::Room {
 
             this->_world->registerSystem<Rtype::PhysicSystem>();
             this->_world->setSystemSignature<Rtype::PhysicSystem, Rtype::TransformComponent>();
-
-            ECS::Entity entity = this->_world->createEntity();
-
-            this->_world->addComponent<Rtype::MovementComponent>(
-                entity,
-                Rtype::MovementComponent({0, 0}, 0, std::bind(base_update_routine, std::placeholders::_1, std::placeholders::_2))
-            );
         }
 
         void launch_game() {
             this->_logger->Debug("[Room ", this, "] Room completed, launching the game");
-            //this->init_ecs();
+            this->init_ecs();
             this->_state = GameState_e::RUNNING;
             std::for_each(this->_users.begin(), this->_users.end(), [](room_user_sptr &u) {
                 u->get_udpsocket()->read();
@@ -254,8 +244,8 @@ namespace RType::Network::Room {
                 float res = duration.count();
                 this->_logger->Debug("[Room ", this, "] State: ", this->_state);
                 this->_world->getSystem<Rtype::MovementUpdateSystem>()->update(res, this->_world);
-                /*this->_world->getSystem<Rtype::TransformSystem>()->update(res, this->_world);
-                this->_world->getSystem<Rtype::PhysicSystem>()->update(res, this->_world); */
+                this->_world->getSystem<Rtype::TransformSystem>()->update(res, this->_world);
+                this->_world->getSystem<Rtype::PhysicSystem>()->update(res, this->_world);
                 std::this_thread::sleep_for(std::chrono::milliseconds(16));
             });
         }
