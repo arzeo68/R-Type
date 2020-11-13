@@ -88,7 +88,7 @@ void Application::catch_keyPressed(EventType type, std::shared_ptr<Observer::IEv
     std::string keyString= std::to_string(key->_key);
     RType::Common::Network::TCPPacket p{RType::Common::Network::g_MagicNumber, key->_key};
     //std::string pack((char *)&p, sizeof(RType::Common::Network::TCPPacket));
-    //tcpSocket->write(p);
+    tcpSocket->write(p);
     udpSocket->write(p);
 }
 } // namespace Rtype

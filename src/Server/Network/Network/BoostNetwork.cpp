@@ -44,7 +44,6 @@ void RType::Network::BoostNetwork::run() {
     while (this->_is_running) {
         input.clear();
         std::cin >> input;
-        printf("Cmd: '%s'\n", input.c_str());
         if (input == "exit" || std::cin.eof())
             this->stop();
     }

@@ -49,8 +49,6 @@ void RType::Network::Socket::UDPBoostSocket::read() {
     this->_logger->Debug("(udp) Waiting for a message...");
     boost::system::error_code err;
     this->_socket->bind(this->_endpoint, err);
-    if (err)
-        std::cerr << "err: " << err.message() << std::endl;
     this->_socket->async_receive_from(boost::asio::buffer(*raw_message),
                                  this->_endpoint,
                                  [&, raw_message](
