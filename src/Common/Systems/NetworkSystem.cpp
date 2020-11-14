@@ -22,6 +22,7 @@ void NetworkSystem::update(float delta, std::shared_ptr<ECS::World>& world)
         p.type = 1;
         p.x = transform.get()->position.x;
         p.y = transform.get()->position.y;
+        //std::cout << "Updating Entity " << p.id << "[ " << e << " ] " << " { x : " << p.x << ", y: " << p.y << " }\n";
         oq.get()->OutputQueue.push_back(p);
     }
 }

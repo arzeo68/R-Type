@@ -38,7 +38,7 @@ namespace RType::Network::Room {
     /**
      * The number of participant per room
      */
-    const static constexpr uint16_t MAX_PARTICIPANT = 1;
+    const static constexpr uint16_t MAX_PARTICIPANT = 2;
 
     typedef uint16_t GameState_t;
     enum class GameState_e : GameState_t {
@@ -292,7 +292,6 @@ namespace RType::Network::Room {
                 for (size_t i = 0; i < _users.size(); ++i) {
                     for (auto& p : oqueue.get()->OutputQueue) {
                         _users[i]->get_udpsocket_write()->write(p);
-
                     }
                 }
                 oqueue.get()->OutputQueue.clear();
