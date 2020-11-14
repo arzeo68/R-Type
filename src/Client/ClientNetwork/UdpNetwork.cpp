@@ -10,12 +10,11 @@ RType::Common::Network::TCPPacket RType::Common::Network::packet_unpack(const st
 namespace Rtype
 {
 
-    UDPBoostSocket::UDPBoostSocket(std::string const& host, std::string const &port, std::shared_ptr<std::deque<std::string>>
+    UDPBoostSocket::UDPBoostSocket(std::string const& host, std::string const &port, boost::asio::io_service& service, std::shared_ptr<std::deque<std::string>>
 
     & SharedQueue)
-    :
-
-    m_ioContext(), m_Resolver(m_ioContext), m_udpSocket(m_ioContext), SharedDataQueue(SharedQueue)
+        :
+        m_Resolver(service), m_udpSocket(service), SharedDataQueue(SharedQueue)
     {
         endpoints = m_Resolver.resolve(host, port);
     }
@@ -23,14 +22,14 @@ namespace Rtype
     void UDPBoostSocket::start_socket() noexcept
     {
         StartConnect(endpoints.begin());
-        m_ioContext.run();
+        //m_ioContext.run();
     }
 
     void UDPBoostSocket::shutdown_socket() noexcept
     {
         stopped = true;
         m_udpSocket.close();
-        m_ioContext.stop();
+        //m_ioContext.stop();
     }
 
     void UDPBoostSocket::StartConnect(boost::asio::ip::udp::resolver::results_type::iterator endpoint)
@@ -51,10 +50,12 @@ namespace Rtype
         else if (error)
         {
             m_udpSocket.close();
+            printf("(%p) Failed w/: '%s'\n", this, error.message().c_str());
             StartConnect(++endpoint);
         } else
         {
             // Start Read and Write
+            printf("Socket: %p\n", this);
             start_read();
         }
     }
@@ -84,22 +85,23 @@ namespace Rtype
 
         std::cout << "(udp) Waiting for a message..." << std::endl;
         boost::system::error_code err;
+        this->m_udpSocket.bind(this->_endpoint, err);
         if (err)
             std::cerr << "ERROR 0:  " << err.message() << std::endl;
-        this->m_udpSocket.bind(this->_endpoint, err);
         this->m_udpSocket.async_receive(boost::asio::buffer(*raw_message),
-            [&, raw_message](
-                const boost::system::error_code& err,
-                std::size_t bytes_transferred) {
-                if (err) {
-                    std::cerr << "error 1  " << err.message() << std::endl;
-                }
-                else
-                {
-                    std::cout << " ca marche bien zebi" << std::endl;
-                }
-                this->wait();
-            });
+                                        [&, raw_message](
+                                            const boost::system::error_code& err,
+                                            std::size_t) {
+                                            if (err) {
+                                                std::cerr << "error 1  " << err.message() << std::endl;
+                                            }
+                                            else
+                                            {
+                                                std::cout << " ca marche bien zebi" << std::endl;
+                                            }
+                                            this->wait();
+                                        });
+        std::cout << "exiting this shitty function" << std::endl;
     }
 
     void UDPBoostSocket::start_read()

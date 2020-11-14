@@ -1,5 +1,6 @@
 #pragma once
 
+#include <boost/asio.hpp>
 #include <utility>
 #include <memory>
 #include <Window/IWindow.hpp>
@@ -39,6 +40,7 @@ namespace Rtype {
         std::shared_ptr<SceneManager> m_pSceneManager;
         std::shared_ptr<AEventManager> m_pEventManager;
         std::unordered_map<std::string, unsigned int> m_cScenes;
+        boost::asio::io_service _service;
     };
 
 }  // namespace Rtype

@@ -32,9 +32,12 @@ Application::Application(std::string const& title, unsigned int width, unsigned 
     m_pSceneManager = std::make_shared<SceneManager>();
     m_pEventManager = std::make_shared<EventManager>(*(std::static_pointer_cast<Window>(m_pWindow)));
     std::cout << "Register 'catch_close' on 'EClose'" << std::endl;
-    tcpSocket = std::make_shared<Rtype::TCPBoostSocket>("127.0.0.1", "4242", tcpMessageReceived);
-    udpSocket = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", "4243", tcpMessageReceived);
-    udpSocket_read = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", port, tcpMessageReceived);
+    tcpSocket = std::make_shared<Rtype::TCPBoostSocket>("127.0.0.1", "4242", this->_service,
+                                                        tcpMessageReceived);
+    udpSocket = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", "4243", this->_service,
+                                                        tcpMessageReceived);
+    udpSocket_read = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", port, this->_service,
+                                                             tcpMessageReceived);
     m_pEventManager->getSubject().registerObserver(EClose, std::bind(&Application::catch_close, this, std::placeholders::_1, std::placeholders::_2));
     m_pEventManager->getSubject().registerObserver(EKeyPressed, std::bind(&Application::catch_keyPressed, this, std::placeholders::_1, std::placeholders::_2));
 }
@@ -65,8 +68,13 @@ void Application::switchScene(std::string const& title)
 void Application::run()
 {
     std::thread client_thead([=](){
+        printf("tcpSocket: %p\n", tcpSocket.get());
         tcpSocket->start_socket();
+        printf("udpSocket_read: %p\n", udpSocket_read.get());
+        udpSocket_read->start_socket();
+        printf("udpSocket: %p\n", udpSocket.get());
         udpSocket->start_socket();
+        this->_service.run();
     });
     std::shared_ptr<Window> w = std::dynamic_pointer_cast<Window>(m_pWindow);
     m_pWindow->open();
@@ -89,6 +97,8 @@ void Application::run()
     }
     tcpSocket->shutdown_socket();
     udpSocket->shutdown_socket();
+    udpSocket_read->shutdown_socket();
+    this->_service.stop();
     client_thead.join();
 }
 

@@ -6,12 +6,11 @@
 namespace Rtype
 {
 
-    TCPBoostSocket::TCPBoostSocket(std::string const& host, std::string const &port, std::shared_ptr<std::deque<std::string>>
+    TCPBoostSocket::TCPBoostSocket(std::string const& host, std::string const &port, boost::asio::io_service& service, std::shared_ptr<std::deque<std::string>>
 
     & SharedQueue)
     :
-
-    m_ioContext(), m_Resolver(m_ioContext), m_tcpSocket(m_ioContext), SharedDataQueue(SharedQueue)
+        m_Resolver(service), m_tcpSocket(service), SharedDataQueue(SharedQueue)
     {
         endpoints = m_Resolver.resolve(host, port);
     }
@@ -19,14 +18,14 @@ namespace Rtype
     void TCPBoostSocket::start_socket() noexcept
     {
         StartConnect(endpoints.begin());
-        m_ioContext.run();
+        //m_ioContext.run();
     }
 
     void TCPBoostSocket::shutdown_socket() noexcept
     {
         stopped = true;
         m_tcpSocket.close();
-        m_ioContext.stop();
+        //m_ioContext.stop();
     }
 
     void TCPBoostSocket::StartConnect(boost::asio::ip::tcp::resolver::results_type::iterator endpoint)

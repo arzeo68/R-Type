@@ -84,24 +84,30 @@ RType::Network::Socket::UDPBoostSocket::write(const Common::Network::TCPPacket& 
     buffers.emplace_back(boost::asio::buffer(&input, sizeof(input)));
     this->_socket->async_send(buffers,
                               [this](const boost::system::error_code& error,
-                                     std::size_t) {
+                                     std::size_t size) {
                                   if (error) {
                                       this->_logger->Error(
-                                          "[client-> UDPBoostSocket] write ",
+                                          "[client-> UDPBoostSocket] TCPPacket write ",
                                           error.message());
+                                  } else {
+                                      this->_logger->Debug(
+                                          "[client-> UDPBoostSocket] TCPPacket write w/ ", size);
                                   }
                               });
 }
 
 void
 RType::Network::Socket::UDPBoostSocket::write(ECS::NetworkPacket& input) {
-    this->_socket->async_send(boost::asio::buffer(input.getData()),
+    this->_socket->async_send_to(boost::asio::buffer(input.getData()), this->_endpoint,
                               [this](const boost::system::error_code& error,
-                                     std::size_t) {
+                                     std::size_t size) {
                                   if (error) {
                                       this->_logger->Error(
-                                          "[client-> UDPBoostSocket] write ",
+                                          "[client-> UDPBoostSocket] NetworkPacket write ",
                                           error.message());
+                                  } else {
+                                      this->_logger->Debug(
+                                          "[client-> UDPBoostSocket] NetworkPacket write w/ ", size);
                                   }
                               });
 }

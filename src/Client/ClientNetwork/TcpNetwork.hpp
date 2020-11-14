@@ -25,7 +25,9 @@ namespace Rtype {
          * @param port server port
          * @param SharedQueue queue in which the socket will stored the message received
          */
-        TCPBoostSocket(std::string const& host, std::string const& port, std::shared_ptr<std::deque<std::string>>& SharedQueue);
+        TCPBoostSocket(std::string const& host, std::string const& port,
+                       boost::asio::io_service& service,
+                       std::shared_ptr<std::deque<std::string>>& SharedQueue);
         /**
          * start the socket
          */
