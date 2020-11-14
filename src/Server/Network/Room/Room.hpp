@@ -33,7 +33,7 @@ namespace RType::Network::Room {
     /**
      * The number of participant per room
      */
-    const static constexpr uint16_t MAX_PARTICIPANT = 1;
+    const static constexpr uint16_t MAX_PARTICIPANT = 2;
 
     typedef uint16_t GameState_t;
     enum class GameState_e : GameState_t {
@@ -272,7 +272,8 @@ namespace RType::Network::Room {
                 this->_world->getSystem<Rtype::MovementUpdateSystem>()->update(res, this->_world);
                 this->_world->getSystem<Rtype::TransformSystem>()->update(res, this->_world);
                 this->_world->getSystem<Rtype::PhysicSystem>()->update(res, this->_world);
-                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                std::this_thread::sleep_for(std::chrono::milliseconds(16));
+                _start = end;
             });
         }
 

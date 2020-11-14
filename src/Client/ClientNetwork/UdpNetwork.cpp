@@ -50,7 +50,7 @@ namespace Rtype
         } else
         {
             // Start Read and Write
-            this->write({RType::Common::Network::g_MagicNumber, 123});
+            start_read();
         }
     }
 

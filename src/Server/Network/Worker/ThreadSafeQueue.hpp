@@ -8,6 +8,7 @@
 #ifndef RTYPE_THREADSAFEQUEUE_HPP
 #define RTYPE_THREADSAFEQUEUE_HPP
 
+#include <iostream>
 #include <queue>
 #include <mutex>
 #include <functional>
@@ -39,9 +40,13 @@ namespace RType::Network {
          * @return A "end" instance otherwise
          */
         T pop() {
-            std::lock_guard<std::mutex> l(this->_mutex);
-            auto element = this->_queue.front();
-            this->_queue.pop();
+            T element;
+            {
+                std::lock_guard<std::mutex> l(this->_mutex);
+                element = this->_queue.front();
+                this->_queue.pop();
+            }
+            std::cout << "POPING " << this->_queue.size() << "\n";
             return (element);
         }
 
