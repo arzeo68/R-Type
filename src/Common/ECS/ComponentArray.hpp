@@ -25,6 +25,8 @@ class ComponentHandle {
         T *const get() const { return m_Handle; }
 
         operator bool() const { return m_Handle != nullptr; }
+
+        size_t size() const { return sizeof(T); }
     private:
         T *m_Handle;
 };

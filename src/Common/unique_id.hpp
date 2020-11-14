@@ -18,5 +18,3 @@ public:
 private:
     uint32_t m_nNextID;
 };
-
-extern std::shared_ptr<UniqueIDGenerator> g_IDGenerator = nullptr;

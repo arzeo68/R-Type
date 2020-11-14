@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <typeindex>
+#include "NetworkPacket.hpp"
 #include "EntityManager.hpp"
 #include "ComponentManager.hpp"
 #include "SystemManager.hpp"

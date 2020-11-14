@@ -53,9 +53,6 @@ static void PlayerUpdateMovement(float delta, std::shared_ptr<ECS::World>& world
                 std::cout << "Q" << std::endl;
                 movement.get()->speed.y = -0.1;
                 break;
-            case 57:
-                std::cout << "Space" << std::endl;
-                break;
             default:
                 break;
         }

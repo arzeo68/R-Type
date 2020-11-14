@@ -80,7 +80,7 @@ namespace Rtype
     }
 
     void UDPBoostSocket::wait() {
-        std::shared_ptr<std::array<char ,6>> raw_message = std::make_shared<std::array<char ,6>>();
+        std::shared_ptr<std::array<char, 28>> raw_message = std::make_shared<std::array<char, 28>>();
 
         std::cout << "(udp) Waiting for a message..." << std::endl;
         boost::system::error_code err;

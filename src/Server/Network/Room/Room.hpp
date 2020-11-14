@@ -19,21 +19,26 @@
 #include "Common/ECS/World.hpp"
 #include "Server/Network/Client/AClient.hpp"
 
+#include "Common/unique_id.hpp"
+
 #include "Common/Component/Transform.hpp"
 #include "Common/Component/Movement.hpp"
 #include "Common/Component/Hitbox.hpp"
 #include "Common/Component/InputQueue.hpp"
+#include "Common/Component/OutputQueue.hpp"
 #include "Common/Component/PlayerID.hpp"
+#include "Common/Component/UniqueID.hpp"
 
 #include "Common/Systems/TransformSystem.hpp"
 #include "Common/Systems/PhysicSystem.hpp"
+#include "Common/Systems/NetworkSystem.hpp"
 #include "Common/Systems/MovementUpdateSystem.hpp"
 
 namespace RType::Network::Room {
     /**
      * The number of participant per room
      */
-    const static constexpr uint16_t MAX_PARTICIPANT = 2;
+    const static constexpr uint16_t MAX_PARTICIPANT = 1;
 
     typedef uint16_t GameState_t;
     enum class GameState_e : GameState_t {
@@ -218,14 +223,19 @@ namespace RType::Network::Room {
 
         private:
         void init_ecs() {
+            _netId_Generator = std::make_shared<UniqueIDGenerator>();
+
             this->_world->registerComponent<Rtype::TransformComponent>();
             this->_world->registerComponent<Rtype::HitboxComponent>();
             this->_world->registerComponent<Rtype::MovementComponent>();
             this->_world->registerComponent<Rtype::InputQueueComponent>();
+            this->_world->registerComponent<Rtype::OutputQueueComponent>();
             this->_world->registerComponent<Rtype::PlayerID>();
+            this->_world->registerComponent<Rtype::UniqueID>();
 
-            this->_world->addSingletonComponents<Rtype::InputQueueComponent>(
-                Rtype::InputQueueComponent()
+            this->_world->addSingletonComponents<Rtype::InputQueueComponent, Rtype::OutputQueueComponent>(
+                Rtype::InputQueueComponent(),
+                Rtype::OutputQueueComponent()
             );
 
             this->_world->registerSystem<Rtype::MovementUpdateSystem>();
@@ -237,14 +247,18 @@ namespace RType::Network::Room {
             this->_world->registerSystem<Rtype::PhysicSystem>();
             this->_world->setSystemSignature<Rtype::PhysicSystem, Rtype::TransformComponent, Rtype::HitboxComponent>();
 
+            this->_world->registerSystem<Rtype::NetworkSystem>();
+            this->_world->setSystemSignature<Rtype::NetworkSystem, Rtype::UniqueID>();
+
             for (size_t i = 0; i < this->_users.size(); i += 1) {
                 ECS::Entity e = this->_world->createEntity();
 
-                this->_world->addComponents<Rtype::TransformComponent, Rtype::MovementComponent, Rtype::PlayerID>(
+                this->_world->addComponents<Rtype::TransformComponent, Rtype::MovementComponent, Rtype::PlayerID, Rtype::UniqueID>(
                     e,
                     Rtype::TransformComponent({0, 0}, 0, {1, 1}),
                     Rtype::MovementComponent({0, 0}, 0, std::bind(Rtype::PlayerUpdateMovement, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
-                    Rtype::PlayerID(i)
+                    Rtype::PlayerID(i),
+                    Rtype::UniqueID(_netId_Generator->getID())
                 );
             }
         }
@@ -259,6 +273,7 @@ namespace RType::Network::Room {
             _start = std::chrono::high_resolution_clock::now();
             this->_worker_game_loop.run_awake([&] () {
                 auto queue = this->_world->getSingletonComponent<Rtype::InputQueueComponent>();
+                auto oqueue = this->_world->getSingletonComponent<Rtype::OutputQueueComponent>();
                 for (int i = 0; i < _users.size(); i += 1) {
                     auto q = _users[i]->get_udpsocket()->get_queue();
                     while (!q->empty()) {
@@ -272,11 +287,19 @@ namespace RType::Network::Room {
                 this->_world->getSystem<Rtype::MovementUpdateSystem>()->update(res, this->_world);
                 this->_world->getSystem<Rtype::TransformSystem>()->update(res, this->_world);
                 this->_world->getSystem<Rtype::PhysicSystem>()->update(res, this->_world);
-                std::this_thread::sleep_for(std::chrono::milliseconds(16));
+                this->_world->getSystem<Rtype::NetworkSystem>()->update(res, this->_world);
+                this->_world->getSystem<Rtype::NetworkSystem>()->update(res, this->_world);
+                for (int i = 0; i < _users.size(); i += 1) {
+                    for (auto& p : oqueue.get()->OutputQueue)
+                        _users[i]->get_udpsocket()->write(p);
+                }
+                oqueue.get()->OutputQueue.clear();
+                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
                 _start = end;
             });
         }
 
+        std::shared_ptr<UniqueIDGenerator> _netId_Generator;
         std::chrono::high_resolution_clock::time_point _start;
         std::shared_ptr<ECS::World> _world;
         Common::Log::Log::shared_log_t _logger;

@@ -72,7 +72,6 @@ add_executable(rtype_client
         src/Client/Application/Application.cpp
         src/Client/Application/Application.hpp
         src/Client/Components/Network.hpp
-        src/Client/unique_id.hpp
         src/Client/ClientNetwork/ISocket.hpp
         src/Client/ClientNetwork/ASocket.hpp
         src/Client/ClientNetwork/TcpNetwork.cpp
@@ -140,17 +139,24 @@ add_executable(rtype_server
         src/Server/Network/Room/RoomManager.hpp
         src/Server/Network/Room/Room.hpp
         src/Common/Network.cpp
+        src/Common/unique_id.hpp
 
+        src/Common/ECS/NetworkPacket.hpp
         src/Common/Systems/MovementUpdateSystem.hpp
         src/Common/Systems/MovementUpdateSystem.cpp
         src/Common/Systems/TransformSystem.hpp
         src/Common/Systems/TransformSystem.cpp
         src/Common/Systems/PhysicSystem.hpp
         src/Common/Systems/PhysicSystem.cpp
+        src/Common/Systems/NetworkSystem.hpp
+        src/Common/Systems/NetworkSystem.cpp
         src/Common/Component/Movement.hpp
         src/Common/Component/Transform.hpp
         src/Common/Component/Hitbox.hpp
-        src/Common/Component/InputQueue.hpp)
+        src/Common/Component/InputQueue.hpp
+        src/Common/Component/OutputQueue.hpp
+        src/Common/Component/PlayerID.hpp
+        src/Common/Component/UniqueID.hpp)
 
 if (MSVC)
     set_target_properties(rtype_client PROPERTIES LINK_FLAGS /MACHINE:X64)
