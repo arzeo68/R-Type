@@ -12,7 +12,6 @@ void TransformSystem::update(float delta, std::shared_ptr<ECS::World>& world)
         auto [ transform, movement ] = getDependencies(entity, world);
 
         transform.get()->position += movement.get()->speed * delta;
-        std::cout << "New position [ " << delta << " ]= { " << transform.get()->position.x << ", " << transform.get()->position.y << " }\n";
         transform.get()->angle += movement.get()->angle * delta;
         if (transform.get()->angle < 0)
             transform.get()->angle = 360.f;

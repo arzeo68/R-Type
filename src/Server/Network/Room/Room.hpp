@@ -235,7 +235,7 @@ namespace RType::Network::Room {
             this->_world->setSystemSignature<Rtype::TransformSystem, Rtype::TransformComponent, Rtype::MovementComponent>();
 
             this->_world->registerSystem<Rtype::PhysicSystem>();
-            this->_world->setSystemSignature<Rtype::PhysicSystem, Rtype::TransformComponent>();
+            this->_world->setSystemSignature<Rtype::PhysicSystem, Rtype::TransformComponent, Rtype::HitboxComponent>();
 
             for (size_t i = 0; i < this->_users.size(); i += 1) {
                 ECS::Entity e = this->_world->createEntity();
