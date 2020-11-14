@@ -5,9 +5,11 @@
 #include <iostream>
 #include <Application/Application.hpp>
 
-int main()
+int main(const int ac, const char **av)
 {
-    Rtype::Application app("Rtype", 800, 800);
+    if (ac != 2)
+        return (84);
+    Rtype::Application app("Rtype", 800, 800, av[1]);
 
     app.run();
 

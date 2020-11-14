@@ -51,8 +51,15 @@ namespace RType::Network {
          * Get the client's TCP socket
          * @return A shared pointer to the UDP Socket
          */
-        std::shared_ptr<Socket::ASocket<UDPSocket>> get_udpsocket() {
-            return (this->_udpsocket);
+        std::shared_ptr<Socket::ASocket<UDPSocket>> get_udpsocket_read() {
+            return (this->_udpsocket_read);
+        }
+        /**
+         * Get the client's TCP socket
+         * @return A shared pointer to the UDP Socket
+         */
+        std::shared_ptr<Socket::ASocket<UDPSocket>> get_udpsocket_write() {
+            return (this->_udpsocket_write);
         }
 
         /**
@@ -65,7 +72,8 @@ namespace RType::Network {
 
         protected:
         Worker _worker;
-        std::shared_ptr<Socket::ASocket<UDPSocket>> _udpsocket;
+        std::shared_ptr<Socket::ASocket<UDPSocket>> _udpsocket_write;
+        std::shared_ptr<Socket::ASocket<UDPSocket>> _udpsocket_read;
         std::shared_ptr<Socket::ASocket<TCPSocket>> _tcpsocket;
         std::shared_ptr<ThreadSafeQueue<AClient<UDPSocket, TCPSocket> *>> _socket_error;
     };

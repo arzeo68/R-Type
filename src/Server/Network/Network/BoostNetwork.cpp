@@ -59,7 +59,7 @@ void RType::Network::BoostNetwork::stop() {
                   this->_clients.end(),
                   [](const client_shared_ptr& client) {
                       client->get_tcpsocket()->shutdown_socket();
-                      client->get_udpsocket()->shutdown_socket();
+                      client->get_udpsocket_read()->shutdown_socket();
                   });
     this->_router.get_io_service()->stop();
     this->_logger->Info("Clearing sockets...");
@@ -69,7 +69,7 @@ void RType::Network::BoostNetwork::stop() {
 }
 
 void RType::Network::BoostNetwork::wait_for_client() {
-    this->_logger->Debug("Creating a client & waiting for connection");
+    this->_logger->Debug("Creating a client & waiting for connection on port: ", this->_global_port);
     auto client = std::make_shared<BoostClient>(*this->_router.get_io_service(),
                                                 *this->_router.get_udp_endpoint(),
                                                 this->_logger,
@@ -89,6 +89,7 @@ void RType::Network::BoostNetwork::wait_for_client() {
                                                                           ") Incoming connection from: ",
                                                                           client->get_tcpsocket()->get_socket()->remote_endpoint().address().to_string());
                                                       this->_rooms->add_user(client);
+                                                      client->init_write_socket(*this->_router.get_io_service(), this->_global_port++);
                                                       client->get_tcpsocket()->read();
                                                       this->_logger->Debug(
                                                           "I will recreate a client for the next connection");

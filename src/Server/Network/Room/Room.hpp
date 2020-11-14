@@ -127,7 +127,7 @@ namespace RType::Network::Room {
             std::for_each(this->_users.begin(),
                           this->_users.end(),
                           [m](room_user_sptr& p) {
-                              p->get_udpsocket->write(m);
+                              p->get_udpsocket_read->write(m);
                           });
         }
 
@@ -268,14 +268,14 @@ namespace RType::Network::Room {
             this->init_ecs();
             this->_state = GameState_e::RUNNING;
             std::for_each(this->_users.begin(), this->_users.end(), [](room_user_sptr &u) {
-                u->get_udpsocket()->read();
+                u->get_udpsocket_read()->read();
             });
             _start = std::chrono::high_resolution_clock::now();
             this->_worker_game_loop.run_awake([&] () {
                 auto queue = this->_world->getSingletonComponent<Rtype::InputQueueComponent>();
                 auto oqueue = this->_world->getSingletonComponent<Rtype::OutputQueueComponent>();
                 for (int i = 0; i < _users.size(); i += 1) {
-                    auto q = _users[i]->get_udpsocket()->get_queue();
+                    auto q = _users[i]->get_udpsocket_read()->get_queue();
                     while (!q->empty()) {
                         auto packet = q->pop();
                         queue.get()->InputQueueMap[i].push_back(packet.command);
@@ -289,9 +289,9 @@ namespace RType::Network::Room {
                 this->_world->getSystem<Rtype::PhysicSystem>()->update(res, this->_world);
                 this->_world->getSystem<Rtype::NetworkSystem>()->update(res, this->_world);
                 this->_world->getSystem<Rtype::NetworkSystem>()->update(res, this->_world);
-                for (int i = 0; i < _users.size(); i += 1) {
+                for (uint i = 0; i < _users.size(); ++i) {
                     for (auto& p : oqueue.get()->OutputQueue)
-                        _users[i]->get_udpsocket()->write(p);
+                        _users[i]->get_udpsocket_write->write(p);
                 }
                 oqueue.get()->OutputQueue.clear();
                 std::this_thread::sleep_for(std::chrono::milliseconds(1000));

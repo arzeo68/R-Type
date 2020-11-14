@@ -15,7 +15,7 @@ namespace Rtype {
     {
     public:
         Application(std::string const& title, unsigned int width,
-                    unsigned int height);
+                    unsigned int height, const std::string& port);
         ~Application() = default;
 
         void addScene(std::string const& title, std::shared_ptr<AScene> scene);
@@ -34,6 +34,7 @@ namespace Rtype {
         std::shared_ptr<std::deque<std::string>> tcpMessageReceived;
         std::shared_ptr<Rtype::ASocket> tcpSocket;
         std::shared_ptr<Rtype::ASocket> udpSocket;
+        std::shared_ptr<Rtype::ASocket> udpSocket_read;
         std::shared_ptr<IWindow> m_pWindow;
         std::shared_ptr<SceneManager> m_pSceneManager;
         std::shared_ptr<AEventManager> m_pEventManager;

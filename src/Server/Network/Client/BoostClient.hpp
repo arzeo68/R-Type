@@ -40,6 +40,8 @@ namespace RType::Network {
          */
         ~BoostClient() override;
 
+        void init_write_socket(boost::asio::io_service& service, uint32_t port);
+
         private:
         Common::Log::Log::shared_log_t _logger;
     };

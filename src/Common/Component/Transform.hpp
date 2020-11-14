@@ -19,7 +19,7 @@ public:
     vec2f scale;
 };
 
-static std::ostream& operator<<(std::ostream& out, TransformComponent const& t)
+[[maybe_unused]] static std::ostream& operator<<(std::ostream& out, TransformComponent const& t)
 {
     out << "TransformComponent : { position : ( " << t.position.x << ", " << t.position.y << " ), rotation : " << t.angle << ", scale : ( " << t.scale.x << ", " << t.scale.y << " ) }";
     return out;

@@ -48,6 +48,7 @@ namespace RType::Network {
         ThreadPool _thread_pool;
         std::shared_ptr<ThreadSafeQueue<AClient<Socket::boost_socket_udp_t, Socket::boost_socket_tcp_t> *>> _pending_client;
         Worker _worker_pending_client;
+        uint64_t _global_port = 4244;
     };
 }
 

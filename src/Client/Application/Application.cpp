@@ -26,7 +26,7 @@ float getAggregatedTime(float delta) { return __aggregated_time; }
         #endif
     }
 
-Application::Application(std::string const& title, unsigned int width, unsigned int height)
+Application::Application(std::string const& title, unsigned int width, unsigned int height, const std::string& port)
 {
     m_pWindow = std::make_shared<Window>(title, width, height);
     m_pSceneManager = std::make_shared<SceneManager>();
@@ -34,6 +34,7 @@ Application::Application(std::string const& title, unsigned int width, unsigned 
     std::cout << "Register 'catch_close' on 'EClose'" << std::endl;
     tcpSocket = std::make_shared<Rtype::TCPBoostSocket>("127.0.0.1", "4242", tcpMessageReceived);
     udpSocket = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", "4243", tcpMessageReceived);
+    udpSocket_read = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", port, tcpMessageReceived);
     m_pEventManager->getSubject().registerObserver(EClose, std::bind(&Application::catch_close, this, std::placeholders::_1, std::placeholders::_2));
     m_pEventManager->getSubject().registerObserver(EKeyPressed, std::bind(&Application::catch_keyPressed, this, std::placeholders::_1, std::placeholders::_2));
 }
