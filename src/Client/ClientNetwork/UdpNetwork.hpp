@@ -48,6 +48,8 @@ namespace Rtype{
         void HandleConnect(const std::error_code& error, boost::asio::ip::udp::resolver::results_type::iterator endpoint);
 
         private:
+        void wait();
+        void handle_receive(const boost::system::error_code& error, size_t bytes_transferred);
         bool stopped = false;
         boost::asio::io_context m_ioContext;
         boost::asio::ip::udp::resolver m_Resolver;
@@ -57,6 +59,7 @@ namespace Rtype{
 
         boost::asio::ip::udp::socket m_udpSocket;
         std::shared_ptr<std::deque<std::string>> SharedDataQueue;
+        std::array<char, 1> recv_buffer;
     };
 }
 

@@ -3,6 +3,10 @@
 #include <iostream>
 #include "UdpNetwork.hpp"
 
+RType::Common::Network::TCPPacket RType::Common::Network::packet_unpack(const std::string& str) {
+    return *(struct Common::Network::TCPPacket *) str.data();
+}
+
 namespace Rtype
 {
 
@@ -34,6 +38,7 @@ namespace Rtype
         if (endpoint != endpoints.end())
         {
             m_udpSocket.async_connect(endpoint->endpoint(), boost::bind(&UDPBoostSocket::HandleConnect, this, boost::asio::placeholders::error, endpoint));
+            _endpoint = endpoint->endpoint();
         }
     }
 
@@ -59,8 +64,8 @@ namespace Rtype
         std::vector<boost::asio::const_buffer> buffers;
         std::cout << "Writing smth" << std::endl;
         buffers.emplace_back(boost::asio::buffer(&input, sizeof(input)));
-        boost::asio::ip::udp::endpoint endpoint = *m_Resolver.resolve(boost::asio::ip::udp::v4(), "127.0.0.1", "").begin();
-        this->m_udpSocket.async_send(buffers, [this](const boost::system::error_code &error, std::size_t)
+
+        this->m_udpSocket.async_send_to(buffers, _endpoint, [this](const boost::system::error_code &error, std::size_t)
         {
             printf("error? %i\n", error.value());
             if (error)
@@ -74,7 +79,31 @@ namespace Rtype
         });
     }
 
+    void UDPBoostSocket::wait() {
+        std::shared_ptr<std::array<char ,6>> raw_message = std::make_shared<std::array<char ,6>>();
+
+        std::cout << "(udp) Waiting for a message..." << std::endl;
+        boost::system::error_code err;
+        if (err)
+            std::cerr << "ERROR 0:  " << err.message() << std::endl;
+        this->m_udpSocket.bind(this->_endpoint, err);
+        this->m_udpSocket.async_receive(boost::asio::buffer(*raw_message),
+            [&, raw_message](
+                const boost::system::error_code& err,
+                std::size_t bytes_transferred) {
+                if (err) {
+                    std::cerr << "error 1  " << err.message() << std::endl;
+                }
+                else
+                {
+                    std::cout << " ca marche bien zebi" << std::endl;
+                }
+                this->wait();
+            });
+    }
+
     void UDPBoostSocket::start_read()
     {
+        wait();
     }
 }

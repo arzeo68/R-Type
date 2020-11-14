@@ -67,8 +67,6 @@ void Application::run()
         tcpSocket->start_socket();
         udpSocket->start_socket();
     });
-    //tcpSocket->start_socket();
-    //udpSocket->start_socket();
     std::shared_ptr<Window> w = std::dynamic_pointer_cast<Window>(m_pWindow);
     m_pWindow->open();
     auto start = std::chrono::high_resolution_clock::now();
@@ -107,7 +105,6 @@ void Application::catch_keyPressed(EventType type, std::shared_ptr<Observer::IEv
     std::shared_ptr<EventKeyPressed> key = std::dynamic_pointer_cast<EventKeyPressed>(data);
     std::string keyString= std::to_string(key->_key);
     RType::Common::Network::TCPPacket p{RType::Common::Network::g_MagicNumber, key->_key};
-    //std::string pack((char *)&p, sizeof(RType::Common::Network::TCPPacket));
     tcpSocket->write(p);
     udpSocket->write(p);
 }
