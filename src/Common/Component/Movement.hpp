@@ -30,7 +30,6 @@ static void PlayerUpdateMovement(float delta, std::shared_ptr<ECS::World>& world
     auto InputQueue = world->getSingletonComponent<Rtype::InputQueueComponent>();
 
     std::deque<int>& inputs = InputQueue.get()->InputQueueMap[ID.get()->id];
-    std::cout << "id " << ID.get()->id << " target " << target << "\n";
 
     movement.get()->speed.x = 0;
     movement.get()->speed.y = 0;

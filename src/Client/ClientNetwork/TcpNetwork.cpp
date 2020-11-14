@@ -49,6 +49,7 @@ namespace Rtype
         } else
         {
             // Start Read and Write
+            start_read();
         }
     }
 
@@ -69,5 +70,20 @@ namespace Rtype
 
     void TCPBoostSocket::start_read()
     {
+        std::cout << "Ready to read\n";
+        boost::asio::async_read(m_tcpSocket, boost::asio::dynamic_buffer(m_data, 6),
+        boost::bind(&TCPBoostSocket::handle_read, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+    }
+
+    void TCPBoostSocket::handle_read(const std::error_code& err, size_t s)
+    {
+        if (!err) {
+            std::cout << "read " << *((int *)(m_data.data()) + 1) << "\n";
+            m_data.clear();
+        } else {
+            this->shutdown_socket();
+            return;
+        }
+        start_read();
     }
 }

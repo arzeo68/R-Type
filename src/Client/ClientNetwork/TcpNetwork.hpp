@@ -7,6 +7,7 @@
 
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/tcp.hpp>
+#include <vector>
 #include <deque>
 #include "ASocket.hpp"
 /**
@@ -48,6 +49,7 @@ namespace Rtype {
         private:
         void StartConnect(boost::asio::ip::tcp::resolver::results_type::iterator endpoint);
         void HandleConnect(const std::error_code& error, boost::asio::ip::tcp::resolver::results_type::iterator endpoint);
+        void handle_read(const std::error_code& error, size_t s);
 
         private:
         bool stopped = false;
@@ -57,6 +59,7 @@ namespace Rtype {
 
         boost::asio::ip::tcp::socket m_tcpSocket;
         std::shared_ptr<std::deque<std::string>> SharedDataQueue;
+        std::vector<char> m_data;
     };
 }
 

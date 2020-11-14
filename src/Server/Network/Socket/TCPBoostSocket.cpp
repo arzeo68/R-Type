@@ -73,6 +73,7 @@ void
 RType::Network::Socket::TCPBoostSocket::write(const Common::Network::TCPPacket& input) {
     std::vector<boost::asio::const_buffer> buffers;
     buffers.emplace_back(boost::asio::buffer(&input, sizeof(input)));
+    std::cout << "RType::Network::Socket::TCPBoostSocket::write::start" << std::endl;
     this->_socket->async_send(buffers,
                               [&](const boost::system::error_code& error,
                                   std::size_t) {
@@ -83,7 +84,9 @@ RType::Network::Socket::TCPBoostSocket::write(const Common::Network::TCPPacket& 
                                       this->shutdown_socket();
                                       return;
                                   }
+                                  std::cout << "Success" << std::endl;
                               });
+    std::cout << "RType::Network::Socket::TCPBoostSocket::write::end" << std::endl;
 }
 
 bool RType::Network::Socket::TCPBoostSocket::is_functional() {

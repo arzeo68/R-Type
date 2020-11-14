@@ -47,7 +47,7 @@ namespace Rtype
         auto status = _sfUdpSocket->send(&input, sizeof(input), _addr, _port);
         if (status == sf::Socket::Done)
         {
-            std::cout << "data succesfully written on :" << _addr << " : " << _port << std::endl;
+            //std::cout << "data succesfully written on :" << _addr << " : " << _port << std::endl;
         }
         else if (status == sf::Socket::NotReady)
         {
@@ -83,8 +83,8 @@ namespace Rtype
         }
         else if (status == sf::Socket::Done)
         {
-            std::cout << "Received " << received << " bytes from " << sender << " on port " << port << std::endl;
-            std::cout << "DATA: " << data.id << "  " << data.type << "  " << data.x << "  " << data.y << std::endl;
+/*             std::cout << "Received " << received << " bytes from " << sender << " on port " << port << std::endl;
+            std::cout << "DATA: " << data.id << "  " << data.type << "  " << data.x << "  " << data.y << std::endl; */
         }
         else
         {
