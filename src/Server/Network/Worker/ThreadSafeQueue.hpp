@@ -34,6 +34,29 @@ namespace RType::Network {
         }
 
         /**
+         *
+         * @return
+         */
+        auto end() {
+            std::lock_guard<std::mutex> l(this->_mutex);
+            return (std::end(this->_queue));
+        }
+
+        /**
+         * Pop the last added element
+         * @return An instance T of the popped element if the queue isn't empty
+         * @return A "end" instance otherwise
+         */
+        T pop() {
+            if (this->empty())
+                return (this->end());
+            std::lock_guard<std::mutex> l(this->_mutex);
+            auto element = this->_queue.front();
+            this->_queue.pop();
+            return (element);
+        }
+
+        /**
          * Pop the last added element and pass it to a custom user defined function
          * @param function Function with the prototype: void (T)
          * @return true: if the element has been removed
