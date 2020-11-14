@@ -67,15 +67,14 @@ void Application::switchScene(std::string const& title)
 
 void Application::run()
 {
+    udpSocket_read->start_socket();
+
     std::thread client_thead([=](){
-        printf("tcpSocket: %p\n", tcpSocket.get());
         tcpSocket->start_socket();
-        printf("udpSocket_read: %p\n", udpSocket_read.get());
-        udpSocket_read->start_socket();
-        printf("udpSocket: %p\n", udpSocket.get());
         udpSocket->start_socket();
         this->_service.run();
     });
+
     std::shared_ptr<Window> w = std::dynamic_pointer_cast<Window>(m_pWindow);
     m_pWindow->open();
     auto start = std::chrono::high_resolution_clock::now();
@@ -83,6 +82,7 @@ void Application::run()
     std::shared_ptr<MenuScene> menu = std::make_shared<MenuScene>();
     m_pSceneManager->add(menu);
     while (m_pWindow->isOpen()) {
+        udpSocket_read->start_read();
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<float, std::milli> duration = end - start;
         float res = duration.count();

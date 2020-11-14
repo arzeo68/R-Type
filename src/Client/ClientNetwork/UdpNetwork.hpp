@@ -5,6 +5,7 @@
 #ifndef RTYPE_UDPNETWORK_HPP
 #define RTYPE_UDPNETWORK_HPP
 
+#include <SFML/Network.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/udp.hpp>
 #include <deque>
@@ -62,6 +63,15 @@ namespace Rtype{
         boost::asio::ip::udp::socket m_udpSocket;
         std::shared_ptr<std::deque<std::string>> SharedDataQueue;
         std::array<char, 1> recv_buffer;
+
+        // test SFML
+
+        std::shared_ptr<sf::UdpSocket> _sfUdpSocket;
+
+
+
+
+
     };
 }
 

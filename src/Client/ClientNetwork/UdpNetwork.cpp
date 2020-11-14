@@ -2,10 +2,7 @@
 #include <boost/bind.hpp>
 #include <iostream>
 #include "UdpNetwork.hpp"
-
-RType::Common::Network::TCPPacket RType::Common::Network::packet_unpack(const std::string& str) {
-    return *(struct Common::Network::TCPPacket *) str.data();
-}
+#include "Common/ECS/NetworkPacket.hpp"
 
 namespace Rtype
 {
@@ -17,6 +14,9 @@ namespace Rtype
         m_Resolver(service), m_udpSocket(service), SharedDataQueue(SharedQueue)
     {
         endpoints = m_Resolver.resolve(host, port);
+        _sfUdpSocket = std::make_shared<sf::UdpSocket>();
+        _sfUdpSocket->setBlocking(false);
+        _sfUdpSocket->bind(std::atoi(port.c_str()));
     }
 
     void UDPBoostSocket::start_socket() noexcept
@@ -56,7 +56,6 @@ namespace Rtype
         {
             // Start Read and Write
             printf("Socket: %p\n", this);
-            start_read();
         }
     }
 
@@ -81,31 +80,52 @@ namespace Rtype
     }
 
     void UDPBoostSocket::wait() {
-        std::shared_ptr<std::array<char, 28>> raw_message = std::make_shared<std::array<char, 28>>();
+//        std::shared_ptr<std::array<char, 28>> raw_message = std::make_shared<std::array<char, 28>>();
+//
+//        boost::system::error_code err;
+//        this->m_udpSocket.bind(this->_endpoint, err);
+//        if (err)
+//            std::cerr << "ERROR 0:  " << err.message() << std::endl;
+//        std::cout << "(udp) Waiting for a message...  " << _endpoint.address().to_string() << " : " << _endpoint.port() << std::endl;
+//        this->m_udpSocket.async_receive_from(boost::asio::buffer(*raw_message), _endpoint,
+//                                        [&, raw_message](
+//                                            const boost::system::error_code& err,
+//                                            std::size_t) {
+//                                            if (err) {
+//                                                std::cerr << "error 1  " << err.message() << std::endl;
+//                                            }
+//                                            else
+//                                            {
+//                                                std::cout << " ca marche bien zebi" << std::endl;
+//                                            }
+//                                            this->wait();
+//                                        });
+//        std::cout << "exiting this shitty function" << std::endl;
 
-        std::cout << "(udp) Waiting for a message..." << std::endl;
-        boost::system::error_code err;
-        this->m_udpSocket.bind(this->_endpoint, err);
-        if (err)
-            std::cerr << "ERROR 0:  " << err.message() << std::endl;
-        this->m_udpSocket.async_receive(boost::asio::buffer(*raw_message),
-                                        [&, raw_message](
-                                            const boost::system::error_code& err,
-                                            std::size_t) {
-                                            if (err) {
-                                                std::cerr << "error 1  " << err.message() << std::endl;
-                                            }
-                                            else
-                                            {
-                                                std::cout << " ca marche bien zebi" << std::endl;
-                                            }
-                                            this->wait();
-                                        });
-        std::cout << "exiting this shitty function" << std::endl;
+
     }
 
     void UDPBoostSocket::start_read()
     {
-        wait();
+        //        wait();
+        ECS::NetworkPacket data;
+        std::size_t received;
+        sf::IpAddress sender;
+        unsigned short port;
+        auto status = _sfUdpSocket->receive(&data, 16, received, sender, port);
+        if (status == sf::Socket::NotReady)
+        {
+//            std::cerr << "not ready" << std::endl;
+            return;
+        }
+        else if (status == sf::Socket::Done)
+        {
+            std::cout << "Received " << received << " bytes from " << sender << " on port " << port << std::endl;
+            std::cout << "DATA: " << data.id << "  " << data.type << "  " << data.x << "  " << data.y << std::endl;
+        }
+        else
+        {
+            std::cerr << " sa a return a autre truc" << std::endl;
+        }
     }
 }

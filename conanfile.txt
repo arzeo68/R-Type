@@ -8,6 +8,7 @@ sfml/2.5.1@bincrafters/stable
 sfml:graphics=True
 sfml:window=True
 sfml:audio=True
+sfml:network=True
 
 [generators]
 cmake

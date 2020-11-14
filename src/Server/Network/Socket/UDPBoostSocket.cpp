@@ -98,7 +98,11 @@ RType::Network::Socket::UDPBoostSocket::write(const Common::Network::TCPPacket& 
 
 void
 RType::Network::Socket::UDPBoostSocket::write(ECS::NetworkPacket& input) {
-    this->_socket->async_send_to(boost::asio::buffer(input.getData()), this->_endpoint,
+    std::cout << "ruffinoni" << std::endl;
+    std::vector<boost::asio::const_buffer> buffers;
+    buffers.emplace_back(boost::asio::buffer(&input, sizeof(input)));
+    std::cout << "write on " << _endpoint.address().to_string() << " : " << _endpoint.port() << std::endl;
+    this->_socket->async_send_to(buffers, this->_endpoint,
                               [this](const boost::system::error_code& error,
                                      std::size_t size) {
                                   if (error) {
@@ -110,6 +114,8 @@ RType::Network::Socket::UDPBoostSocket::write(ECS::NetworkPacket& input) {
                                           "[client-> UDPBoostSocket] NetworkPacket write w/ ", size);
                                   }
                               });
+    std::cout << "tessier" << std::endl;
+
 }
 
 bool RType::Network::Socket::UDPBoostSocket::is_functional() {

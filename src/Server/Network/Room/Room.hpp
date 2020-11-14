@@ -290,8 +290,10 @@ namespace RType::Network::Room {
                 this->_world->getSystem<Rtype::NetworkSystem>()->update(res, this->_world);
                 this->_world->getSystem<Rtype::NetworkSystem>()->update(res, this->_world);
                 for (size_t i = 0; i < _users.size(); ++i) {
-                    for (auto& p : oqueue.get()->OutputQueue)
+                    for (auto& p : oqueue.get()->OutputQueue) {
                         _users[i]->get_udpsocket_write()->write(p);
+
+                    }
                 }
                 oqueue.get()->OutputQueue.clear();
                 std::this_thread::sleep_for(std::chrono::milliseconds(1000));

@@ -88,8 +88,8 @@ void RType::Network::BoostNetwork::wait_for_client() {
                                                                           client,
                                                                           ") Incoming connection from: ",
                                                                           client->get_tcpsocket()->get_socket()->remote_endpoint().address().to_string());
-                                                      this->_rooms->add_user(client);
                                                       client->init_write_socket(*this->_router.get_io_service(), this->_global_port++);
+                                                      this->_rooms->add_user(client);
                                                       client->get_tcpsocket()->read();
                                                       this->_logger->Debug(
                                                           "I will recreate a client for the next connection");
