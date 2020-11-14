@@ -22,6 +22,8 @@
 #include "Common/Component/Transform.hpp"
 #include "Common/Component/Movement.hpp"
 #include "Common/Component/Hitbox.hpp"
+#include "Common/Component/InputQueue.hpp"
+#include "Common/Component/PlayerID.hpp"
 
 #include "Common/Systems/TransformSystem.hpp"
 #include "Common/Systems/PhysicSystem.hpp"
@@ -219,6 +221,12 @@ namespace RType::Network::Room {
             this->_world->registerComponent<Rtype::TransformComponent>();
             this->_world->registerComponent<Rtype::HitboxComponent>();
             this->_world->registerComponent<Rtype::MovementComponent>();
+            this->_world->registerComponent<Rtype::InputQueueComponent>();
+            this->_world->registerComponent<Rtype::PlayerID>();
+
+            this->_world->addSingletonComponents<Rtype::InputQueueComponent>(
+                Rtype::InputQueueComponent()
+            );
 
             this->_world->registerSystem<Rtype::MovementUpdateSystem>();
             this->_world->setSystemSignature<Rtype::MovementUpdateSystem, Rtype::MovementComponent>();
@@ -228,6 +236,17 @@ namespace RType::Network::Room {
 
             this->_world->registerSystem<Rtype::PhysicSystem>();
             this->_world->setSystemSignature<Rtype::PhysicSystem, Rtype::TransformComponent>();
+
+            for (size_t i = 0; i < this->_users.size(); i += 1) {
+                ECS::Entity e = this->_world->createEntity();
+
+                this->_world->addComponents<Rtype::TransformComponent, Rtype::MovementComponent, Rtype::PlayerID>(
+                    e,
+                    Rtype::TransformComponent({0, 0}, 0, {1, 1}),
+                    Rtype::MovementComponent({0, 0}, 0, std::bind(Rtype::PlayerUpdateMovement, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
+                    Rtype::PlayerID(i)
+                );
+            }
         }
 
         void launch_game() {
@@ -239,24 +258,21 @@ namespace RType::Network::Room {
             });
             _start = std::chrono::high_resolution_clock::now();
             this->_worker_game_loop.run_awake([&] () {
-                std::for_each(this->_users.begin(), this->_users.end(), [](room_user_sptr &u) {
-                    auto q = u->get_udpsocket()->get_queue();
-                    int i = 0;
+                auto queue = this->_world->getSingletonComponent<Rtype::InputQueueComponent>();
+                for (int i = 0; i < _users.size(); i += 1) {
+                    auto q = _users[i]->get_udpsocket()->get_queue();
                     while (!q->empty()) {
                         auto packet = q->pop();
-                        std::cout << "Packet: " << std::to_string(packet.command) << std::endl;
-                        i++;
+                        queue.get()->InputQueueMap[i].push_back(packet.command);
                     }
-                    std::cout << "q size: " << std::to_string(i) << std::endl;
-                });
+                }
                 auto end = std::chrono::high_resolution_clock::now();
                 std::chrono::duration<float, std::milli> duration = end - _start;
                 float res = duration.count();
-                this->_logger->Debug("[Room ", this, "] State: ", this->_state);
                 this->_world->getSystem<Rtype::MovementUpdateSystem>()->update(res, this->_world);
                 this->_world->getSystem<Rtype::TransformSystem>()->update(res, this->_world);
                 this->_world->getSystem<Rtype::PhysicSystem>()->update(res, this->_world);
-                std::this_thread::sleep_for(std::chrono::milliseconds(16));
+                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
             });
         }
 

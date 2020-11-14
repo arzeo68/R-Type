@@ -11,7 +11,7 @@ void MovementUpdateSystem::update(float delta, std::shared_ptr<ECS::World>& worl
     for (auto entity : m_cEntities) {
         auto [ movement ] = getDependencies(entity, world);
 
-        movement.get()->update(delta, movement);
+        movement.get()->update(delta, world, entity);
     }
 }
 

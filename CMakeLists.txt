@@ -149,7 +149,8 @@ add_executable(rtype_server
         src/Common/Systems/PhysicSystem.cpp
         src/Common/Component/Movement.hpp
         src/Common/Component/Transform.hpp
-        src/Common/Component/Hitbox.hpp)
+        src/Common/Component/Hitbox.hpp
+        src/Common/Component/InputQueue.hpp)
 
 if (MSVC)
     set_target_properties(rtype_client PROPERTIES LINK_FLAGS /MACHINE:X64)
