@@ -10,6 +10,7 @@
 
 #include <condition_variable>
 #include "ISocket.hpp"
+#include "Server/Network/Worker/ThreadSafeQueue.hpp"
 
 namespace RType::Network::Socket {
     /**
@@ -20,6 +21,10 @@ namespace RType::Network::Socket {
     class ASocket : public ISocket {
         public:
         ~ASocket() override = default;
+        //ASocket() = default;
+        //ASocket(const std::shared_ptr<ThreadSafeQueue<Common::Network::TCPPacket>> shared_queue) {
+        //    this->_queue = shared_queue;
+        //}
 
         /**
          * Override the -> operator to access directly to the socket
@@ -48,6 +53,11 @@ namespace RType::Network::Socket {
          */
         typedef std::array<char, sizeof(Common::Network::TCPPacket)> MessageArr_t;
 
+
+        virtual std::shared_ptr<ThreadSafeQueue<Common::Network::TCPPacket>> get_queue() {
+            return (this->_event->shared_from_this());
+        };
+
         protected:
         /**
          * Shared pointer to the socket
@@ -69,6 +79,8 @@ namespace RType::Network::Socket {
          * @warning You should initialize this variable by yourself but pass an instance instead
          */
         std::shared_ptr<std::condition_variable> _socket_error_notifier;
+
+        std::shared_ptr<ThreadSafeQueue<Common::Network::TCPPacket>> _event;
     };
 }
 

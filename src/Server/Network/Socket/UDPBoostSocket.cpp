@@ -17,6 +17,7 @@ RType::Network::Socket::UDPBoostSocket::UDPBoostSocket(
     this->_socket->open(endpoint.protocol());
     this->_socket->set_option(boost::asio::ip::udp::socket::reuse_address(true));
     this->_logger = log;
+    this->_event = std::make_shared<ThreadSafeQueue<Common::Network::TCPPacket>>();
 }
 
 RType::Network::Socket::UDPBoostSocket::~UDPBoostSocket() {
@@ -67,7 +68,7 @@ void RType::Network::Socket::UDPBoostSocket::read() {
                                          this->_logger->Error(
                                              "(udp) Wrong magic number for this message");
                                      else {
-                                         this->_queue->add(package);
+                                         this->_event->add(package);
                                          this->_logger->Info("(udp) Command: '",
                                                              package.command,
                                                              "' w/ ",
@@ -98,5 +99,5 @@ bool RType::Network::Socket::UDPBoostSocket::is_functional() {
 
 std::shared_ptr<RType::Network::ThreadSafeQueue<RType::Common::Network::TCPPacket>>
 RType::Network::Socket::UDPBoostSocket::get_queue() {
-    return (this->_queue->shared_from_this());
+    return (this->_event->shared_from_this());
 }

@@ -239,6 +239,16 @@ namespace RType::Network::Room {
             });
             _start = std::chrono::high_resolution_clock::now();
             this->_worker_game_loop.run_awake([&] () {
+                std::for_each(this->_users.begin(), this->_users.end(), [](room_user_sptr &u) {
+                    auto q = u->get_udpsocket()->get_queue();
+                    int i = 0;
+                    while (!q->empty()) {
+                        auto packet = q->pop();
+                        std::cout << "Packet: " << std::to_string(packet.command) << std::endl;
+                        i++;
+                    }
+                    std::cout << "q size: " << std::to_string(i) << std::endl;
+                });
                 auto end = std::chrono::high_resolution_clock::now();
                 std::chrono::duration<float, std::milli> duration = end - _start;
                 float res = duration.count();

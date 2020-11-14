@@ -39,12 +39,11 @@ namespace RType::Network::Socket {
         void read() final;
         void write(const Common::Network::TCPPacket& input) final;
         bool is_functional() final;
-        std::shared_ptr<ThreadSafeQueue<Common::Network::TCPPacket>> get_queue();
+        std::shared_ptr<ThreadSafeQueue<Common::Network::TCPPacket>> get_queue() override;
 
         private:
         Common::Log::Log::shared_log_t _logger;
         boost::asio::ip::udp::endpoint _endpoint;
-        std::shared_ptr<ThreadSafeQueue<Common::Network::TCPPacket>> _queue;
     };
 }
 
