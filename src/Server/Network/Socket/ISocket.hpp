@@ -8,6 +8,7 @@
 #ifndef SRC_ISOCKET_RTYPE_
 #define SRC_ISOCKET_RTYPE_
 
+#include "Common/ECS/NetworkPacket.hpp"
 #include "Common/Network.hpp"
 
 namespace RType::Network {
@@ -32,6 +33,7 @@ namespace RType::Network {
          * @param input Input to write in the socket
          */
         virtual void write(const Common::Network::TCPPacket&) = 0;
+        virtual void write(ECS::NetworkPacket&) = 0;
 
         /**
          * Indicates if the socket is still functional. Functional, here, means

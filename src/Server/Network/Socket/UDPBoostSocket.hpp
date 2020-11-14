@@ -38,6 +38,7 @@ namespace RType::Network::Socket {
         void shutdown_socket() noexcept final;
         void read() final;
         void write(const Common::Network::TCPPacket& input) final;
+        void write(ECS::NetworkPacket&) final;
         bool is_functional() final;
         std::shared_ptr<ThreadSafeQueue<Common::Network::TCPPacket>> get_queue() override;
 

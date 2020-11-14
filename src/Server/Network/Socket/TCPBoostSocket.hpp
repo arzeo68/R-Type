@@ -35,6 +35,7 @@ namespace RType::Network::Socket {
 
         void read() final;
         void write(const Common::Network::TCPPacket& input) final;
+        void write(ECS::NetworkPacket&) final {}
         void shutdown_socket() noexcept final;
         bool is_functional() final;
 

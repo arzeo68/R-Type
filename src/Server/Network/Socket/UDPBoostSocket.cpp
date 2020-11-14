@@ -93,6 +93,19 @@ RType::Network::Socket::UDPBoostSocket::write(const Common::Network::TCPPacket& 
                               });
 }
 
+void
+RType::Network::Socket::UDPBoostSocket::write(ECS::NetworkPacket& input) {
+    this->_socket->async_send(boost::asio::buffer(input.getData()),
+                              [this](const boost::system::error_code& error,
+                                     std::size_t) {
+                                  if (error) {
+                                      this->_logger->Error(
+                                          "[client-> UDPBoostSocket] write ",
+                                          error.message());
+                                  }
+                              });
+}
+
 bool RType::Network::Socket::UDPBoostSocket::is_functional() {
     return (this->_is_functional);
 }
