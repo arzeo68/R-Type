@@ -67,11 +67,9 @@ void Application::switchScene(std::string const& title)
 
 void Application::run()
 {
-    udpSocket_read->start_socket();
 
     std::thread client_thead([=](){
         tcpSocket->start_socket();
-        udpSocket->start_socket();
         this->_service.run();
     });
 
@@ -112,11 +110,11 @@ void Application::catch_close(EventType type, std::shared_ptr<Observer::IEvent> 
 
 void Application::catch_keyPressed(EventType type, std::shared_ptr<Observer::IEvent> data)
 {
-    std::cout << "Caught key pressed" << std::endl;
+//    std::cout << "Caught key pressed" << std::endl;
     std::shared_ptr<EventKeyPressed> key = std::dynamic_pointer_cast<EventKeyPressed>(data);
     std::string keyString= std::to_string(key->_key);
     RType::Common::Network::TCPPacket p{RType::Common::Network::g_MagicNumber, key->_key};
-    tcpSocket->write(p);
+//    tcpSocket->write(p);
     udpSocket->write(p);
 }
 

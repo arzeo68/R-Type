@@ -51,8 +51,6 @@ namespace Rtype{
         void HandleConnect(const std::error_code& error, boost::asio::ip::udp::resolver::results_type::iterator endpoint);
 
         private:
-        void wait();
-        void handle_receive(const boost::system::error_code& error, size_t bytes_transferred);
         bool stopped = false;
         boost::asio::io_context m_ioContext;
         boost::asio::ip::udp::resolver m_Resolver;
@@ -67,6 +65,8 @@ namespace Rtype{
         // test SFML
 
         std::shared_ptr<sf::UdpSocket> _sfUdpSocket;
+        unsigned short _port;
+        sf::IpAddress _addr;
 
 
 

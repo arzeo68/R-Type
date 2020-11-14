@@ -48,9 +48,10 @@ void RType::Network::Socket::UDPBoostSocket::read() {
 
     this->_logger->Debug("(udp) Waiting for a message...");
     boost::system::error_code err;
-    this->_socket->bind(this->_endpoint, err);
+    boost::asio::ip::udp::endpoint endn(boost::asio::ip::address::from_string("127.0.0.1"), 4243);
+    this->_socket->bind(endn, err);
     this->_socket->async_receive_from(boost::asio::buffer(*raw_message),
-                                 this->_endpoint,
+        endn,
                                  [&, raw_message](
                                      const boost::system::error_code& err,
                                      std::size_t bytes_transferred) {
@@ -98,10 +99,9 @@ RType::Network::Socket::UDPBoostSocket::write(const Common::Network::TCPPacket& 
 
 void
 RType::Network::Socket::UDPBoostSocket::write(ECS::NetworkPacket& input) {
-    std::cout << "ruffinoni" << std::endl;
     std::vector<boost::asio::const_buffer> buffers;
     buffers.emplace_back(boost::asio::buffer(&input, sizeof(input)));
-    std::cout << "write on " << _endpoint.address().to_string() << " : " << _endpoint.port() << std::endl;
+//    std::cout << "write on " << _endpoint.address().to_string() << " : " << _endpoint.port() << std::endl;
     this->_socket->async_send_to(buffers, this->_endpoint,
                               [this](const boost::system::error_code& error,
                                      std::size_t size) {
@@ -109,12 +109,8 @@ RType::Network::Socket::UDPBoostSocket::write(ECS::NetworkPacket& input) {
                                       this->_logger->Error(
                                           "[client-> UDPBoostSocket] NetworkPacket write ",
                                           error.message());
-                                  } else {
-                                      this->_logger->Debug(
-                                          "[client-> UDPBoostSocket] NetworkPacket write w/ ", size);
                                   }
                               });
-    std::cout << "tessier" << std::endl;
 
 }
 
