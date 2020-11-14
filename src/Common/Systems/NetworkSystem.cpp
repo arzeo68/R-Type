@@ -3,6 +3,7 @@
 #include <Common/Systems/NetworkSystem.hpp>
 #include <Common/ECS/NetworkPacket.hpp>
 
+#include <iostream>
 namespace Rtype
 {
 
@@ -11,16 +12,16 @@ void NetworkSystem::init()
 
 void NetworkSystem::update(float delta, std::shared_ptr<ECS::World>& world)
 {
-    Rtype::NetworkPacketType type = Rtype::NPT_UPDATE;
     auto oq = world->getSingletonComponent<Rtype::OutputQueueComponent>();
     for (ECS::Entity e : m_cEntities) {
         ECS::NetworkPacket p;
         auto [ id ] = getDependencies(e, world);
         auto const transform = world->getComponent<Rtype::TransformComponent>(e);
 
-        p.addData<Rtype::UniqueID>(id.get());
-        p.addData<Rtype::NetworkPacketType>(&type);
-        p.addData<Rtype::TransformComponent>(transform.get());
+        p.id = id.get()->id;
+        p.type = 1;
+        p.x = transform.get()->position.x;
+        p.y = transform.get()->position.y;
         oq.get()->OutputQueue.push_back(p);
     }
 }
