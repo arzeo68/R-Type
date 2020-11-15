@@ -10,11 +10,11 @@ namespace RType
 void NetworkSystem::init()
 { }
 
-void NetworkSystem::update(float delta, std::shared_ptr<ECS::World>& world)
+void NetworkSystem::update(float, std::shared_ptr<ECS::World>& world)
 {
     auto oq = world->getSingletonComponent<RType::OutputQueueComponent>();
     for (ECS::Entity e : m_cEntities) {
-        ECS::NetworkPacket p;
+        ECS::NetworkPacket p{};
         auto [ id ] = getDependencies(e, world);
         auto const transform = world->getComponent<RType::TransformComponent>(e);
 
@@ -22,7 +22,7 @@ void NetworkSystem::update(float delta, std::shared_ptr<ECS::World>& world)
         p.type = 1;
         p.x = transform.get()->position.x;
         p.y = transform.get()->position.y;
-        oq.get()->OutputQueue.push_back(p);
+        oq.get()->OutputQueue->push_back(p);
     }
 }
 

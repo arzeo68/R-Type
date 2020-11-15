@@ -342,7 +342,7 @@ namespace RType::Network::Room {
                 this->_world->template getSystem<RType::PhysicSystem>()->update(res, this->_world);
                 this->_world->template getSystem<RType::NetworkSystem>()->update(res, this->_world);
                 for (size_t i = 0; i < _users.size(); ++i) {
-                    for (auto& p : oqueue.get()->OutputQueue) {
+                    for (auto& p : *oqueue.get()->OutputQueue) {
                         _users[i]->get_udpsocket_write()->write(p);
                     }
                 }
@@ -351,7 +351,7 @@ namespace RType::Network::Room {
                     for (size_t i = 0; i < _users.size(); ++i)
                         _users[i]->get_udpsocket_write()->write(tmp);
                 }
-                oqueue.get()->OutputQueue.clear();
+                oqueue.get()->OutputQueue->clear();
                 std::this_thread::sleep_for(std::chrono::milliseconds(16));
                 _start = end;
                 if ((*this->_time) > 1000.f) {

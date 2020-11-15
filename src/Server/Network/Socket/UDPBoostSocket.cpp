@@ -52,11 +52,11 @@ void RType::Network::Socket::UDPBoostSocket::read() {
     this->_socket->bind(endn, err);
     this->_socket->async_receive_from(boost::asio::buffer(*raw_message),
                                 endn,
-                                 [&, raw_message](
+                                 [self = this->shared_from_this(), raw_message](
                                      const boost::system::error_code& err,
                                      std::size_t bytes_transferred) {
                                      if (err) {
-                                         this->_logger->Error(
+                                         self->_logger->Error(
                                              "(read udp) An error occurred: ",
                                              err.message());
                                          return;
@@ -66,16 +66,16 @@ void RType::Network::Socket::UDPBoostSocket::read() {
                                                      raw_message->end()));
                                      if (package.magic !=
                                          Common::Network::g_MagicNumber)
-                                         this->_logger->Error(
+                                         self->_logger->Error(
                                              "(udp) Wrong magic number for this message");
                                      else {
-                                         this->_event->add(package);
-                                         this->_logger->Info("(udp) USER: '",
+                                         self->_event->add(package);
+                                         self->_logger->Info("(udp) USER: '",
                                                              package.networkID,
                                                              "' w/ ",
                                                              bytes_transferred);
                                      }
-                                     this->read();
+                                     self->read();
                                  });
 }
 
