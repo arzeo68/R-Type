@@ -32,7 +32,7 @@ namespace Rtype {
                               std::shared_ptr<Observer::IEvent> data);
 
     private:
-        std::shared_ptr<std::deque<std::string>> tcpMessageReceived;
+        std::shared_ptr<std::deque<std::vector<char>>> tcpMessageReceived;
         std::shared_ptr<Rtype::ASocket> tcpSocket;
         std::shared_ptr<Rtype::ASocket> udpSocket;
         std::shared_ptr<Rtype::ASocket> udpSocket_read;

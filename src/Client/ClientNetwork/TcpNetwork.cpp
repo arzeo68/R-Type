@@ -6,7 +6,7 @@
 namespace Rtype
 {
 
-    TCPBoostSocket::TCPBoostSocket(std::string const& host, std::string const &port, boost::asio::io_service& service, std::shared_ptr<std::deque<std::string>>
+    TCPBoostSocket::TCPBoostSocket(std::string const& host, std::string const &port, boost::asio::io_service& service, std::shared_ptr<std::deque<std::vector<char>>>
 
     & SharedQueue)
     :
@@ -78,7 +78,9 @@ namespace Rtype
     void TCPBoostSocket::handle_read(const std::error_code& err, size_t s)
     {
         if (!err) {
-            std::cout << "read " << *((int *)(m_data.data()) + 1) << "\n";
+            std::cout << "TCP DATA RECEIVED:  " << *((int *)(m_data.data()) + 1) << std::endl;
+
+            SharedDataQueue->push_back(m_data);
             m_data.clear();
         } else {
             this->shutdown_socket();

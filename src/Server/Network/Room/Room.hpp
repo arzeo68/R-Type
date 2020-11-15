@@ -225,35 +225,35 @@ namespace RType::Network::Room {
         void init_ecs() {
             _netId_Generator = std::make_shared<UniqueIDGenerator>();
 
-            this->_world->registerComponent<Rtype::TransformComponent>();
-            this->_world->registerComponent<Rtype::HitboxComponent>();
-            this->_world->registerComponent<Rtype::MovementComponent>();
-            this->_world->registerComponent<Rtype::InputQueueComponent>();
-            this->_world->registerComponent<Rtype::OutputQueueComponent>();
-            this->_world->registerComponent<Rtype::PlayerID>();
-            this->_world->registerComponent<Rtype::UniqueID>();
+            this->_world->template registerComponent<Rtype::TransformComponent>();
+            this->_world->template registerComponent<Rtype::HitboxComponent>();
+            this->_world->template registerComponent<Rtype::MovementComponent>();
+            this->_world->template registerComponent<Rtype::InputQueueComponent>();
+            this->_world->template registerComponent<Rtype::OutputQueueComponent>();
+            this->_world->template registerComponent<Rtype::PlayerID>();
+            this->_world->template registerComponent<Rtype::UniqueID>();
 
-            this->_world->addSingletonComponents<Rtype::InputQueueComponent, Rtype::OutputQueueComponent>(
+            this->_world->template addSingletonComponents<Rtype::InputQueueComponent, Rtype::OutputQueueComponent>(
                 Rtype::InputQueueComponent(),
                 Rtype::OutputQueueComponent()
             );
 
-            this->_world->registerSystem<Rtype::MovementUpdateSystem>();
-            this->_world->setSystemSignature<Rtype::MovementUpdateSystem, Rtype::MovementComponent>();
+            this->_world->template registerSystem<Rtype::MovementUpdateSystem>();
+            this->_world->template setSystemSignature<Rtype::MovementUpdateSystem, Rtype::MovementComponent>();
 
-            this->_world->registerSystem<Rtype::TransformSystem>();
-            this->_world->setSystemSignature<Rtype::TransformSystem, Rtype::TransformComponent, Rtype::MovementComponent>();
+            this->_world->template registerSystem<Rtype::TransformSystem>();
+            this->_world->template setSystemSignature<Rtype::TransformSystem, Rtype::TransformComponent, Rtype::MovementComponent>();
 
-            this->_world->registerSystem<Rtype::PhysicSystem>();
-            this->_world->setSystemSignature<Rtype::PhysicSystem, Rtype::TransformComponent, Rtype::HitboxComponent>();
+            this->_world->template registerSystem<Rtype::PhysicSystem>();
+            this->_world->template setSystemSignature<Rtype::PhysicSystem, Rtype::TransformComponent, Rtype::HitboxComponent>();
 
-            this->_world->registerSystem<Rtype::NetworkSystem>();
-            this->_world->setSystemSignature<Rtype::NetworkSystem, Rtype::UniqueID>();
+            this->_world->template registerSystem<Rtype::NetworkSystem>();
+            this->_world->template setSystemSignature<Rtype::NetworkSystem, Rtype::UniqueID>();
 
             for (size_t i = 0; i < this->_users.size(); i += 1) {
                 ECS::Entity e = this->_world->createEntity();
 
-                this->_world->addComponents<Rtype::TransformComponent, Rtype::MovementComponent, Rtype::PlayerID, Rtype::UniqueID>(
+                this->_world->template addComponents<Rtype::TransformComponent, Rtype::MovementComponent, Rtype::PlayerID, Rtype::UniqueID>(
                     e,
                     Rtype::TransformComponent({0, 0}, 0, {1, 1}),
                     Rtype::MovementComponent({0, 0}, 0, std::bind(Rtype::PlayerUpdateMovement, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
@@ -274,9 +274,10 @@ namespace RType::Network::Room {
             });
             _start = std::chrono::high_resolution_clock::now();
             this->_worker_game_loop.run_awake([&] () {
-                auto queue = this->_world->getSingletonComponent<Rtype::InputQueueComponent>();
-                auto oqueue = this->_world->getSingletonComponent<Rtype::OutputQueueComponent>();
+                auto queue = this->_world->template getSingletonComponent<Rtype::InputQueueComponent>();
+                auto oqueue = this->_world->template getSingletonComponent<Rtype::OutputQueueComponent>();
                 for (int i = 0; i < _users.size(); i += 1) {
+                    std::cout << "package received from: " << i << std::endl;
                     auto q = _users[i]->get_udpsocket_read()->get_queue();
                     while (!q->empty()) {
                         auto packet = q->pop();
@@ -286,11 +287,11 @@ namespace RType::Network::Room {
                 auto end = std::chrono::high_resolution_clock::now();
                 std::chrono::duration<float, std::milli> duration = end - _start;
                 float res = duration.count();
-                this->_world->getSystem<Rtype::MovementUpdateSystem>()->update(res, this->_world);
-                this->_world->getSystem<Rtype::TransformSystem>()->update(res, this->_world);
-                this->_world->getSystem<Rtype::PhysicSystem>()->update(res, this->_world);
-                this->_world->getSystem<Rtype::NetworkSystem>()->update(res, this->_world);
-                this->_world->getSystem<Rtype::NetworkSystem>()->update(res, this->_world);
+                this->_world->template getSystem<Rtype::MovementUpdateSystem>()->update(res, this->_world);
+                this->_world->template getSystem<Rtype::TransformSystem>()->update(res, this->_world);
+                this->_world->template getSystem<Rtype::PhysicSystem>()->update(res, this->_world);
+                this->_world->template getSystem<Rtype::NetworkSystem>()->update(res, this->_world);
+                this->_world->template getSystem<Rtype::NetworkSystem>()->update(res, this->_world);
                 for (size_t i = 0; i < _users.size(); ++i) {
                     for (auto& p : oqueue.get()->OutputQueue) {
                         _users[i]->get_udpsocket_write()->write(p);

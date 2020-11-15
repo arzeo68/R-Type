@@ -32,12 +32,11 @@ Application::Application(std::string const& title, unsigned int width, unsigned 
     m_pSceneManager = std::make_shared<SceneManager>();
     m_pEventManager = std::make_shared<EventManager>(*(std::static_pointer_cast<Window>(m_pWindow)));
     std::cout << "Register 'catch_close' on 'EClose'" << std::endl;
+    tcpMessageReceived = std::make_shared<std::deque<std::vector<char>>>();
     tcpSocket = std::make_shared<Rtype::TCPBoostSocket>("127.0.0.1", "4242", this->_service,
                                                         tcpMessageReceived);
-    udpSocket = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", "4243", this->_service,
-                                                        tcpMessageReceived);
-    udpSocket_read = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", port, this->_service,
-                                                             tcpMessageReceived);
+    udpSocket = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", "4243", this->_service);
+    udpSocket_read = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", port, this->_service);
     m_pEventManager->getSubject().registerObserver(EClose, std::bind(&Application::catch_close, this, std::placeholders::_1, std::placeholders::_2));
     m_pEventManager->getSubject().registerObserver(EKeyPressed, std::bind(&Application::catch_keyPressed, this, std::placeholders::_1, std::placeholders::_2));
 }
@@ -79,6 +78,11 @@ void Application::run()
     RenderTarget target = w->getRenderTarget();
     std::shared_ptr<MenuScene> menu = std::make_shared<MenuScene>();
     m_pSceneManager->add(menu);
+
+    while (tcpMessageReceived->empty());
+    int lol = *((int *)(tcpMessageReceived->front().data()) + 1);
+    std::cout << "sdfsdf: " << lol << std::endl;
+
     while (m_pWindow->isOpen()) {
         udpSocket_read->start_read();
         auto end = std::chrono::high_resolution_clock::now();

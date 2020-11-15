@@ -27,8 +27,7 @@ namespace Rtype{
          * @param SharedQueue queue in which the socket will stored the message received
          */
         UDPBoostSocket(std::string const& host, std::string const& port,
-                       boost::asio::io_service& service,
-                       std::shared_ptr<std::deque<std::string>>& SharedQueue);
+                       boost::asio::io_service& service);
         /**
          * start the socket
          */

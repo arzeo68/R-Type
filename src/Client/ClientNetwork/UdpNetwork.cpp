@@ -7,11 +7,10 @@
 namespace Rtype
 {
 
-    UDPBoostSocket::UDPBoostSocket(std::string const& host, std::string const &port, boost::asio::io_service& service, std::shared_ptr<std::deque<std::string>>
-
-    & SharedQueue)
+    UDPBoostSocket::UDPBoostSocket(std::string const& host, std::string const &port, boost::asio::io_service& service
+    )
         :
-        m_Resolver(service), m_udpSocket(service), SharedDataQueue(SharedQueue)
+        m_Resolver(service), m_udpSocket(service)
     {
         endpoints = m_Resolver.resolve(host, port);
         _sfUdpSocket = std::make_shared<sf::UdpSocket>();
