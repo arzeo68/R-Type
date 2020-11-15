@@ -28,7 +28,7 @@ namespace Rtype {
          */
         TCPBoostSocket(std::string const& host, std::string const& port,
                        boost::asio::io_service& service,
-                       std::shared_ptr<std::deque<std::vector<char>>>& SharedQueue);
+                       std::shared_ptr<std::deque<int>>& SharedQueue);
         /**
          * start the socket
          */
@@ -58,7 +58,7 @@ namespace Rtype {
         boost::asio::ip::tcp::resolver::results_type endpoints;
 
         boost::asio::ip::tcp::socket m_tcpSocket;
-        std::shared_ptr<std::deque<std::vector<char>>> SharedDataQueue;
+        std::shared_ptr<std::deque<int>> SharedDataQueue;
         std::vector<char> m_data;
     };
 }

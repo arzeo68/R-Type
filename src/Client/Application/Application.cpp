@@ -32,7 +32,7 @@ Application::Application(std::string const& title, unsigned int width, unsigned 
     m_pSceneManager = std::make_shared<SceneManager>();
     m_pEventManager = std::make_shared<EventManager>(*(std::static_pointer_cast<Window>(m_pWindow)));
     std::cout << "Register 'catch_close' on 'EClose'" << std::endl;
-    tcpMessageReceived = std::make_shared<std::deque<std::vector<char>>>();
+    tcpMessageReceived = std::make_shared<std::deque<int>>();
     tcpSocket = std::make_shared<Rtype::TCPBoostSocket>("127.0.0.1", "4242", this->_service,
                                                         tcpMessageReceived);
     udpSocket = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", "4243", this->_service);
@@ -79,9 +79,12 @@ void Application::run()
     std::shared_ptr<MenuScene> menu = std::make_shared<MenuScene>();
     m_pSceneManager->add(menu);
 
-    while (tcpMessageReceived->empty());
-    int lol = *((int *)(tcpMessageReceived->front().data()) + 1);
-    std::cout << "sdfsdf: " << lol << std::endl;
+    while (tcpMessageReceived->empty())
+    {
+        std::cout << "wait" << std::endl;
+        std::this_thread::sleep_for(std::chrono::seconds(3));
+    }
+    std::cout << "sdfsdf: " << tcpMessageReceived->front() << std::endl;
 
     while (m_pWindow->isOpen()) {
         udpSocket_read->start_read();
