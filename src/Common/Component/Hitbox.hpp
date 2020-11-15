@@ -4,7 +4,7 @@
 #include <Client/typeEncapsulation.hpp>
 #include <Common/ECS/World.hpp>
 
-namespace Rtype
+namespace RType
 {
 
     struct HitboxComponent {
@@ -19,4 +19,4 @@ namespace Rtype
         { }
     };
 
-} // namespace Rtype
+} // namespace RType

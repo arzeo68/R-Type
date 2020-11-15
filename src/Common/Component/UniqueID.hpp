@@ -3,7 +3,7 @@
 #include <iostream>
 #include <cstdint>
 
-namespace Rtype
+namespace RType
 {
 
 enum NetworkPacketType {
@@ -19,4 +19,4 @@ struct UniqueID {
     UniqueID(uint32_t id) : id(id) {std::cout << "New entity with network id : " << id << "\n"; }
 };
 
-} // namespace Rtype
+} // namespace RType

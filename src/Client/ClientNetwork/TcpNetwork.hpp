@@ -14,7 +14,7 @@
 /**
  * main namespace
  */
-namespace Rtype {
+namespace RType {
     /**
      * implementation of ISocket for a TCP boost socket
      */

@@ -9,9 +9,9 @@
 #include <string>
 #include "Common/Network.hpp"
 /**
- * Rtype main namespace
+ * RType main namespace
  */
-namespace Rtype {
+namespace RType {
     /**
      * ISocket is an interface whith the basic function for any socket type
      */

@@ -9,7 +9,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include "ARenderTarget.hpp"
-namespace Rtype
+namespace RType
 {
     class RenderTarget : public ARenderTarget
     {

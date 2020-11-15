@@ -15,7 +15,7 @@
 /**
  * main namespace
  */
-namespace Rtype{
+namespace RType{
     enum packageType {
         EVENT
     };

@@ -3,10 +3,10 @@
 void RenderSystem::init()
 { }
 
-void RenderSystem::update(float delta, std::shared_ptr<ECS::World>& world, Rtype::RenderTarget& target)
+void RenderSystem::update(float delta, std::shared_ptr<ECS::World>& world, RType::RenderTarget& target)
 {
-    std::shared_ptr<Rtype::IRenderState<Rtype::RenderState>> state = std::make_shared<Rtype::sfmlRenderState>();
-    Rtype::ITransform<Rtype::Transform> *mat = new Rtype::sfmlTransform();
+    std::shared_ptr<RType::IRenderState<RType::RenderState>> state = std::make_shared<RType::sfmlRenderState>();
+    RType::ITransform<RType::Transform> *mat = new RType::sfmlTransform();
 
     for (auto entity : m_cEntities) {
         auto [ sprite, transform ] = getDependencies(entity, world);
@@ -24,7 +24,7 @@ void RenderSystem::update(float delta, std::shared_ptr<ECS::World>& world, Rtype
 RenderSystem::Dependencies RenderSystem::getDependencies(ECS::Entity entity, std::shared_ptr<ECS::World>& world)
 {
     auto const sprite = world->getComponent<SpriteComponent>(entity);
-    auto const transform = world->getComponent<Rtype::TransformComponent>(entity);
+    auto const transform = world->getComponent<RType::TransformComponent>(entity);
 
     return std::make_tuple(sprite, transform);
 }

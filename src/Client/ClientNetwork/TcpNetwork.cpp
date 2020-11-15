@@ -3,7 +3,7 @@
 #include <iostream>
 #include "TcpNetwork.hpp"
 
-namespace Rtype
+namespace RType
 {
 
     TCPBoostSocket::TCPBoostSocket(std::string const& host, std::string const &port, boost::asio::io_service& service, const std::shared_ptr<RType::Network::ThreadSafeQueue<int>>

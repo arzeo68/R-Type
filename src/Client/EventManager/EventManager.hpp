@@ -13,10 +13,10 @@
 #include <Window/Window.hpp>
 
 /**
- * @namespace Rtype
+ * @namespace RType
  * @brief Global project namespace
  */
-namespace Rtype
+namespace RType
 {
     /**
      * @enum EventType
@@ -59,10 +59,10 @@ namespace Rtype
     class EventManager : public AEventManager {
     public:
         /**
-         * @brief Construct the EventManager from the Rtype::Window
-         * @see Rtype::Window
+         * @brief Construct the EventManager from the RType::Window
+         * @see RType::Window
          */
-        EventManager(Rtype::Window& window)
+        EventManager(RType::Window& window)
             : m_Window(window.getNativeHandle())
         { }
 
@@ -78,4 +78,4 @@ namespace Rtype
         sf::RenderWindow& m_Window;
     };
 
-} // namespace Rtype
+} // namespace RType

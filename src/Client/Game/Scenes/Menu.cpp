@@ -3,7 +3,6 @@
 #include <Client/Components/TextureLibrary.hpp>
 #include <Client/Components/NetworkUpdate.hpp>
 #include <Client/Components/Sprite.hpp>
-#include <Client/Components/Rotation.hpp>
 #include <Common/Component/Transform.hpp>
 #include <Common/Component/Movement.hpp>
 #include <Common/Component/Hitbox.hpp>
@@ -17,9 +16,9 @@
 
 void base_update_routine(float delta, std::shared_ptr<ECS::World>& world, ECS::Entity target)
 {
-    auto input = world->getSingletonComponent<Rtype::NetworkUpdateSingletonComponent>();
-    auto transform = world->getComponent<Rtype::TransformComponent>(target);
-    auto ID = world->getComponent<Rtype::UniqueID>(target);
+    auto input = world->getSingletonComponent<RType::NetworkUpdateSingletonComponent>();
+    auto transform = world->getComponent<RType::TransformComponent>(target);
+    auto ID = world->getComponent<RType::UniqueID>(target);
 
     for (auto p : input.get()->packets) {
         if (p.id == ID.get()->id) {
@@ -31,8 +30,8 @@ void base_update_routine(float delta, std::shared_ptr<ECS::World>& world, ECS::E
 
 static void parrallax_update_routine(float delta, std::shared_ptr<ECS::World>& world, ECS::Entity target)
 {
-    auto transform = world->getComponent<Rtype::TransformComponent>(target);
-    auto movement = world->getComponent<Rtype::MovementComponent>(target);
+    auto transform = world->getComponent<RType::TransformComponent>(target);
+    auto movement = world->getComponent<RType::MovementComponent>(target);
 
     transform.get()->position += movement.get()->speed * delta;
     if (transform.get()->position.x < -4096 + (1920 / 2))
@@ -46,26 +45,26 @@ void MenuScene::onCreate()
     m_World->initialize();
 
     m_World->registerComponent<TextureLibraryComponent>();
-    m_World->registerComponent<Rtype::NetworkUpdateSingletonComponent>();
+    m_World->registerComponent<RType::NetworkUpdateSingletonComponent>();
     m_World->registerComponent<SpriteComponent>();
     m_World->registerComponent<TextureComponent>();
-    m_World->registerComponent<Rtype::TransformComponent>();
-    m_World->registerComponent<Rtype::MovementComponent>();
-    m_World->registerComponent<Rtype::UniqueID>();
+    m_World->registerComponent<RType::TransformComponent>();
+    m_World->registerComponent<RType::MovementComponent>();
+    m_World->registerComponent<RType::UniqueID>();
 
-    m_World->addSingletonComponents<TextureLibraryComponent, Rtype::NetworkUpdateSingletonComponent>(
+    m_World->addSingletonComponents<TextureLibraryComponent, RType::NetworkUpdateSingletonComponent>(
         TextureLibraryComponent(),
-        Rtype::NetworkUpdateSingletonComponent()
+        RType::NetworkUpdateSingletonComponent()
     );
 
     m_World->registerSystem<RenderSystem>();
-    m_World->setSystemSignature<RenderSystem, SpriteComponent, Rtype::TransformComponent>();
+    m_World->setSystemSignature<RenderSystem, SpriteComponent, RType::TransformComponent>();
 
-    m_World->registerSystem<Rtype::MovementUpdateSystem>();
-    m_World->setSystemSignature<Rtype::MovementUpdateSystem, Rtype::MovementComponent>();
+    m_World->registerSystem<RType::MovementUpdateSystem>();
+    m_World->setSystemSignature<RType::MovementUpdateSystem, RType::MovementComponent>();
 
     m_World->registerSystem<NetworkEntityDestructionSystem>();
-    m_World->setSystemSignature<NetworkEntityDestructionSystem, Rtype::UniqueID>();
+    m_World->setSystemSignature<NetworkEntityDestructionSystem, RType::UniqueID>();
 
     auto texlib = m_World->getSingletonComponent<TextureLibraryComponent>();
 
@@ -80,47 +79,47 @@ void MenuScene::onCreate()
 
     ECS::Entity parallax_background = m_World->createEntity();
 
-    m_World->addComponents<SpriteComponent, Rtype::TransformComponent, Rtype::MovementComponent>(
+    m_World->addComponents<SpriteComponent, RType::TransformComponent, RType::MovementComponent>(
         parallax_background,
         SpriteComponent(texlib.get()->get_texture("P_Background"), 0),
-        Rtype::TransformComponent({0, 0}, 0, {1, 1}),
-        Rtype::MovementComponent({-0.01, 0}, 0, std::bind(parrallax_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3))
+        RType::TransformComponent({0, 0}, 0, {1, 1}),
+        RType::MovementComponent({-0.01, 0}, 0, std::bind(parrallax_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3))
     );
 
     ECS::Entity parallax_star1 = m_World->createEntity();
 
-    m_World->addComponents<SpriteComponent, Rtype::TransformComponent, Rtype::MovementComponent>(
+    m_World->addComponents<SpriteComponent, RType::TransformComponent, RType::MovementComponent>(
         parallax_star1,
         SpriteComponent(texlib.get()->get_texture("P_Star1"), 0),
-        Rtype::TransformComponent({0, 0}, 0, {1, 1}),
-        Rtype::MovementComponent({-0.05, 0}, 0, std::bind(parrallax_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3))
+        RType::TransformComponent({0, 0}, 0, {1, 1}),
+        RType::MovementComponent({-0.05, 0}, 0, std::bind(parrallax_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3))
     );
 
     ECS::Entity parallax_star2 = m_World->createEntity();
 
-    m_World->addComponents<SpriteComponent, Rtype::TransformComponent, Rtype::MovementComponent>(
+    m_World->addComponents<SpriteComponent, RType::TransformComponent, RType::MovementComponent>(
         parallax_star2,
         SpriteComponent(texlib.get()->get_texture("P_Star2"), 0),
-        Rtype::TransformComponent({2048, 0}, 0, {1, 1}),
-        Rtype::MovementComponent({-0.1, 0}, 0, std::bind(parrallax_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3))
+        RType::TransformComponent({2048, 0}, 0, {1, 1}),
+        RType::MovementComponent({-0.1, 0}, 0, std::bind(parrallax_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3))
     );
 
     ECS::Entity parallax_star3 = m_World->createEntity();
 
-    m_World->addComponents<SpriteComponent, Rtype::TransformComponent, Rtype::MovementComponent>(
+    m_World->addComponents<SpriteComponent, RType::TransformComponent, RType::MovementComponent>(
         parallax_star3,
         SpriteComponent(texlib.get()->get_texture("P_Star3"), 0),
-        Rtype::TransformComponent({0, 0}, 0, {1, 1}),
-        Rtype::MovementComponent({-0.5, 0}, 0, std::bind(parrallax_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3))
+        RType::TransformComponent({0, 0}, 0, {1, 1}),
+        RType::MovementComponent({-0.5, 0}, 0, std::bind(parrallax_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3))
     );
 
     ECS::Entity parallax_star4 = m_World->createEntity();
 
-    m_World->addComponents<SpriteComponent, Rtype::TransformComponent, Rtype::MovementComponent>(
+    m_World->addComponents<SpriteComponent, RType::TransformComponent, RType::MovementComponent>(
         parallax_star4,
         SpriteComponent(texlib.get()->get_texture("P_Star4"), 0),
-        Rtype::TransformComponent({2048, 0}, 0, {1, 1}),
-        Rtype::MovementComponent({-0.5, 0}, 0, std::bind(parrallax_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3))
+        RType::TransformComponent({2048, 0}, 0, {1, 1}),
+        RType::MovementComponent({-0.5, 0}, 0, std::bind(parrallax_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3))
     );
 }
 
@@ -139,16 +138,16 @@ void MenuScene::onDeactivate()
     std::cout << "Deactivating MenuScene\n";
 }
 
-void MenuScene::update(float delta, Rtype::RenderTarget& target)
+void MenuScene::update(float delta, RType::RenderTarget& target)
 {
-    auto net_update = m_World->getSingletonComponent<Rtype::NetworkUpdateSingletonComponent>();
+    auto net_update = m_World->getSingletonComponent<RType::NetworkUpdateSingletonComponent>();
     m_World->clearDeferList();
-    target.expose().clear(Rtype::color::Black);
-    m_World->getSystem<Rtype::MovementUpdateSystem>()->update(delta, m_World);
+    target.expose().clear(RType::color::Black);
+    m_World->getSystem<RType::MovementUpdateSystem>()->update(delta, m_World);
     m_World->getSystem<NetworkEntityDestructionSystem>()->update(delta, m_World);
     m_World->getSystem<RenderSystem>()->update(delta, m_World, target);
     net_update.get()->packets.clear();
 }
 
-void MenuScene::lateUpdate(float delta, Rtype::RenderTarget& target)
+void MenuScene::lateUpdate(float delta, RType::RenderTarget& target)
 { }

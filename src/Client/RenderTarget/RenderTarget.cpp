@@ -4,7 +4,7 @@
 
 #include "RenderTarget.hpp"
 
-namespace Rtype
+namespace RType
 {
     RenderTarget::~RenderTarget()
     {

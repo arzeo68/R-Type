@@ -4,7 +4,7 @@
 
 #ifndef BABEL_IWINDOW_HPP
 #define BABEL_IWINDOW_HPP
-namespace Rtype
+namespace RType
 {
     /**
      * window interface

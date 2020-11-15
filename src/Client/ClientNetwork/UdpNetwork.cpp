@@ -4,7 +4,7 @@
 #include "UdpNetwork.hpp"
 #include "Common/ECS/NetworkPacket.hpp"
 
-namespace Rtype
+namespace RType
 {
 
     void UDPBoostSocket::start_socket() noexcept

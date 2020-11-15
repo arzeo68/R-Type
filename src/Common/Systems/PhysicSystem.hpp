@@ -4,7 +4,7 @@
 #include <Common/Component/Transform.hpp>
 #include <Common/Component/Hitbox.hpp>
 
-namespace Rtype
+namespace RType
 {
 
 class PhysicSystem : public ECS::System {
@@ -18,4 +18,4 @@ public:
 };
 
 
-} // namespace Rtype
+} // namespace RType

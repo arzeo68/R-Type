@@ -3,7 +3,7 @@
 #include <vector>
 #include "Common/ECS/NetworkPacket.hpp"
 
-namespace Rtype
+namespace RType
 {
 
 struct NetworkUpdateSingletonComponent {
@@ -13,4 +13,4 @@ struct NetworkUpdateSingletonComponent {
     NetworkUpdateSingletonComponent() = default;
 };
 
-} // namespace Rtype
+} // namespace RType

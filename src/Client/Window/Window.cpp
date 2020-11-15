@@ -9,7 +9,7 @@
  * @param width window's width
  * @param height window's height
  */
-Rtype::Window::Window(std::string name, int width, int height):_name(name), _width(width), _height(height)
+RType::Window::Window(std::string name, int width, int height):_name(name), _width(width), _height(height)
 {
 }
 
@@ -17,7 +17,7 @@ Rtype::Window::Window(std::string name, int width, int height):_name(name), _wid
  *
  * @return open the window
  */
-bool Rtype::Window::open()
+bool RType::Window::open()
 {
     _view.setSize({1920, 1080});
     _view.setCenter({0, 0});
@@ -30,7 +30,7 @@ bool Rtype::Window::open()
  *
  * @return close the window
  */
-bool Rtype::Window::close()
+bool RType::Window::close()
 {
     _window.close();
     return false;
@@ -40,12 +40,12 @@ bool Rtype::Window::close()
  *
  * @return true if the window is open and false if the window is closed
  */
-bool Rtype::Window::isOpen() const
+bool RType::Window::isOpen() const
 {
     return _window.isOpen();
 }
 
-Rtype::RenderTarget Rtype::Window::getRenderTarget()
+RType::RenderTarget RType::Window::getRenderTarget()
 {
     return RenderTarget(_window);
 }

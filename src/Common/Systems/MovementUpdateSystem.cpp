@@ -1,6 +1,6 @@
 #include <Common/Systems/MovementUpdateSystem.hpp>
 
-namespace Rtype
+namespace RType
 {
 
 void MovementUpdateSystem::init()
@@ -22,4 +22,4 @@ MovementUpdateSystem::Dependencies MovementUpdateSystem::getDependencies(ECS::En
     return std::tuple(movement);
 }
 
-} // namespace Rtype
+} // namespace RType

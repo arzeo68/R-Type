@@ -1,15 +1,17 @@
 #pragma once
 
+#include <string>
 #include "Common/unique_id.hpp"
 #include "Common/ECS/NetworkPacket.hpp"
 #include "Common/ECS/World.hpp"
 
-namespace Rtype
+namespace RType
 {
-    class IEntityFactory{
-
+    class IEntityFactory {
     public:
-        virtual ~IEntityFactory();
+        virtual ~IEntityFactory() {};
         virtual ECS::NetworkPacket instanciate(std::shared_ptr<ECS::World>&, std::shared_ptr<UniqueIDGenerator>&) = 0;
+        virtual std::string getName() const = 0;
     };
+
 }

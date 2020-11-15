@@ -7,7 +7,7 @@
 
 #include "IWindow.hpp"
 
-namespace Rtype
+namespace RType
 {
 
     /**

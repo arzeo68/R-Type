@@ -5,7 +5,7 @@
 #include <utility>
 #include <Common/ECS/World.hpp>
 
-namespace Rtype {
+namespace RType {
 
 struct InputQueueComponent {
     std::unordered_map<int, std::deque<int>> InputQueueMap;

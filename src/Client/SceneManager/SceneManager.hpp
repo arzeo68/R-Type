@@ -12,7 +12,7 @@ void base_update_routine(float delta, std::shared_ptr<ECS::World>& world, ECS::E
 /**
  * main namespace
  */
-namespace Rtype
+namespace RType
 {
 /**
  * enum of the different event type that can be triggerd by the scene
@@ -111,15 +111,15 @@ namespace Rtype
             m_Subject.notify(Switch_to, event);
         };
 
-        void register_network(Observer::Subject<Rtype::packageType>& subject)
+        void register_network(Observer::Subject<RType::packageType>& subject)
         {
-            subject.registerObserver(Rtype::packageType::EVENT, std::bind(&AScene::catch_network_event, this, std::placeholders::_1, std::placeholders::_2));
+            subject.registerObserver(RType::packageType::EVENT, std::bind(&AScene::catch_network_event, this, std::placeholders::_1, std::placeholders::_2));
         }
     protected:
         std::shared_ptr<ECS::World> m_World;
         Observer::Subject<EventSceneSwitchType> m_Subject;
 
-        void catch_network_event(Rtype::packageType type, std::shared_ptr<Observer::IEvent> data);
+        void catch_network_event(RType::packageType type, std::shared_ptr<Observer::IEvent> data);
     };
     /**
      * this class handle all the scene
@@ -164,4 +164,4 @@ namespace Rtype
         unsigned int m_nInsertedSceneID;
     };
 
-} // namespace Rtype
+} // namespace RType

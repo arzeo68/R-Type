@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace Rtype
+namespace RType
 {
 
 struct TagComponent {
@@ -12,4 +12,4 @@ struct TagComponent {
     TagComponent(std::string const& tag) : tag(tag) { };
 };
 
-} // namespace Rtype
+} // namespace RType

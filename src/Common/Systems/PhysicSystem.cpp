@@ -1,6 +1,6 @@
 #include <Common/Systems/PhysicSystem.hpp>
 
-namespace Rtype
+namespace RType
 {
 
 void PhysicSystem::init()
@@ -36,4 +36,4 @@ PhysicSystem::Dependencies PhysicSystem::getDependencies(ECS::Entity entity, std
     return std::tuple(transform, hitbox);
 }
 
-} // namespace Rtype
+} // namespace RType

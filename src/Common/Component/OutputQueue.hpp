@@ -3,7 +3,7 @@
 #include <vector>
 #include <Common/ECS/NetworkPacket.hpp>
 
-namespace Rtype
+namespace RType
 {
 
 struct OutputQueueComponent {
@@ -12,4 +12,4 @@ struct OutputQueueComponent {
     OutputQueueComponent() : OutputQueue({}) {};
 };
 
-} // namespace Rtype
+} // namespace RType

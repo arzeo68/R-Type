@@ -1,6 +1,6 @@
 #include <Common/Systems/TransformSystem.hpp>
 
-namespace Rtype
+namespace RType
 {
 
 void TransformSystem::init()
@@ -28,4 +28,4 @@ TransformSystem::Dependencies TransformSystem::getDependencies(ECS::Entity entit
     return std::tuple(transform, movement);
 }
 
-} // namespace Rtype
+} // namespace RType
