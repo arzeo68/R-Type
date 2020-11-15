@@ -32,7 +32,16 @@ namespace RType::Common::Network {
         int command;
     };
     #pragma pack(pop)
+
+    #pragma pack(push, 1)
+    struct UDPPacket {
+        uint16_t magic;
+        int networkID;
+        int command;
+    };
+    #pragma pack(pop)
     TCPPacket packet_unpack(const std::string& data);
+    UDPPacket UDPpacket_unpack(const std::string& data);
 }
 
 #endif

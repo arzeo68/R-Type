@@ -17,7 +17,7 @@ RType::Network::Socket::UDPBoostSocket::UDPBoostSocket(
     this->_socket->open(endpoint.protocol());
     this->_socket->set_option(boost::asio::ip::udp::socket::reuse_address(true));
     this->_logger = log;
-    this->_event = std::make_shared<ThreadSafeQueue<Common::Network::TCPPacket>>();
+    this->_event = std::make_shared<ThreadSafeQueue<Common::Network::UDPPacket>>();
 }
 
 RType::Network::Socket::UDPBoostSocket::~UDPBoostSocket() {
@@ -44,7 +44,7 @@ void RType::Network::Socket::UDPBoostSocket::shutdown_socket() noexcept {
 }
 
 void RType::Network::Socket::UDPBoostSocket::read() {
-    std::shared_ptr<MessageArr_t> raw_message = std::make_shared<MessageArr_t>();
+    std::shared_ptr<UDPMessageArr_t> raw_message = std::make_shared<UDPMessageArr_t>();
 
     this->_logger->Debug("(udp) Waiting for a message...");
     boost::system::error_code err;
@@ -61,7 +61,7 @@ void RType::Network::Socket::UDPBoostSocket::read() {
                                              err.message());
                                          return;
                                      }
-                                     auto package = Common::Network::packet_unpack(
+                                     auto package = Common::Network::UDPpacket_unpack(
                                          std::string(raw_message->begin(),
                                                      raw_message->end()));
                                      if (package.magic !=
@@ -70,8 +70,8 @@ void RType::Network::Socket::UDPBoostSocket::read() {
                                              "(udp) Wrong magic number for this message");
                                      else {
                                          this->_event->add(package);
-                                         this->_logger->Info("(udp) Command: '",
-                                                             package.command,
+                                         this->_logger->Info("(udp) USER: '",
+                                                             package.networkID,
                                                              "' w/ ",
                                                              bytes_transferred);
                                      }
@@ -118,7 +118,7 @@ bool RType::Network::Socket::UDPBoostSocket::is_functional() {
     return (this->_is_functional);
 }
 
-std::shared_ptr<RType::Network::ThreadSafeQueue<RType::Common::Network::TCPPacket>>
+std::shared_ptr<RType::Network::ThreadSafeQueue<RType::Common::Network::UDPPacket>>
 RType::Network::Socket::UDPBoostSocket::get_queue() {
     return (this->_event->shared_from_this());
 }

@@ -41,6 +41,7 @@ namespace Rtype {
         std::shared_ptr<AEventManager> m_pEventManager;
         std::unordered_map<std::string, unsigned int> m_cScenes;
         boost::asio::io_service _service;
+        int _networkID = -1;
     };
 
 }  // namespace Rtype

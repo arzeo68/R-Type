@@ -38,7 +38,7 @@ namespace RType::Network::Room {
     /**
      * The number of participant per room
      */
-    const static constexpr uint16_t MAX_PARTICIPANT = 1;
+    const static constexpr uint16_t MAX_PARTICIPANT = 2;
 
     typedef uint16_t GameState_t;
     enum class GameState_e : GameState_t {

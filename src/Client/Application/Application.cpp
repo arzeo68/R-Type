@@ -85,6 +85,8 @@ void Application::run()
         std::this_thread::sleep_for(std::chrono::seconds(3));
     }
     std::cout << "sdfsdf: " << tcpMessageReceived->front() << std::endl;
+    _networkID = tcpMessageReceived->front();
+    tcpMessageReceived->pop_front();
 
     while (m_pWindow->isOpen()) {
         udpSocket_read->start_read();
@@ -117,12 +119,10 @@ void Application::catch_close(EventType type, std::shared_ptr<Observer::IEvent> 
 
 void Application::catch_keyPressed(EventType type, std::shared_ptr<Observer::IEvent> data)
 {
-//    std::cout << "Caught key pressed" << std::endl;
     std::shared_ptr<EventKeyPressed> key = std::dynamic_pointer_cast<EventKeyPressed>(data);
     std::string keyString= std::to_string(key->_key);
-    RType::Common::Network::TCPPacket p{RType::Common::Network::g_MagicNumber, key->_key};
-//    tcpSocket->write(p);
-    udpSocket->write(p);
+    RType::Common::Network::UDPPacket p{RType::Common::Network::g_MagicNumber, _networkID ,key->_key};
+    udpSocket->write(&p, sizeof(p));
 }
 
 } // namespace Rtype

@@ -52,9 +52,10 @@ namespace RType::Network::Socket {
          * on a socket.
          */
         typedef std::array<char, sizeof(Common::Network::TCPPacket)> MessageArr_t;
+        typedef std::array<char, sizeof(Common::Network::UDPPacket)> UDPMessageArr_t;
 
 
-        virtual std::shared_ptr<ThreadSafeQueue<Common::Network::TCPPacket>> get_queue() {
+        virtual std::shared_ptr<ThreadSafeQueue<Common::Network::UDPPacket>> get_queue() {
             return (this->_event->shared_from_this());
         };
 
@@ -80,7 +81,7 @@ namespace RType::Network::Socket {
          */
         std::shared_ptr<std::condition_variable> _socket_error_notifier;
 
-        std::shared_ptr<ThreadSafeQueue<Common::Network::TCPPacket>> _event;
+        std::shared_ptr<ThreadSafeQueue<Common::Network::UDPPacket>> _event;
     };
 }
 

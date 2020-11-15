@@ -40,7 +40,7 @@ namespace RType::Network::Socket {
         void write(const Common::Network::TCPPacket& input) final;
         void write(ECS::NetworkPacket&) final;
         bool is_functional() final;
-        std::shared_ptr<ThreadSafeQueue<Common::Network::TCPPacket>> get_queue() override;
+        std::shared_ptr<ThreadSafeQueue<Common::Network::UDPPacket>> get_queue() override;
 
         private:
         Common::Log::Log::shared_log_t _logger;

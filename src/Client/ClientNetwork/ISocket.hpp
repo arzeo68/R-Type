@@ -37,6 +37,8 @@ namespace Rtype {
          * @param input Input to write in the socket
          */
         virtual void write(const RType::Common::Network::TCPPacket& input) = 0;
+
+        virtual void write(void *data, size_t dataSize) {};
     };
 }
 

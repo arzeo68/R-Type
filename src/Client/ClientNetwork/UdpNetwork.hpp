@@ -48,6 +48,8 @@ namespace Rtype{
         private:
         void StartConnect(boost::asio::ip::udp::resolver::results_type::iterator endpoint);
         void HandleConnect(const std::error_code& error, boost::asio::ip::udp::resolver::results_type::iterator endpoint);
+        void write(void *data, size_t dataSize) override;
+        private:
 
         private:
         bool stopped = false;

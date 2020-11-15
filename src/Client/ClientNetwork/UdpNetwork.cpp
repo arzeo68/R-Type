@@ -90,4 +90,30 @@ namespace Rtype
             std::cerr << " sa a return a autre truc" << std::endl;
         }
     }
+
+    void UDPBoostSocket::write(void *data, size_t dataSize)
+    {
+        auto status = _sfUdpSocket->send(data, dataSize, _addr, _port);
+        if (status == sf::Socket::Done)
+        {
+            //std::cout << "data succesfully written on :" << _addr << " : " << _port << std::endl;
+        }
+        else if (status == sf::Socket::NotReady)
+        {
+            //            std::cout << "data succesfully written" << std::endl;
+        }
+        else if (status == sf::Socket::Partial)
+        {
+            std::cerr << "PARTIAL" << std::endl;
+        }
+        else if (status == sf::Socket::Error)
+        {
+            std::cerr << "ERROR WRITE" << std::endl;
+        }
+        else
+        {
+            std::cerr << "OTHER" << std::endl;
+
+        }
+    }
 }
