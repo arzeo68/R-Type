@@ -39,7 +39,7 @@ ECS::NetworkPacket MediumShipFactory::instanciate(std::shared_ptr<ECS::World>& w
     int id = idgenerator->getID();
     world->template addComponents<RType::TransformComponent, RType::MovementComponent, RType::HitboxComponent, RType::UniqueID, RType::TagComponent>(
         e,
-        RType::TransformComponent({1000.f, static_cast<float>(distribution(gen))}, 0, {1, 1}),
+        RType::TransformComponent({1000.f, static_cast<float>(distribution(gen))}, 0, {3, 3}),
         RType::MovementComponent({-0.2, 0}, 0, std::bind(UpdateBasicShipMovement, queue, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
         RType::HitboxComponent({0, 0, 27, 12}, std::bind(UpdateBasicShipPhysic, queue, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4)),
         RType::UniqueID(id),
