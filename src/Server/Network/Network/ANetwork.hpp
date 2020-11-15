@@ -68,6 +68,10 @@ namespace RType::Network {
                 this->_clients.erase(it);
         };
 
+        void display_rooms() {
+            this->_rooms->display_rooms();
+        }
+
         protected:
         /**
          * Boolean corresponding to the network's state

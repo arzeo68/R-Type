@@ -46,6 +46,8 @@ void RType::Network::BoostNetwork::run() {
         std::cin >> input;
         if (input == "exit" || std::cin.eof())
             this->stop();
+        else if (input == "rooms")
+            this->display_rooms();
     }
 }
 

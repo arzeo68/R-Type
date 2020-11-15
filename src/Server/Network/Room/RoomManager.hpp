@@ -71,6 +71,30 @@ namespace RType::Network::Room {
             return (it != std::end(this->_rooms));
         }
 
+        /**
+         * Display all rooms with their number of users in it and the currently room state.
+         */
+        void display_rooms() {
+            std::lock_guard<std::mutex> l(this->_mutex);
+            if (this->_rooms.empty())
+                this->_logger->Info("There is no room at the moment.");
+            else {
+                std::for_each(this->_rooms.begin(), this->_rooms.end(), [&](room_sptr &r) {
+                    switch (r->get_game_state()) {
+                        case GameState_e::PENDING:
+                            this->_logger->Info("Room ", r, " with ", r->count_users(), " users connected on the room. The room is waiting for more users.");
+                            break;
+                        case GameState_e::RUNNING:
+                            this->_logger->Info("Room ", r, " with ", r->count_users(), " users connected on the room. The game is currently running.");
+                            break;
+                        case GameState_e::EXITING:
+                            this->_logger->Info("Room ", r, " with ", r->count_users(), " users connected on the room. The room is exiting.");
+                            break;
+                    }
+                });
+            }
+        }
+
         private:
         Common::Log::Log::shared_log_t _logger;
         std::list<room_sptr> _rooms;

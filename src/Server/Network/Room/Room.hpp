@@ -38,7 +38,7 @@ namespace RType::Network::Room {
     /**
      * The number of participant per room
      */
-    const static constexpr uint16_t MAX_PARTICIPANT = 2;
+    const static constexpr uint16_t MAX_PARTICIPANT = 1;
 
     typedef uint16_t GameState_t;
     enum class GameState_e : GameState_t {
@@ -152,6 +152,15 @@ namespace RType::Network::Room {
         }
 
         /**
+         * The function count the number of user in the room and return it
+         * @return The number of users in the room
+         */
+        inline std::size_t count_users() {
+            std::lock_guard<std::mutex> l(this->_mutex);
+            return (this->_users.size());
+        }
+
+        /**
          * Add a client to the room
          * @param p A shared pointer to the client (aka AClient<...>)
          */
@@ -217,8 +226,18 @@ namespace RType::Network::Room {
          * @return true if the game is running or exiting
          * @return false if the game is not running or exiting
          */
-        bool is_game_running() const {
+        inline bool is_game_running() {
+            std::lock_guard<std::mutex> l(this->_mutex);
             return (this->_state == GameState_e::EXITING || this->_state == GameState_e::RUNNING);
+        }
+
+        /**
+         * Get the currently game state set by GameState_e
+         * @return The current game state
+         */
+        GameState_e get_game_state() {
+            std::lock_guard<std::mutex> l(this->_mutex);
+            return (this->_state);
         }
 
         private:
