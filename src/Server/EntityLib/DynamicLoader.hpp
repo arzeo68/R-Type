@@ -10,7 +10,7 @@
 
 #ifdef _WIN32
     #include <Server/EntityLib/dlfcn.h>
-#elif
+#else
     #include "dlfcn.h"
 #endif
 #include <iostream>
@@ -21,7 +21,7 @@ class DynamicLoader {
         DynamicLoader(const std::string &filename)
         {
             dlerror();
-            this->_lib = dlopen(filename.c_str(), RTLD_LAZY);
+            this->_lib = dlopen(filename.c_str(), RTLD_NOW);
             if (this->_lib == nullptr) {
                 std::cerr << dlerror() << std::endl;
             }

@@ -47,7 +47,7 @@ ECS::NetworkPacket BasicShipFactory::instanciate(std::shared_ptr<ECS::World>& wo
     return {id, 0, 0, 0, {10, 237, 14, 16}};
 }
 
-extern "C" __declspec(dllexport) RType::IEntityFactory *entry()
+EXPORT RType::IEntityFactory *entry()
 {
     return new BasicShipFactory();
 }

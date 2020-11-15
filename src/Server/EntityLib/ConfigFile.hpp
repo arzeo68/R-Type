@@ -31,20 +31,24 @@ namespace RType
 
         bool load(std::string const& name)
         {
+#ifdef _WIN32
             std::string path("./");
             path.append(name);
             path.append("Factory");
-#ifdef _WIN32
             path.append(".dll");
 #else
+            std::string path("../lib/lib");
+            path.append(name);
+            path.append("Factory");
             path.append(".so");
 #endif
+            std::cout << path << "\n";
             for (auto& f : *_factories.get()) {
                 std::string current_name = (*(f.get()))->getName();
                 if (name == current_name) {
                     return false;
                 }
-            }
+            }&
             _factories->emplace_back(std::make_shared<DynamicLoader<RType::IEntityFactory>>(path));
             return true;
         }

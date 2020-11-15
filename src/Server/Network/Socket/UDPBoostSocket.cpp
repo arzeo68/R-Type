@@ -51,7 +51,7 @@ void RType::Network::Socket::UDPBoostSocket::read() {
     boost::asio::ip::udp::endpoint endn(boost::asio::ip::address::from_string("127.0.0.1"), 4243);
     this->_socket->bind(endn, err);
     this->_socket->async_receive_from(boost::asio::buffer(*raw_message),
-        endn,
+                                endn,
                                  [&, raw_message](
                                      const boost::system::error_code& err,
                                      std::size_t bytes_transferred) {

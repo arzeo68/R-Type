@@ -4,6 +4,12 @@
 #include <functional>
 #include "IEntityFactory.hpp"
 
+#ifdef _WIN32
+    #define EXPORT extern "C" __declspec(dllexport)
+#else
+    #define EXPORT extern "C" __attribute__((visibility("default")))
+#endif
+
 class MediumShipFactory : public RType::IEntityFactory
 {
 private:

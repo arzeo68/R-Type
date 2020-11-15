@@ -48,7 +48,7 @@ ECS::NetworkPacket MediumShipFactory::instanciate(std::shared_ptr<ECS::World>& w
     return {id, 0, 0, 0, {261, 208, 18, 18}};
 }
 
-extern "C" __declspec(dllexport) RType::IEntityFactory *entry()
+EXPORT RType::IEntityFactory *entry()
 {
     return new MediumShipFactory();
 }
