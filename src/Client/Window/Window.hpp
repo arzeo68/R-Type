@@ -8,6 +8,7 @@
 #include <string>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/View.hpp>
 #include <memory>
 #include <Client/RenderTarget/RenderTarget.hpp>
 #include "AWindow.hpp"
@@ -34,6 +35,7 @@ namespace Rtype
 
         private:
         sf::RenderWindow _window;
+        sf::View _view;
         std::string _name;
         int _width;
         int _height;

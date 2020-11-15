@@ -81,14 +81,8 @@ void Application::run()
     menu->register_network(m_subject);
     m_pSceneManager->add(menu);
 
-    while (tcpMessageReceived->empty())
-    {
-        //std::cout << "wait" << std::endl;
-        //std::this_thread::sleep_for(std::chrono::seconds(3));
-    }
-    //_networkID = tcpMessageReceived->front();
-    _networkID = tcpMessageReceived->pop();
-    //tcpMessageReceived->pop_front();
+    //while (tcpMessageReceived->empty());
+    //_networkID = tcpMessageReceived->pop();
 
     while (m_pWindow->isOpen()) {
         udpSocket_read->start_read();

@@ -28,6 +28,16 @@ void base_update_routine(float delta, std::shared_ptr<ECS::World>& world, ECS::E
     }
 }
 
+static void parrallax_update_routine(float delta, std::shared_ptr<ECS::World>& world, ECS::Entity target)
+{
+    auto transform = world->getComponent<Rtype::TransformComponent>(target);
+    auto movement = world->getComponent<Rtype::MovementComponent>(target);
+
+    transform.get()->position += movement.get()->speed * delta;
+    if (transform.get()->position.x < -4096 + (1920 / 2))
+        transform.get()->position.x = 4096 + (1920 / 2);
+}
+
 void MenuScene::onCreate()
 {
     std::cout << "Creating MenuScene\n";
@@ -51,11 +61,61 @@ void MenuScene::onCreate()
     m_World->setSystemSignature<RenderSystem, SpriteComponent, Rtype::TransformComponent>();
 
     m_World->registerSystem<Rtype::MovementUpdateSystem>();
-    m_World->setSystemSignature<Rtype::MovementUpdateSystem, Rtype::MovementComponent, Rtype::UniqueID>();
+    m_World->setSystemSignature<Rtype::MovementUpdateSystem, Rtype::MovementComponent>();
 
     auto texlib = m_World->getSingletonComponent<TextureLibraryComponent>();
 
     texlib.get()->load_default_texture("../../ressources/default.png");
+    texlib.get()->load_texture("P_Background", "../../ressources/Nebula Aqua-Pink.png");
+    texlib.get()->load_texture("P_Star1", "../../ressources/Stars Small_1.png");
+    texlib.get()->load_texture("P_Star2", "../../ressources/Stars Small_2.png");
+    texlib.get()->load_texture("P_Star3", "../../ressources/Stars-Big_1_1_PC.png");
+    texlib.get()->load_texture("P_Star4", "../../ressources/Stars-Big_1_2_PC.png");
+
+    ECS::Entity parallax_background = m_World->createEntity();
+
+    m_World->addComponents<SpriteComponent, Rtype::TransformComponent, Rtype::MovementComponent>(
+        parallax_background,
+        SpriteComponent(texlib.get()->get_texture("P_Background"), 0),
+        Rtype::TransformComponent({0, 0}, 0, {1, 1}),
+        Rtype::MovementComponent({-0.01, 0}, 0, std::bind(parrallax_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3))
+    );
+
+    ECS::Entity parallax_star1 = m_World->createEntity();
+
+    m_World->addComponents<SpriteComponent, Rtype::TransformComponent, Rtype::MovementComponent>(
+        parallax_star1,
+        SpriteComponent(texlib.get()->get_texture("P_Star1"), 0),
+        Rtype::TransformComponent({0, 0}, 0, {1, 1}),
+        Rtype::MovementComponent({-0.05, 0}, 0, std::bind(parrallax_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3))
+    );
+
+    ECS::Entity parallax_star2 = m_World->createEntity();
+
+    m_World->addComponents<SpriteComponent, Rtype::TransformComponent, Rtype::MovementComponent>(
+        parallax_star2,
+        SpriteComponent(texlib.get()->get_texture("P_Star2"), 0),
+        Rtype::TransformComponent({2048, 0}, 0, {1, 1}),
+        Rtype::MovementComponent({-0.1, 0}, 0, std::bind(parrallax_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3))
+    );
+
+    ECS::Entity parallax_star3 = m_World->createEntity();
+
+    m_World->addComponents<SpriteComponent, Rtype::TransformComponent, Rtype::MovementComponent>(
+        parallax_star3,
+        SpriteComponent(texlib.get()->get_texture("P_Star3"), 0),
+        Rtype::TransformComponent({0, 0}, 0, {1, 1}),
+        Rtype::MovementComponent({-0.5, 0}, 0, std::bind(parrallax_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3))
+    );
+
+    ECS::Entity parallax_star4 = m_World->createEntity();
+
+    m_World->addComponents<SpriteComponent, Rtype::TransformComponent, Rtype::MovementComponent>(
+        parallax_star4,
+        SpriteComponent(texlib.get()->get_texture("P_Star4"), 0),
+        Rtype::TransformComponent({2048, 0}, 0, {1, 1}),
+        Rtype::MovementComponent({-0.5, 0}, 0, std::bind(parrallax_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3))
+    );
 }
 
 void MenuScene::onDestroy()

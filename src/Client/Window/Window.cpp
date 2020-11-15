@@ -19,7 +19,10 @@ Rtype::Window::Window(std::string name, int width, int height):_name(name), _wid
  */
 bool Rtype::Window::open()
 {
+    _view.setSize({1920, 1080});
+    _view.setCenter({0, 0});
     _window.create(sf::VideoMode(_width, _height), _name);
+    _window.setView(_view);
     return true;
 }
 
