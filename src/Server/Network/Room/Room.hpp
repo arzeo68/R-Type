@@ -298,7 +298,7 @@ namespace RType::Network::Room {
 
                 this->_world->template addComponents<RType::TransformComponent, RType::MovementComponent, RType::HitboxComponent, RType::PlayerID, RType::UniqueID, RType::TagComponent>(
                     e,
-                    RType::TransformComponent({-(1920 / 2) + 100, static_cast<float>(i) * 100.f}, 0, {1, 1}),
+                    RType::TransformComponent({-(1920 / 2) + 100, static_cast<float>(i) * 100.f}, 0, {3, 3}),
                     RType::MovementComponent({0, 0}, 0, std::bind(RType::PlayerUpdateMovement, _netId_Generator, _packetQueue, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
                     RType::HitboxComponent({0, 0, 27, 12}, std::bind(RType::PlayerCollisionUpdateRoutine, _packetQueue, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4)),
                     RType::PlayerID(i),

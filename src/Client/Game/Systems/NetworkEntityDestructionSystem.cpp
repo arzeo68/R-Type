@@ -15,7 +15,6 @@ void NetworkEntityDestructionSystem::update(float delta, std::shared_ptr<ECS::Wo
       auto [ id ] = getDependencies(entity, world);
 
       if (std::find(netupdate.get()->destructionIDs.begin(), netupdate.get()->destructionIDs.end(), id.get()->id) != netupdate.get()->destructionIDs.end()) {
-         std::cout << "Destroying entity " << entity << "\n";
          world->deferEntityDestruction(entity);
       }
    }
