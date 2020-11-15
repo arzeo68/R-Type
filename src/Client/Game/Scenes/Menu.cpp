@@ -71,6 +71,8 @@ void MenuScene::onCreate()
     texlib.get()->load_texture("P_Star2", "../../ressources/Stars Small_2.png");
     texlib.get()->load_texture("P_Star3", "../../ressources/Stars-Big_1_1_PC.png");
     texlib.get()->load_texture("P_Star4", "../../ressources/Stars-Big_1_2_PC.png");
+    texlib.get()->load_texture("P_Star4", "../../ressources/Stars-Big_1_2_PC.png");
+    texlib.get()->load_texture("SpriteSheet", "../../ressources/Sprite_rtype.png");
 
     ECS::Entity parallax_background = m_World->createEntity();
 

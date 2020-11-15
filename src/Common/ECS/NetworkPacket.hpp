@@ -10,6 +10,7 @@ struct NetworkPacket {
     int id;
     int type;
     float x, y;
+    int rect[4];
 };
 #pragma pack(pop)
 
