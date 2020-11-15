@@ -45,7 +45,7 @@ namespace RType
     void UDPBoostSocket::start_read()
     {
         //        wait();
-        ECS::NetworkPacket data;
+        ECS::NetworkPacket data{};
         std::size_t received;
         sf::IpAddress sender;
         unsigned short port;

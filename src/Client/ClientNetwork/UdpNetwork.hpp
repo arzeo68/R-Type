@@ -26,7 +26,7 @@ namespace RType{
                 : data(p)
             { }
 
-            ECS::NetworkPacket data;
+            ECS::NetworkPacket data{};
     };
 
     /**
