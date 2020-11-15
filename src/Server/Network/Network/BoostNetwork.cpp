@@ -130,9 +130,9 @@ void RType::Network::BoostNetwork::pre_run() {
                                  error.message());
         else if (self->_is_running) {
             #ifdef _WIN_32
-            _write(0, "exit", 5);
+                _write(0, "exit", 5);
             #else
-            ssize_t _ = write(0, "exit", 5);
+            auto p = write(0, "exit", 5);
             #endif
         }
     });

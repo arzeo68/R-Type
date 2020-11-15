@@ -28,7 +28,6 @@ namespace RType::Network {
          */
         void add(T element) {
             std::lock_guard<std::mutex> l(this->_mutex);
-            std::cerr << "element added" << std::endl;
             this->_queue.push(element);
         }
 
