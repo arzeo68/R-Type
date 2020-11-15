@@ -1,5 +1,6 @@
 #include <Client/EventManager/EventManager.hpp>
 #include <Client/EventManager/SFMLEvents.hpp>
+#include <iostream>
 
 namespace Rtype
 {
@@ -10,8 +11,31 @@ void EventManager::update()
     while (m_Window.pollEvent(event)) {
         switch (event.type) {
             case sf::Event::KeyPressed:             {
-                std::shared_ptr<EventKeyPressed> key = std::make_shared<EventKeyPressed>(event.key.code);
-                m_Subject.notify(EKeyPressed, key);
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+                {
+                    std::shared_ptr<EventKeyPressed> key = std::make_shared<EventKeyPressed>(sf::Keyboard::Left);
+                    m_Subject.notify(EKeyPressed, key);
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+                {
+                    std::shared_ptr<EventKeyPressed> key = std::make_shared<EventKeyPressed>(sf::Keyboard::Right);
+                    m_Subject.notify(EKeyPressed, key);
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+                {
+                    std::shared_ptr<EventKeyPressed> key = std::make_shared<EventKeyPressed>(sf::Keyboard::Up);
+                    m_Subject.notify(EKeyPressed, key);
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+                {
+                    std::shared_ptr<EventKeyPressed> key = std::make_shared<EventKeyPressed>(sf::Keyboard::Down);
+                    m_Subject.notify(EKeyPressed, key);
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+                {
+                    std::shared_ptr<EventKeyPressed> key = std::make_shared<EventKeyPressed>(sf::Keyboard::Space);
+                    m_Subject.notify(EKeyPressed, key);
+                }
                 break;
             }
             case sf::Event::KeyReleased:            { break; }
