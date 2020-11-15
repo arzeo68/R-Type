@@ -56,24 +56,6 @@ void MenuScene::onCreate()
     auto texlib = m_World->getSingletonComponent<TextureLibraryComponent>();
 
     texlib.get()->load_default_texture("../../ressources/default.png");
-
-    ECS::Entity e = m_World->createEntity();
-    ECS::Entity e1 = m_World->createEntity();
-
-    m_World->addComponents<SpriteComponent, Rtype::TransformComponent, Rtype::MovementComponent, Rtype::UniqueID>(
-        e,
-        SpriteComponent(texlib.get()->get_texture("<default>"), 0),
-        Rtype::TransformComponent({0, 0}, 0, {1, 1}),
-        Rtype::MovementComponent({0, 0}, 0, std::bind(base_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
-        Rtype::UniqueID(0)
-    );
-    m_World->addComponents<SpriteComponent, Rtype::TransformComponent, Rtype::MovementComponent, Rtype::UniqueID>(
-        e1,
-        SpriteComponent(texlib.get()->get_texture("<default>"), 0),
-        Rtype::TransformComponent({0, 0}, 0, {1, 1}),
-        Rtype::MovementComponent({0, 0}, 0, std::bind(base_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
-        Rtype::UniqueID(1)
-    );
 }
 
 void MenuScene::onDestroy()

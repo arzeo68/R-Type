@@ -77,7 +77,7 @@ void AScene::catch_network_event(Rtype::packageType type, std::shared_ptr<Observ
     std::shared_ptr<NetworkEvent> event = std::dynamic_pointer_cast<NetworkEvent>(data);
     auto input = m_World->getSingletonComponent<Rtype::NetworkUpdateSingletonComponent>();
     if (event->data.type == 0) {
-        ECS::Entity e;
+        ECS::Entity e = m_World->createEntity();
         auto texlib = m_World->getSingletonComponent<TextureLibraryComponent>();
         m_World->addComponents<SpriteComponent, Rtype::TransformComponent, Rtype::MovementComponent, Rtype::UniqueID>(
             e,
@@ -86,6 +86,7 @@ void AScene::catch_network_event(Rtype::packageType type, std::shared_ptr<Observ
             Rtype::MovementComponent({0, 0}, 0, std::bind(base_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
             Rtype::UniqueID(event->data.id)
         );
+        std::cout << "Created a new entity : " << event->data.x << ", " << event->data.y << "\n";
     } else if (event->data.type == 1) {
         input.get()->packets.push_back(std::move(event->data));
     }
