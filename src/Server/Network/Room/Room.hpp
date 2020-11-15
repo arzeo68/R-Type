@@ -38,7 +38,7 @@ namespace RType::Network::Room {
     /**
      * The number of participant per room
      */
-    const static constexpr uint16_t MAX_PARTICIPANT = 2;
+    const static constexpr uint16_t MAX_PARTICIPANT = 1;
 
     typedef uint16_t GameState_t;
     enum class GameState_e : GameState_t {
@@ -280,6 +280,11 @@ namespace RType::Network::Room {
                     Rtype::UniqueID(_netId_Generator->getID())
                 );
                 this->_users[i]->get_tcpsocket()->write({RType::Common::Network::g_MagicNumber, static_cast<int>(i)});
+            }
+            for (size_t i = 0; i < this->_users.size(); i += 1) {
+                ECS::NetworkPacket p = {static_cast<int>(i), 0, 0, 0};
+                for (size_t j = 0; j < this->_users.size(); j += 1)
+                    this->_users[j]->get_udpsocket_write()->write(p);
             }
         }
 
