@@ -24,7 +24,8 @@ namespace RType
     void TCPBoostSocket::shutdown_socket() noexcept
     {
         stopped = true;
-        m_tcpSocket.close();
+        boost::system::error_code err;
+        m_tcpSocket.close(err);
         //m_ioContext.stop();
     }
 
@@ -36,7 +37,7 @@ namespace RType
         }
     }
 
-    void TCPBoostSocket::HandleConnect(const std::error_code &error, boost::asio::ip::tcp::resolver::results_type::iterator endpoint)
+    void TCPBoostSocket::HandleConnect(const boost::system::error_code &error, boost::asio::ip::tcp::resolver::results_type::iterator endpoint)
     {
         if (stopped)
             return;
@@ -75,7 +76,7 @@ namespace RType
         boost::bind(&TCPBoostSocket::handle_read, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
     }
 
-    void TCPBoostSocket::handle_read(const std::error_code& err, size_t)
+    void TCPBoostSocket::handle_read(const boost::system::error_code& err, size_t)
     {
         if (!err) {
             RType::Common::Network::TCPPacket *unpacked = (RType::Common::Network::TCPPacket *)m_data.data();
