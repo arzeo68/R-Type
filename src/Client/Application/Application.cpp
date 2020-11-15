@@ -81,8 +81,8 @@ void Application::run()
     menu->register_network(m_subject);
     m_pSceneManager->add(menu);
 
-    //while (tcpMessageReceived->empty());
-    //_networkID = tcpMessageReceived->pop();
+    while (tcpMessageReceived->empty());
+    _networkID = tcpMessageReceived->pop();
 
     while (m_pWindow->isOpen()) {
         udpSocket_read->start_read();

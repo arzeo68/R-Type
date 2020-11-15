@@ -38,16 +38,16 @@ static void PlayerUpdateMovement(float delta, std::shared_ptr<ECS::World>& world
 
         switch (key_val) {
             case 73:
-                movement.get()->speed.y = -0.1;
+                movement.get()->speed.y = -0.4;
                 break;
             case 72:
-                movement.get()->speed.x = 0.1;
+                movement.get()->speed.x = 0.5;
                 break;
             case 74:
-                movement.get()->speed.y = 0.1;
+                movement.get()->speed.y = 0.4;
                 break;
             case 71:
-                movement.get()->speed.x = -0.1;
+                movement.get()->speed.x = -0.5;
                 break;
             default:
                 break;
