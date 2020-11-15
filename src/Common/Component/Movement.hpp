@@ -7,6 +7,7 @@
 #include <Common/Component/PlayerID.hpp>
 #include <Common/Component/Tag.hpp>
 #include <Common/Component/InputQueue.hpp>
+#include <Common/Component/Hitbox.hpp>
 #include <Common/Component/Movement.hpp>
 #include <Common/Component/Transform.hpp>
 #include <Client/typeEncapsulation.hpp>
@@ -69,10 +70,11 @@ static void PlayerUpdateMovement(std::shared_ptr<UniqueIDGenerator>& unique_id_g
             case 57: {
                 ECS::Entity e = world->createEntity();
                 uint32_t id = unique_id_generator->getID();
-                world->template addComponents<RType::TransformComponent, RType::MovementComponent, RType::UniqueID, RType::TagComponent>(
+                world->template addComponents<RType::TransformComponent, RType::MovementComponent, RType::HitboxComponent, RType::UniqueID, RType::TagComponent>(
                     e,
                     RType::TransformComponent({transform.get()->position.x + 20, transform.get()->position.y}, 0, {1, 1}),
                     RType::MovementComponent({0.9, 0}, 0, std::bind(RType::BulletUpdateMovement, queue, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
+                    RType::HitboxComponent({0, 0, 22, 10}, std::bind(RType::BulletCollisionUpdateRoutine, queue, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4)),
                     RType::UniqueID(id),
                     RType::TagComponent("Bullet")
                 );

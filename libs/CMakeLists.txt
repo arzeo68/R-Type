@@ -13,4 +13,11 @@ add_library(BasicShipFactory
     ../src/Server/EntityLib/BasicShipFactory.cpp)
 set_target_properties(BasicShipFactory PROPERTIES LINKER_LANGUAGE CXX)
 
+add_library(MediumShipFactory
+    SHARED
+    ../src/Server/EntityLib/IEntityFactory.hpp
+    ../src/Server/EntityLib/MediumShipFactory.hpp
+    ../src/Server/EntityLib/MediumShipFactory.cpp)
+set_target_properties(BasicShipFactory PROPERTIES LINKER_LANGUAGE CXX)
+
 install(TARGETS BasicShipFactory DESTINATION ${LIB_INSTALL_PATH})

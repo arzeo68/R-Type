@@ -265,6 +265,7 @@ namespace RType::Network::Room {
             _netId_Generator = std::make_shared<UniqueIDGenerator>();
             _libs = std::make_shared<std::vector<std::shared_ptr<DynamicLoader<IEntityFactory>>>>();
             _config = std::make_shared<ConfigFile>("../../ressources/config.conf", _libs);
+            _time = std::make_shared<float>(0.f);
 
             this->_world->template registerComponent<RType::TransformComponent>();
             this->_world->template registerComponent<RType::HitboxComponent>();
@@ -295,10 +296,11 @@ namespace RType::Network::Room {
             for (size_t i = 0; i < this->_users.size(); i += 1) {
                 ECS::Entity e = this->_world->createEntity();
 
-                this->_world->template addComponents<RType::TransformComponent, RType::MovementComponent, RType::PlayerID, RType::UniqueID, RType::TagComponent>(
+                this->_world->template addComponents<RType::TransformComponent, RType::MovementComponent, RType::HitboxComponent, RType::PlayerID, RType::UniqueID, RType::TagComponent>(
                     e,
                     RType::TransformComponent({-(1920 / 2) + 100, static_cast<float>(i) * 100.f}, 0, {1, 1}),
                     RType::MovementComponent({0, 0}, 0, std::bind(RType::PlayerUpdateMovement, _netId_Generator, _packetQueue, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
+                    RType::HitboxComponent({0, 0, 27, 12}, std::bind(RType::PlayerCollisionUpdateRoutine, _packetQueue, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4)),
                     RType::PlayerID(i),
                     RType::UniqueID(_netId_Generator->getID()),
                     RType::TagComponent("Player")
@@ -334,6 +336,7 @@ namespace RType::Network::Room {
                 auto end = std::chrono::high_resolution_clock::now();
                 std::chrono::duration<float, std::milli> duration = end - _start;
                 float res = duration.count();
+                (*this->_time) += res;
                 this->_world->template getSystem<RType::MovementUpdateSystem>()->update(res, this->_world);
                 this->_world->template getSystem<RType::TransformSystem>()->update(res, this->_world);
                 this->_world->template getSystem<RType::PhysicSystem>()->update(res, this->_world);
@@ -351,6 +354,13 @@ namespace RType::Network::Room {
                 oqueue.get()->OutputQueue.clear();
                 std::this_thread::sleep_for(std::chrono::milliseconds(16));
                 _start = end;
+                if ((*this->_time) > 1000.f) {
+                    ECS::NetworkPacket enp = (*this->_libs->at(rand() % (this->_libs->size())))->instanciate(this->_world, this->_netId_Generator, this->_packetQueue);
+                    for (size_t i = 0; i < _users.size(); ++i) {
+                        _users[i]->get_udpsocket_write()->write(enp);
+                    }
+                    (*this->_time) = 0.f;
+                }
             });
         }
 
@@ -365,6 +375,7 @@ namespace RType::Network::Room {
         std::shared_ptr<ThreadSafeQueue<ECS::NetworkPacket>> _packetQueue;
         std::shared_ptr<ConfigFile> _config;
         std::shared_ptr<std::vector<std::shared_ptr<DynamicLoader<IEntityFactory>>>> _libs;
+        std::shared_ptr<float> _time;
     };
 }
 

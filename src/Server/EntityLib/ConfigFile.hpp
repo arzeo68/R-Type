@@ -31,7 +31,7 @@ namespace RType
 
         bool load(std::string const& name)
         {
-            std::string path("../../ressources/ennemies/");
+            std::string path("./");
             path.append(name);
             path.append("Factory");
 #ifdef _WIN32
@@ -39,29 +39,14 @@ namespace RType
 #else
             path.append(".so");
 #endif
-            if (_factories->empty()) {
-                _factories->emplace_back(std::make_shared<DynamicLoader<RType::IEntityFactory>>(path));
-            }
-            /* for (auto& f : *_factories.get()) {
-                std::cout << "NAME : " << (*(f.get()))->getName() << "\n";
-                if (name == (*(f.get()))->getName()) {
-                    std::string path("../../ressources/ennemies/");
-                    path.append(name);
-                    path.append("Factory");
-#ifdef _WIN32
-                    path.append(".dll");
-#else
-                    path.append(".so");
-#endif
-                    std::fstream f(path);
-                    if (f.is_open()) {
-                        _factories->emplace_back(path);
-                        f.close();
-                        return true;
-                    }
+            for (auto& f : *_factories.get()) {
+                std::string current_name = (*(f.get()))->getName();
+                if (name == current_name) {
+                    return false;
                 }
-            } */
-            return false;
+            }
+            _factories->emplace_back(std::make_shared<DynamicLoader<RType::IEntityFactory>>(path));
+            return true;
         }
 
     private:

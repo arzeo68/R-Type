@@ -1,5 +1,5 @@
 #include <random>
-#include "BasicShipFactory.hpp"
+#include "MediumShipFactory.hpp"
 
 #include <Common/Component/Transform.hpp>
 #include <Common/Component/Movement.hpp>
@@ -28,7 +28,8 @@ static void UpdateBasicShipPhysic(std::shared_ptr<RType::Network::ThreadSafeQueu
     }
 }
 
-ECS::NetworkPacket BasicShipFactory::instanciate(std::shared_ptr<ECS::World>& world, std::shared_ptr<UniqueIDGenerator>& idgenerator, std::shared_ptr<RType::Network::ThreadSafeQueue<ECS::NetworkPacket>>& queue)
+
+ECS::NetworkPacket MediumShipFactory::instanciate(std::shared_ptr<ECS::World>& world, std::shared_ptr<UniqueIDGenerator>& idgenerator, std::shared_ptr<RType::Network::ThreadSafeQueue<ECS::NetworkPacket>>& queue)
 {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -40,14 +41,14 @@ ECS::NetworkPacket BasicShipFactory::instanciate(std::shared_ptr<ECS::World>& wo
         e,
         RType::TransformComponent({1000.f, static_cast<float>(distribution(gen))}, 0, {1, 1}),
         RType::MovementComponent({-0.2, 0}, 0, std::bind(UpdateBasicShipMovement, queue, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
-        RType::HitboxComponent({0, 0, 14, 16}, std::bind(UpdateBasicShipPhysic, queue, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4)),
+        RType::HitboxComponent({0, 0, 27, 12}, std::bind(UpdateBasicShipPhysic, queue, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4)),
         RType::UniqueID(id),
         RType::TagComponent("Enemy")
     );
-    return {id, 0, 0, 0, {10, 237, 14, 16}};
+    return {id, 0, 0, 0, {261, 208, 18, 18}};
 }
 
 extern "C" __declspec(dllexport) RType::IEntityFactory *entry()
 {
-    return new BasicShipFactory();
+    return new MediumShipFactory();
 }
