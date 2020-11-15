@@ -154,7 +154,9 @@ add_executable(rtype_server
         src/Common/Component/InputQueue.hpp
         src/Common/Component/OutputQueue.hpp
         src/Common/Component/PlayerID.hpp
-        src/Common/Component/UniqueID.hpp)
+        src/Common/Component/UniqueID.hpp
+
+        src/Server/EntityLib/IEntityFactory.hpp)
 
 if (MSVC)
     set_target_properties(rtype_client PROPERTIES LINK_FLAGS /MACHINE:X64)

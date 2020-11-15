@@ -1,6 +1,8 @@
 #pragma once
 
-#include "ECS/World.hpp"
+#include "Common/unique_id.hpp"
+#include "Common/ECS/NetworkPacket.hpp"
+#include "Common/ECS/World.hpp"
 
 namespace Rtype
 {
@@ -8,6 +10,6 @@ namespace Rtype
 
     public:
         virtual ~IEntityFactory();
-        virtual void instanciate(std::shared_ptr<ECS::World>&) = 0;
+        virtual ECS::NetworkPacket instanciate(std::shared_ptr<ECS::World>&, std::shared_ptr<UniqueIDGenerator>&) = 0;
     };
-} 
+}
