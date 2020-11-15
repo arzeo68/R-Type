@@ -25,8 +25,7 @@ if (BUILD_DOC)
 endif(BUILD_DOC)
 
 cmake_minimum_required(VERSION 3.17.0)
-project(RType)
-
+project(RTyp LANGUAGES CXX C)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY build/bin)
 set(CMAKE_CXX_STANDARD 20)
@@ -46,6 +45,8 @@ else()
 endif()
 
 conan_basic_setup()
+
+add_subdirectory(libs)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/Client)
@@ -113,6 +114,15 @@ add_executable(rtype_client
         # - Common Components and Systems
 )
 
+if (WIN32)
+    set(PLATFORM_SPECIFIC_FILES
+        src/Server/EntityLib/dlfcn.c
+        src/Server/EntityLib/dlfcn.h
+    )
+else (WIN32)
+    set(PLATFORM_SPECIFIC_FILES)
+endif (WIN32)
+
 add_executable(rtype_server
         src/Server/Network/Network/INetwork.hpp
         src/Server/Network/Socket/ISocket.hpp
@@ -154,7 +164,11 @@ add_executable(rtype_server
         src/Common/Component/InputQueue.hpp
         src/Common/Component/OutputQueue.hpp
         src/Common/Component/PlayerID.hpp
-        src/Common/Component/UniqueID.hpp)
+        src/Common/Component/UniqueID.hpp
+
+        src/Server/EntityLib/IEntityFactory.hpp
+        src/Server/EntityLib/ConfigFile.hpp
+        ${PLATFORM_SPECIFIC_FILES})
 
 if (MSVC)
     set_target_properties(rtype_client PROPERTIES LINK_FLAGS /MACHINE:X64)

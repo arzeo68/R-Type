@@ -5,6 +5,8 @@
 ** Main file for the server part
 */
 
+#include <ctime>
+#include <cstdlib>
 #include <iostream>
 #include "Server.hpp"
 #include "Network/Client/BoostClient.hpp"
@@ -12,6 +14,7 @@
 
 int main(const int ac, const char **av) {
     uint32_t port = 4242;
+    srand(time(0));
     if (ac != 1)
         port = std::stoi(av[1], nullptr);
 

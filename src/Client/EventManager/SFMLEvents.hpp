@@ -8,7 +8,7 @@
 /**
  * main namespace
  */
-namespace Rtype
+namespace RType
 {
     /**
      * event called when the user close the window
@@ -187,4 +187,4 @@ public:
     vec2i position;
 };
 
-} // namespace Rtype
+} // namespace RType

@@ -1,15 +1,16 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 #include <Common/ECS/NetworkPacket.hpp>
 
-namespace Rtype
+namespace RType
 {
 
 struct OutputQueueComponent {
-    std::vector<ECS::NetworkPacket> OutputQueue;
+    std::shared_ptr<std::vector<ECS::NetworkPacket>> OutputQueue;
 
-    OutputQueueComponent() : OutputQueue({}) {};
+    OutputQueueComponent() : OutputQueue(std::make_shared<std::vector<ECS::NetworkPacket>>()) {};
 };
 
-} // namespace Rtype
+} // namespace RType

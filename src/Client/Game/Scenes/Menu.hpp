@@ -6,7 +6,7 @@
 /**
  * implementation of AScene
  */
-class MenuScene : public Rtype::AScene {
+class MenuScene : public RType::AScene {
 public:
     /**
      * Constructor
@@ -35,11 +35,11 @@ public:
     /**
  * this function will be call at each frame on this scene
  */
-    void update(float delta, Rtype::RenderTarget& target) override;
+    void update(float delta, RType::RenderTarget& target) override;
     /**
 * this function will be call at the end of each frame on this scene
 */
-    void lateUpdate(float delta, Rtype::RenderTarget& target) override;
+    void lateUpdate(float delta, RType::RenderTarget& target) override;
 
 private:
 };

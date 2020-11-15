@@ -4,7 +4,7 @@
 #include <Common/Component/Movement.hpp>
 #include <Common/Component/Transform.hpp>
 
-namespace Rtype
+namespace RType
 {
 
 class MovementUpdateSystem : public ECS::System {
@@ -18,4 +18,4 @@ public:
 };
 
 
-} // namespace Rtype
+} // namespace RType

@@ -8,7 +8,7 @@
 #include <condition_variable>
 #include "ISocket.hpp"
 
-namespace Rtype {
+namespace RType {
     /**
  * ASocket is an abstraction whith the basic function for any socket type
  */

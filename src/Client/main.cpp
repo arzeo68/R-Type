@@ -9,7 +9,7 @@ int main(const int ac, const char **av)
 {
     if (ac != 2)
         return (84);
-    Rtype::Application app("Rtype", 960, 540, av[1]);
+    RType::Application app("RType", 960, 540, av[1]);
 
     app.run();
 

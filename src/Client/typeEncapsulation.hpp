@@ -12,7 +12,7 @@
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
-namespace Rtype {
+namespace RType {
     typedef sf::Vector2i vec2i;
     typedef sf::Vector2f vec2f;
     typedef sf::Vector3f vec3f;
@@ -79,9 +79,9 @@ namespace Rtype {
     class ISprite {
         public:
         virtual ~ISprite() = default;
-        virtual void setTexture(Rtype::Texture& tex) = 0;
-        virtual void setTextureRect(Rtype::iRect& rect) = 0;
-        virtual void setOrigin(Rtype::vec2f& vec) = 0;
+        virtual void setTexture(RType::Texture& tex) = 0;
+        virtual void setTextureRect(RType::iRect& rect) = 0;
+        virtual void setOrigin(RType::vec2f& vec) = 0;
         virtual void centerOrigin() = 0;
         virtual T &getNativ() = 0;
     };
@@ -97,17 +97,17 @@ namespace Rtype {
             return _image;
         }
 
-        void setTexture(Rtype::Texture& tex)
+        void setTexture(RType::Texture& tex)
         {
             _image.setTexture(tex);
         }
 
-        void setTextureRect(Rtype::iRect& rect)
+        void setTextureRect(RType::iRect& rect)
         {
             _image.setTextureRect(rect);
         }
 
-        void setOrigin(Rtype::vec2f& vec)
+        void setOrigin(RType::vec2f& vec)
         {
             _image.setOrigin(vec);
         }
@@ -161,7 +161,7 @@ namespace Rtype {
             return *this;
         }
 
-        Rtype::fRect transformRect(Rtype::fRect rect)
+        RType::fRect transformRect(RType::fRect rect)
         {
             return _mat.transformRect(rect);
         }
@@ -174,7 +174,7 @@ namespace Rtype {
     class IRenderState {
         public:
         virtual ~IRenderState() = default;
-        virtual void setMatrix(Rtype::Transform mat) = 0;
+        virtual void setMatrix(RType::Transform mat) = 0;
         virtual T &getNativ() = 0;
     };
 
@@ -189,7 +189,7 @@ namespace Rtype {
             return _state;
         }
 
-        void setMatrix(Rtype::Transform mat)
+        void setMatrix(RType::Transform mat)
         {
             _state.transform = mat;
         }
@@ -197,6 +197,6 @@ namespace Rtype {
         private:
         RenderState _state;
     };
-}  // namespace Rtype
+}  // namespace RType
 
 #endif  // BABEL_TYPEENCAPSULATION_HPP

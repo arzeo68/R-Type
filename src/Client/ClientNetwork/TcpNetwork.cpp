@@ -3,7 +3,7 @@
 #include <iostream>
 #include "TcpNetwork.hpp"
 
-namespace Rtype
+namespace RType
 {
 
     TCPBoostSocket::TCPBoostSocket(std::string const& host, std::string const &port, boost::asio::io_service& service, const std::shared_ptr<RType::Network::ThreadSafeQueue<int>>
@@ -24,7 +24,8 @@ namespace Rtype
     void TCPBoostSocket::shutdown_socket() noexcept
     {
         stopped = true;
-        m_tcpSocket.close();
+        boost::system::error_code err;
+        m_tcpSocket.close(err);
         //m_ioContext.stop();
     }
 
@@ -36,7 +37,7 @@ namespace Rtype
         }
     }
 
-    void TCPBoostSocket::HandleConnect(const std::error_code &error, boost::asio::ip::tcp::resolver::results_type::iterator endpoint)
+    void TCPBoostSocket::HandleConnect(const boost::system::error_code &error, boost::asio::ip::tcp::resolver::results_type::iterator endpoint)
     {
         if (stopped)
             return;
@@ -75,7 +76,7 @@ namespace Rtype
         boost::bind(&TCPBoostSocket::handle_read, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
     }
 
-    void TCPBoostSocket::handle_read(const std::error_code& err, size_t)
+    void TCPBoostSocket::handle_read(const boost::system::error_code& err, size_t)
     {
         if (!err) {
             RType::Common::Network::TCPPacket *unpacked = (RType::Common::Network::TCPPacket *)m_data.data();

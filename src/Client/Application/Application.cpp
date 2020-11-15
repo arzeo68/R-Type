@@ -10,7 +10,7 @@
 
 #include <Client/Game/Scenes/Menu.hpp>
 
-namespace Rtype
+namespace RType
 {
 extern float __aggregated_time = 0.f;
 
@@ -34,10 +34,10 @@ Application::Application(std::string const& title, unsigned int width, unsigned 
     std::cout << "Register 'catch_close' on 'EClose'" << std::endl;
     //tcpMessageReceived = std::make_shared<std::deque<int>>();
     tcpMessageReceived = std::make_shared<RType::Network::ThreadSafeQueue<int>>();
-    tcpSocket = std::make_shared<Rtype::TCPBoostSocket>("127.0.0.1", "4242", this->_service,
+    tcpSocket = std::make_shared<RType::TCPBoostSocket>("127.0.0.1", "4242", this->_service,
                                                         tcpMessageReceived->shared_from_this());
-    udpSocket = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", "4243", this->_service, std::bind(&Application::catch_network_event, this, std::placeholders::_1, std::placeholders::_2));
-    udpSocket_read = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", port, this->_service, std::bind(&Application::catch_network_event, this, std::placeholders::_1, std::placeholders::_2));
+    udpSocket = std::make_shared<RType::UDPBoostSocket>("127.0.0.1", "4243", this->_service, std::bind(&Application::catch_network_event, this, std::placeholders::_1, std::placeholders::_2));
+    udpSocket_read = std::make_shared<RType::UDPBoostSocket>("127.0.0.1", port, this->_service, std::bind(&Application::catch_network_event, this, std::placeholders::_1, std::placeholders::_2));
     m_pEventManager->getSubject().registerObserver(EClose, std::bind(&Application::catch_close, this, std::placeholders::_1, std::placeholders::_2));
     m_pEventManager->getSubject().registerObserver(EKeyPressed, std::bind(&Application::catch_keyPressed, this, std::placeholders::_1, std::placeholders::_2));
 }
@@ -128,4 +128,4 @@ void Application::catch_network_event(packageType type, std::shared_ptr<Observer
     m_subject.notify(type, data);
 }
 
-} // namespace Rtype
+} // namespace RType

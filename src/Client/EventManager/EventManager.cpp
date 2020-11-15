@@ -2,7 +2,7 @@
 #include <Client/EventManager/SFMLEvents.hpp>
 #include <iostream>
 
-namespace Rtype
+namespace RType
 {
 
 void EventManager::update()
@@ -88,4 +88,4 @@ void EventManager::update()
     }
 }
 
-} // namespace Rtype
+} // namespace RType

@@ -14,7 +14,7 @@
 /**
  * main namespace
  */
-namespace Rtype {
+namespace RType {
     /**
      * implementation of ISocket for a TCP boost socket
      */
@@ -49,8 +49,8 @@ namespace Rtype {
 
         private:
         void StartConnect(boost::asio::ip::tcp::resolver::results_type::iterator endpoint);
-        void HandleConnect(const std::error_code& error, boost::asio::ip::tcp::resolver::results_type::iterator endpoint);
-        void handle_read(const std::error_code& error, size_t s);
+        void HandleConnect(const boost::system::error_code& error, boost::asio::ip::tcp::resolver::results_type::iterator endpoint);
+        void handle_read(const boost::system::error_code& error, size_t s);
 
         private:
         bool stopped = false;

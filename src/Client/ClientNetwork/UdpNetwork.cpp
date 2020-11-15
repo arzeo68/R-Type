@@ -4,7 +4,7 @@
 #include "UdpNetwork.hpp"
 #include "Common/ECS/NetworkPacket.hpp"
 
-namespace Rtype
+namespace RType
 {
 
     void UDPBoostSocket::start_socket() noexcept
@@ -17,14 +17,15 @@ namespace Rtype
 
     void UDPBoostSocket::write(const RType::Common::Network::TCPPacket& input)
     {
+        std::cout << "UDPBoostSocket::write" << std::endl;
         auto status = _sfUdpSocket->send(&input, sizeof(input), _addr, _port);
         if (status == sf::Socket::Done)
         {
-            //std::cout << "data succesfully written on :" << _addr << " : " << _port << std::endl;
+            std::cout << "data succesfully written on :" << _addr << " : " << _port << std::endl;
         }
         else if (status == sf::Socket::NotReady)
         {
-//            std::cout << "data succesfully written" << std::endl;
+            std::cout << "NOT READY" << std::endl;
         }
         else if (status == sf::Socket::Partial)
         {
@@ -44,7 +45,7 @@ namespace Rtype
     void UDPBoostSocket::start_read()
     {
         //        wait();
-        ECS::NetworkPacket data;
+        ECS::NetworkPacket data{};
         std::size_t received;
         sf::IpAddress sender;
         unsigned short port;
@@ -70,11 +71,11 @@ namespace Rtype
         auto status = _sfUdpSocket->send(data, dataSize, _addr, _port);
         if (status == sf::Socket::Done)
         {
-            //std::cout << "data succesfully written on :" << _addr << " : " << _port << std::endl;
+            // std::cout << "DATA succesfully written on :" << _addr << " : " << _port << std::endl;
         }
         else if (status == sf::Socket::NotReady)
         {
-            //            std::cout << "data succesfully written" << std::endl;
+            // std::cout << "not ready" << std::endl;
         }
         else if (status == sf::Socket::Partial)
         {

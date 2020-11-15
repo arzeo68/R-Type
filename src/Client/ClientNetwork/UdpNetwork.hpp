@@ -15,7 +15,7 @@
 /**
  * main namespace
  */
-namespace Rtype{
+namespace RType{
     enum packageType {
         EVENT
     };
@@ -26,7 +26,7 @@ namespace Rtype{
                 : data(p)
             { }
 
-            ECS::NetworkPacket data;
+            ECS::NetworkPacket data{};
     };
 
     /**

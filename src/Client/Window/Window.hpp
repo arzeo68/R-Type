@@ -13,7 +13,7 @@
 #include <Client/RenderTarget/RenderTarget.hpp>
 #include "AWindow.hpp"
 
-namespace Rtype
+namespace RType
 {
 
     class Window : public AWindow
@@ -28,7 +28,7 @@ namespace Rtype
 
         bool close() override;
 
-        Rtype::RenderTarget getRenderTarget();
+        RType::RenderTarget getRenderTarget();
 
         sf::RenderWindow& getNativeHandle() { return _window; }
         sf::RenderWindow const& getNativeHandle() const { return _window; }

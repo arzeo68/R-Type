@@ -3,7 +3,7 @@
 #include <iostream>
 #include <Client/typeEncapsulation.hpp>
 
-namespace Rtype
+namespace RType
 {
 
 struct TransformComponent {
@@ -25,4 +25,4 @@ public:
     return out;
 }
 
-} // namespace Rtype
+} // namespace RType

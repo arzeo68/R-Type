@@ -9,7 +9,7 @@
 #include <Common/Component/Hitbox.hpp>
 #include <Common/Component/UniqueID.hpp>
 
-namespace Rtype
+namespace RType
 {
 
 SceneManager::SceneManager()
@@ -73,22 +73,21 @@ void SceneManager::catch_switch(EventSceneSwitchType, std::shared_ptr<Observer::
     switch_to(nScene->sceneID);
 }
 
-void AScene::catch_network_event(Rtype::packageType type, std::shared_ptr<Observer::IEvent> data)
+void AScene::catch_network_event(RType::packageType type, std::shared_ptr<Observer::IEvent> data)
 {
     std::shared_ptr<NetworkEvent> event = std::dynamic_pointer_cast<NetworkEvent>(data);
-    auto input = m_World->getSingletonComponent<Rtype::NetworkUpdateSingletonComponent>();
+    auto input = m_World->getSingletonComponent<RType::NetworkUpdateSingletonComponent>();
     if (event->data.type == 0) {
-        Rtype::iRect rect = {event->data.rect[0], event->data.rect[1], event->data.rect[2], event->data.rect[3]};
+        RType::iRect rect = {event->data.rect[0], event->data.rect[1], event->data.rect[2], event->data.rect[3]};
         ECS::Entity e = m_World->createEntity();
         auto texlib = m_World->getSingletonComponent<TextureLibraryComponent>();
-        m_World->addComponents<SpriteComponent, Rtype::TransformComponent, Rtype::MovementComponent, Rtype::UniqueID>(
+        m_World->addComponents<SpriteComponent, RType::TransformComponent, RType::MovementComponent, RType::UniqueID>(
             e,
             SpriteComponent(texlib.get()->get_texture("SpriteSheet"), &rect),
-            Rtype::TransformComponent({event->data.x, event->data.y}, 0, {3, 3}),
-            Rtype::MovementComponent({0, 0}, 0, std::bind(base_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
-            Rtype::UniqueID(event->data.id)
+            RType::TransformComponent({event->data.x, event->data.y}, 0, {3, 3}),
+            RType::MovementComponent({0, 0}, 0, std::bind(base_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
+            RType::UniqueID(event->data.id)
         );
-        std::cout << "Creating entity\n";
     } else if (event->data.type == 1) {
         input.get()->packets.push_back(std::move(event->data));
     } else if (event->data.type == 2) {
@@ -96,4 +95,4 @@ void AScene::catch_network_event(Rtype::packageType type, std::shared_ptr<Observ
     }
 }
 
-} // namespace Rtype
+} // namespace RType

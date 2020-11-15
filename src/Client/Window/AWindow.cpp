@@ -9,7 +9,7 @@
  *
  * @return the window width
  */
-int Rtype::AWindow::getWidth() const
+int RType::AWindow::getWidth() const
 {
     return _width;
 }
@@ -18,7 +18,7 @@ int Rtype::AWindow::getWidth() const
  *
  * @return the window height
  */
-int Rtype::AWindow::getHeight() const
+int RType::AWindow::getHeight() const
 {
     return _height;
 }

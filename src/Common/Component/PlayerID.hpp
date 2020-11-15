@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Rtype
+namespace RType
 {
 
 struct PlayerID {
@@ -10,4 +10,4 @@ struct PlayerID {
     PlayerID(int id) : id(id) {};
 };
 
-} // namespace Rtype
+} // namespace RType

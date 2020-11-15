@@ -7,7 +7,7 @@ void NetworkEntityDestructionSystem::init()
 
 void NetworkEntityDestructionSystem::update(float delta, std::shared_ptr<ECS::World>& world)
 {
-   auto netupdate = world->getSingletonComponent<Rtype::NetworkUpdateSingletonComponent>();
+   auto netupdate = world->getSingletonComponent<RType::NetworkUpdateSingletonComponent>();
 
    if (netupdate.get()->destructionIDs.empty())
       return;
@@ -15,7 +15,6 @@ void NetworkEntityDestructionSystem::update(float delta, std::shared_ptr<ECS::Wo
       auto [ id ] = getDependencies(entity, world);
 
       if (std::find(netupdate.get()->destructionIDs.begin(), netupdate.get()->destructionIDs.end(), id.get()->id) != netupdate.get()->destructionIDs.end()) {
-         std::cout << "Destroying entity " << entity << "\n";
          world->deferEntityDestruction(entity);
       }
    }
@@ -24,7 +23,7 @@ void NetworkEntityDestructionSystem::update(float delta, std::shared_ptr<ECS::Wo
 
 NetworkEntityDestructionSystem::Dependencies NetworkEntityDestructionSystem::getDependencies(ECS::Entity entity, std::shared_ptr<ECS::World>& world)
 {
-    auto const id = world->getComponent<Rtype::UniqueID>(entity);
+    auto const id = world->getComponent<RType::UniqueID>(entity);
 
     return std::make_tuple(id);
 }

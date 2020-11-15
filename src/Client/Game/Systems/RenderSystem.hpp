@@ -17,9 +17,9 @@ public:
     /**
  * this function is called at each frame
  */
-    void update(float delta, std::shared_ptr<ECS::World>& world, Rtype::RenderTarget& target);
+    void update(float delta, std::shared_ptr<ECS::World>& world, RType::RenderTarget& target);
 
-    typedef std::tuple<const ECS::ComponentHandle<SpriteComponent>, const ECS::ComponentHandle<Rtype::TransformComponent>> Dependencies;
+    typedef std::tuple<const ECS::ComponentHandle<SpriteComponent>, const ECS::ComponentHandle<RType::TransformComponent>> Dependencies;
     /**
  * this function return all the dependencies needed by the render system
  */

@@ -16,7 +16,7 @@ public:
  */
     void update(float delta, std::shared_ptr<ECS::World>& world);
 
-    typedef std::tuple<const ECS::ComponentHandle<Rtype::UniqueID>> Dependencies;
+    typedef std::tuple<const ECS::ComponentHandle<RType::UniqueID>> Dependencies;
     /**
  * this function return all the dependencies needed by the render system
  */
