@@ -277,11 +277,10 @@ namespace RType::Network::Room {
                 auto queue = this->_world->template getSingletonComponent<Rtype::InputQueueComponent>();
                 auto oqueue = this->_world->template getSingletonComponent<Rtype::OutputQueueComponent>();
                 for (int i = 0; i < _users.size(); i += 1) {
-                    std::cout << "package received from: " << i << std::endl;
                     auto q = _users[i]->get_udpsocket_read()->get_queue();
                     while (!q->empty()) {
                         auto packet = q->pop();
-                        queue.get()->InputQueueMap[i].push_back(packet.command);
+                        queue.get()->InputQueueMap[packet.networkID].push_back(packet.command);
                     }
                 }
                 auto end = std::chrono::high_resolution_clock::now();

@@ -9,11 +9,17 @@
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/udp.hpp>
 #include <deque>
+#include <src/Client/ObserverPattern/Subject.hpp>
 #include "ASocket.hpp"
 /**
  * main namespace
  */
 namespace Rtype{
+    enum packageType {
+        CREATION,
+        UPDATE,
+        DESTRUCTION
+    };
     /**
      * implementation of ISocket for a UDP boost socket
      */
@@ -26,6 +32,7 @@ namespace Rtype{
          * @param port server port
          * @param SharedQueue queue in which the socket will stored the message received
          */
+
         UDPBoostSocket(std::string const& host, std::string const& port,
                        boost::asio::io_service& service);
         /**
@@ -68,11 +75,7 @@ namespace Rtype{
         std::shared_ptr<sf::UdpSocket> _sfUdpSocket;
         unsigned short _port;
         sf::IpAddress _addr;
-
-
-
-
-
+        Observer::Subject<packageType> subject;
     };
 }
 

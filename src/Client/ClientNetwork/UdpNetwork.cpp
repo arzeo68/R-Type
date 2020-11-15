@@ -74,7 +74,7 @@ namespace Rtype
         std::size_t received;
         sf::IpAddress sender;
         unsigned short port;
-        auto status = _sfUdpSocket->receive(&data, 16, received, sender, port);
+        auto status = _sfUdpSocket->receive(&data, sizeof(data), received, sender, port);
         if (status == sf::Socket::NotReady)
         {
 //            std::cerr << "not ready" << std::endl;
@@ -82,8 +82,8 @@ namespace Rtype
         }
         else if (status == sf::Socket::Done)
         {
-/*             std::cout << "Received " << received << " bytes from " << sender << " on port " << port << std::endl;
-            std::cout << "DATA: " << data.id << "  " << data.type << "  " << data.x << "  " << data.y << std::endl; */
+            std::cout << "Received " << received << " bytes from " << sender << " on port " << port << std::endl;
+            std::cout << "DATA: " << data.id << "  " << data.type << "  " << data.x << "  " << data.y << std::endl;
         }
         else
         {
