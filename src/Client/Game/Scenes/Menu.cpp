@@ -55,7 +55,7 @@ void MenuScene::onCreate()
 
     auto texlib = m_World->getSingletonComponent<TextureLibraryComponent>();
 
-    texlib.get()->load_default_texture("../ressources/default.png");
+    texlib.get()->load_default_texture("../../ressources/default.png");
 
     ECS::Entity e = m_World->createEntity();
     ECS::Entity e1 = m_World->createEntity();

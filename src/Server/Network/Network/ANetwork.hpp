@@ -36,10 +36,6 @@ namespace RType::Network {
         typename SignalSet = _nullTemplate>
     class ANetwork : public INetwork {
         public:
-        //ANetwork() = delete;
-        //ANetwork(const Common::Log::Log::shared_log_t& log) : _rooms(log) {}
-        //~ANetwork() = default;
-        //ANetwork(const ANetwork<ClientUDPSocket, ClientTCPSocket, IOService, Acceptor, SignalSet>&) = delete;
 
         /**
          * Alias for std::shared_ptr<AClient<...>>

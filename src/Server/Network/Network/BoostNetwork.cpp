@@ -71,7 +71,7 @@ void RType::Network::BoostNetwork::stop() {
 }
 
 void RType::Network::BoostNetwork::wait_for_client() {
-    this->_logger->Debug("Creating a client & waiting for connection on port: ", this->_global_port);
+    this->_logger->Debug("Creating a client & waiting for connection on udp port: ", this->_global_port);
     auto client = std::make_shared<BoostClient>(*this->_router.get_io_service(),
                                                 *this->_router.get_udp_endpoint(),
                                                 this->_logger,
@@ -128,14 +128,11 @@ void RType::Network::BoostNetwork::pre_run() {
         if (error)
             self->_logger->Error("Error during catching signals: ",
                                  error.message());
-        if (self->_is_running) {
-            /**
-             * Replace the write of EOF by a real command: "exit"
-             */
+        else if (self->_is_running) {
             #ifdef _WIN_32
             _write(0, "exit", 5);
             #else
-            write(0, "exit", 5);
+            ssize_t _ = write(0, "exit", 5);
             #endif
         }
     });

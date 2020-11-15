@@ -32,9 +32,10 @@ Application::Application(std::string const& title, unsigned int width, unsigned 
     m_pSceneManager = std::make_shared<SceneManager>();
     m_pEventManager = std::make_shared<EventManager>(*(std::static_pointer_cast<Window>(m_pWindow)));
     std::cout << "Register 'catch_close' on 'EClose'" << std::endl;
-    tcpMessageReceived = std::make_shared<std::deque<int>>();
+    //tcpMessageReceived = std::make_shared<std::deque<int>>();
+    tcpMessageReceived = std::make_shared<RType::Network::ThreadSafeQueue<int>>();
     tcpSocket = std::make_shared<Rtype::TCPBoostSocket>("127.0.0.1", "4242", this->_service,
-                                                        tcpMessageReceived);
+                                                        tcpMessageReceived->shared_from_this());
     udpSocket = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", "4243", this->_service, std::bind(&Application::catch_network_event, this, std::placeholders::_1, std::placeholders::_2));
     udpSocket_read = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", port, this->_service, std::bind(&Application::catch_network_event, this, std::placeholders::_1, std::placeholders::_2));
     m_pEventManager->getSubject().registerObserver(EClose, std::bind(&Application::catch_close, this, std::placeholders::_1, std::placeholders::_2));
@@ -82,11 +83,12 @@ void Application::run()
 
     while (tcpMessageReceived->empty())
     {
-        std::cout << "wait" << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(3));
+        //std::cout << "wait" << std::endl;
+        //std::this_thread::sleep_for(std::chrono::seconds(3));
     }
-    _networkID = tcpMessageReceived->front();
-    tcpMessageReceived->pop_front();
+    //_networkID = tcpMessageReceived->front();
+    _networkID = tcpMessageReceived->pop();
+    //tcpMessageReceived->pop_front();
 
     while (m_pWindow->isOpen()) {
         udpSocket_read->start_read();

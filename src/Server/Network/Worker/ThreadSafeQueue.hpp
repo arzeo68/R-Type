@@ -22,15 +22,13 @@ namespace RType::Network {
     class ThreadSafeQueue :
         public std::enable_shared_from_this<ThreadSafeQueue<T>> {
         public:
-        ThreadSafeQueue() = default;
-        ~ThreadSafeQueue() = default;
-
         /**
          * Add an element to the queue
          * @param element Element to add
          */
         void add(T element) {
             std::lock_guard<std::mutex> l(this->_mutex);
+            std::cerr << "element added" << std::endl;
             this->_queue.push(element);
         }
 
@@ -70,6 +68,7 @@ namespace RType::Network {
          */
         bool empty() {
             std::lock_guard<std::mutex> l(this->_mutex);
+            //std::cerr << "Size: " << this->_queue.empty() << std::endl;
             return (this->_queue.empty());
         }
 

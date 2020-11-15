@@ -38,7 +38,7 @@ namespace RType::Network::Room {
     /**
      * The number of participant per room
      */
-    const static constexpr uint16_t MAX_PARTICIPANT = 1;
+    const static constexpr uint16_t MAX_PARTICIPANT = 2;
 
     typedef uint16_t GameState_t;
     enum class GameState_e : GameState_t {
@@ -294,7 +294,7 @@ namespace RType::Network::Room {
             this->_worker_game_loop.run_awake([&] () {
                 auto queue = this->_world->template getSingletonComponent<Rtype::InputQueueComponent>();
                 auto oqueue = this->_world->template getSingletonComponent<Rtype::OutputQueueComponent>();
-                for (int i = 0; i < _users.size(); i += 1) {
+                for (std::size_t i = 0; i < _users.size(); i += 1) {
                     auto q = _users[i]->get_udpsocket_read()->get_queue();
                     while (!q->empty()) {
                         auto packet = q->pop();

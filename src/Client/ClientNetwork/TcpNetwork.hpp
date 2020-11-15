@@ -10,6 +10,7 @@
 #include <vector>
 #include <deque>
 #include "ASocket.hpp"
+#include "Server/Network/Worker/ThreadSafeQueue.hpp"
 /**
  * main namespace
  */
@@ -28,7 +29,7 @@ namespace Rtype {
          */
         TCPBoostSocket(std::string const& host, std::string const& port,
                        boost::asio::io_service& service,
-                       std::shared_ptr<std::deque<int>>& SharedQueue);
+                       const std::shared_ptr<RType::Network::ThreadSafeQueue<int>>& SharedQueue);
         /**
          * start the socket
          */
@@ -58,7 +59,7 @@ namespace Rtype {
         boost::asio::ip::tcp::resolver::results_type endpoints;
 
         boost::asio::ip::tcp::socket m_tcpSocket;
-        std::shared_ptr<std::deque<int>> SharedDataQueue;
+        std::shared_ptr<RType::Network::ThreadSafeQueue<int>> SharedDataQueue;
         std::vector<char> m_data;
     };
 }

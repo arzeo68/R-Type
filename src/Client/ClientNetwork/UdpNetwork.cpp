@@ -61,7 +61,7 @@ namespace Rtype
         }
         else
         {
-            std::cerr << " sa a return a autre truc" << std::endl;
+            std::cerr << " ça a return a autre truc" << std::endl;
         }
     }
 

@@ -8,6 +8,7 @@
 #include <Client/EventManager/EventManager.hpp>
 #include <Client/ClientNetwork/ASocket.hpp>
 #include <Client/ClientNetwork/UdpNetwork.hpp>
+#include "Server/Network/Worker/ThreadSafeQueue.hpp"
 
 namespace Rtype {
 
@@ -35,7 +36,7 @@ namespace Rtype {
         void catch_network_event(Rtype::packageType, std::shared_ptr<Observer::IEvent> data);
 
     private:
-        std::shared_ptr<std::deque<int>> tcpMessageReceived;
+        std::shared_ptr<RType::Network::ThreadSafeQueue<int>> tcpMessageReceived;
         std::shared_ptr<Rtype::ASocket> tcpSocket;
         std::shared_ptr<Rtype::ASocket> udpSocket;
         std::shared_ptr<Rtype::ASocket> udpSocket_read;
