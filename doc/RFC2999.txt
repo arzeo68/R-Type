@@ -1,0 +1,140 @@
+
+
+
+
+
+
+Epitech STRASBOURG                                          C. Ruffinoni
+Request for Comments: 0053                                    Q. Tessier
+Category: Informational                                        A. Walter
+                                                              V. Limbach
+                                                           November 2020
+
+                            R-Type Protocols
+
+Status of this Memo
+
+   This memo is the official specification of the 2 R-Type Protocols
+   (the R-Type TCP Protocol and the R-Type UDP Protocol). The R-Type is
+   a third year project from EPITECH inspired from the real game R-Type.
+   Distribution of this memo is unlimited.
+
+Table of Contents
+
+   1.   Introduction . . . . . . . . . . . . . . . . . . . . . . . . . 1
+   2.   R-Type architecture  . . . . . . . . . . . . . . . . . . . . . 1
+   3.   R-Type TCP Protocol  . . . . . . . . . . . . . . . . . . . . . 2
+   3a.   Package . . . . . . . . . . . . . . . . . . . . . . . . . . . 2
+   3b.   Server connection . . . . . . . . . . . . . . . . . . . . . . 2
+   4.   R-Type UDP Protocol  . . . . . . . . . . . . . . . . . . . . . 3
+   4a.   Package . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+   4b.   Input communication . . . . . . . . . . . . . . . . . . . . . 3
+
+
+
+Ruffinoni                     Informational                     [Page 1]
+
+RFC 0053                      Instruction                  November 2020
+
+
+1.  Introduction
+
+   The goal of the R-Type project is to create an online multiplayer
+   copy of the classic R-Type game (1987).
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in RFC 2119.
+
+2.  R-Type architecture
+
+   The R-Type architecture is a classic client-server game architecture.
+   The client joins the server by entering the server's port and IP
+   address. When joining, the client is set in a room by the server and
+   the game launch when a room is full. The server can run several rooms
+   at the same time.
+
+   Both TCP and UDP communications use a magic number which is defined
+   in the file "Network.hpp" in: "src/Common/Network.hpp".
+   Edit this magic number is OPTIONAL since there is a default one.
+
+
+
+Ruffinoni                     Informational                     [Page 3]
+
+RFC 9999                    R-Type Protocols               November 2020
+
+
+3.  R-Type TCP Protocol
+
+    The clients connects to the server by using a TCP protocol describe
+    below.
+
+    3a. Package
+
+        Each package communication MUST use the structure named
+        'TCPPacket'.
+        The structure is defined as:
+            uint_16 magic
+            int command
+
+        Where "magic" is the magic number used by both, client and server,
+        to ensure secure communications.
+
+        Where "command" is an element of "tcpCommand" enumeration
+        (which can be found in "src/Common/Network.hpp") representing the
+        main action of the package.
+
+        A TCP package can be read by casting the received data to the
+        structure above or using the utility function "packet_unpack".
+
+    3b. Server connection
+
+        At the client's connection, and when a room is full, the server
+        MUST attributes an id and inform the client of it. In th
+        meantime, the client MUST wait for this id to start the game.
+        When the client is a game state, it MUST use the UDP connection.
+
+
+
+Ruffinoni                     Informational                     [Page 3]
+
+RFC 9999                    R-Type Protocols               November 2020
+
+4.  R-Type UDP Protocol
+
+   Once the game is launched, the client-server communications are done
+   by using this R-Type UDP Protocol. The UDP protocol is roughly the
+   same as the TCP protocol described in page 2.
+
+    4a. Package
+
+        Each package communication MUST use the structure named
+        'UDPPacket'.
+        The structure is defined as:
+            uint_16 magic
+            int networkID
+            int input
+
+        Where "magic" is the magic number used by both, client and server,
+        to ensure secure communications.
+
+        Where "networkID" is the ID attributed by the server at the
+        client's connection. Refer to the TCP protocol at page 2 for
+        further explanations.
+
+        Where "input" is the key pressed by the user and registered by the
+        client. The implementation is library dependant. Refer to the SFML
+        documentation for the current keymap implementation.
+
+        An UDP package can be read by casting the received data to the
+        structure above or using the utility function "UDPpacket_unpack".
+
+    4b. Input communication
+
+        The server received all user's input (depending on the keymap
+        implementation) by using the package described above.
+
+        When a non supported key is pressed or there is no related event
+        attributed to this key, the input is ignored by the server.
+
