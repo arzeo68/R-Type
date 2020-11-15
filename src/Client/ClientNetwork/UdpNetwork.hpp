@@ -11,15 +11,24 @@
 #include <deque>
 #include <src/Client/ObserverPattern/Subject.hpp>
 #include "ASocket.hpp"
+#include "Common/ECS/NetworkPacket.hpp"
 /**
  * main namespace
  */
 namespace Rtype{
     enum packageType {
-        CREATION,
-        UPDATE,
-        DESTRUCTION
+        EVENT
     };
+
+    class NetworkEvent : public Observer::IEvent {
+        public:
+            NetworkEvent(ECS::NetworkPacket& p)
+                : data(p)
+            { }
+
+            ECS::NetworkPacket data;
+    };
+
     /**
      * implementation of ISocket for a UDP boost socket
      */
@@ -32,9 +41,17 @@ namespace Rtype{
          * @param port server port
          * @param SharedQueue queue in which the socket will stored the message received
          */
-
+        template<typename func>
         UDPBoostSocket(std::string const& host, std::string const& port,
-                       boost::asio::io_service& service);
+                       boost::asio::io_service& service, func&& handler)
+        {
+            _sfUdpSocket = std::make_shared<sf::UdpSocket>();
+            _sfUdpSocket->setBlocking(false);
+            _addr = host;
+            _port = std::atoi(port.c_str());
+            _sfUdpSocket->bind(_port);
+            subject.registerObserver(EVENT, handler);
+        }
         /**
          * start the socket
          */
@@ -53,24 +70,11 @@ namespace Rtype{
         void write(const RType::Common::Network::TCPPacket& input) override;
 
         private:
-        void StartConnect(boost::asio::ip::udp::resolver::results_type::iterator endpoint);
-        void HandleConnect(const std::error_code& error, boost::asio::ip::udp::resolver::results_type::iterator endpoint);
         void write(void *data, size_t dataSize) override;
-        private:
 
         private:
+
         bool stopped = false;
-        boost::asio::io_context m_ioContext;
-        boost::asio::ip::udp::resolver m_Resolver;
-        boost::asio::ip::udp::resolver::results_type endpoints;
-
-        boost::asio::ip::udp::endpoint _endpoint;
-
-        boost::asio::ip::udp::socket m_udpSocket;
-        std::shared_ptr<std::deque<std::string>> SharedDataQueue;
-        std::array<char, 1> recv_buffer;
-
-        // test SFML
 
         std::shared_ptr<sf::UdpSocket> _sfUdpSocket;
         unsigned short _port;

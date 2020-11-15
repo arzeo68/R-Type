@@ -17,7 +17,6 @@ void TransformSystem::update(float delta, std::shared_ptr<ECS::World>& world)
             transform.get()->angle = 360.f;
         else if (transform.get()->angle > 360)
             transform.get()->angle = 0.f;
-        std::cout << "entity: [ " << entity << " ] x: " << transform.get()->position.x << "  y: " << transform.get()->position.y << std::endl;
     }
 }
 

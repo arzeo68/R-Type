@@ -46,7 +46,6 @@ namespace RType::Network {
                 element = this->_queue.front();
                 this->_queue.pop();
             }
-            std::cout << "POPING " << this->_queue.size() << "\n";
             return (element);
         }
 

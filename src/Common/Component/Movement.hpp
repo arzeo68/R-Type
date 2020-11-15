@@ -38,20 +38,16 @@ static void PlayerUpdateMovement(float delta, std::shared_ptr<ECS::World>& world
 
         switch (key_val) {
             case 73:
-                std::cout << "Z" << std::endl;
-                movement.get()->speed.x = 0.1;
+                movement.get()->speed.y = -0.1;
                 break;
             case 72:
-                std::cout << "D" << std::endl;
-                movement.get()->speed.y = 0.1;
+                movement.get()->speed.x = 0.1;
                 break;
             case 74:
-                std::cout << "S" << std::endl;
-                movement.get()->speed.x = -0.1;
+                movement.get()->speed.y = 0.1;
                 break;
             case 71:
-                std::cout << "Q" << std::endl;
-                movement.get()->speed.y = -0.1;
+                movement.get()->speed.x = -0.1;
                 break;
             default:
                 break;

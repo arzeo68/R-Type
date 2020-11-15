@@ -260,7 +260,6 @@ namespace RType::Network::Room {
                     Rtype::PlayerID(i),
                     Rtype::UniqueID(_netId_Generator->getID())
                 );
-                std::cout << "---------- TCP Sending to " << i << "\n";
                 this->_users[i]->get_tcpsocket()->write({RType::Common::Network::g_MagicNumber, static_cast<int>(i)});
             }
         }
@@ -297,7 +296,7 @@ namespace RType::Network::Room {
                     }
                 }
                 oqueue.get()->OutputQueue.clear();
-                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                std::this_thread::sleep_for(std::chrono::milliseconds(16));
                 _start = end;
             });
         }

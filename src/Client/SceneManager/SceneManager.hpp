@@ -5,6 +5,10 @@
 #include <Client/RenderTarget/RenderTarget.hpp>
 #include <Common/ECS/World.hpp>
 #include <Client/ObserverPattern/Subject.hpp>
+#include <Client/ClientNetwork/UdpNetwork.hpp>
+#include <Client/Components/NetworkUpdate.hpp>
+
+void base_update_routine(float delta, std::shared_ptr<ECS::World>& world, ECS::Entity target);
 /**
  * main namespace
  */
@@ -106,9 +110,16 @@ namespace Rtype
             std::shared_ptr<EventSceneSwitch> event = std::make_shared<EventSceneSwitch>(scene);
             m_Subject.notify(Switch_to, event);
         };
+
+        void register_network(Observer::Subject<Rtype::packageType>& subject)
+        {
+            subject.registerObserver(Rtype::packageType::EVENT, std::bind(&AScene::catch_network_event, this, std::placeholders::_1, std::placeholders::_2));
+        }
     protected:
         std::shared_ptr<ECS::World> m_World;
         Observer::Subject<EventSceneSwitchType> m_Subject;
+
+        void catch_network_event(Rtype::packageType type, std::shared_ptr<Observer::IEvent> data);
     };
     /**
      * this class handle all the scene

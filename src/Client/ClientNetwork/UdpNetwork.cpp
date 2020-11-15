@@ -7,38 +7,12 @@
 namespace Rtype
 {
 
-    UDPBoostSocket::UDPBoostSocket(std::string const& host, std::string const &port, boost::asio::io_service& service
-    )
-        :
-        m_Resolver(service), m_udpSocket(service)
-    {
-        endpoints = m_Resolver.resolve(host, port);
-        _sfUdpSocket = std::make_shared<sf::UdpSocket>();
-        _sfUdpSocket->setBlocking(false);
-        _addr = host;
-        _port = std::atoi(port.c_str());
-        _sfUdpSocket->bind(_port);
-    }
-
     void UDPBoostSocket::start_socket() noexcept
     {
-        StartConnect(endpoints.begin());
     }
 
     void UDPBoostSocket::shutdown_socket() noexcept
     {
-        stopped = true;
-        m_udpSocket.close();
-    }
-
-    void UDPBoostSocket::StartConnect(boost::asio::ip::udp::resolver::results_type::iterator endpoint)
-    {
-
-    }
-
-    void UDPBoostSocket::HandleConnect(const std::error_code &error, boost::asio::ip::udp::resolver::results_type::iterator endpoint)
-    {
-
     }
 
     void UDPBoostSocket::write(const RType::Common::Network::TCPPacket& input)
@@ -82,8 +56,8 @@ namespace Rtype
         }
         else if (status == sf::Socket::Done)
         {
-            std::cout << "Received " << received << " bytes from " << sender << " on port " << port << std::endl;
-            std::cout << "DATA: " << data.id << "  " << data.type << "  " << data.x << "  " << data.y << std::endl;
+            std::shared_ptr<NetworkEvent> event = std::make_shared<NetworkEvent>(data);
+            subject.notify(EVENT, event);
         }
         else
         {

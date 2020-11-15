@@ -1,5 +1,13 @@
 #include <algorithm>
 #include <Client/SceneManager/SceneManager.hpp>
+#include <Client/Components/TextureLibrary.hpp>
+#include <Client/Components/NetworkUpdate.hpp>
+#include <Client/Components/Sprite.hpp>
+#include <Client/Components/Rotation.hpp>
+#include <Common/Component/Transform.hpp>
+#include <Common/Component/Movement.hpp>
+#include <Common/Component/Hitbox.hpp>
+#include <Common/Component/UniqueID.hpp>
 
 namespace Rtype
 {
@@ -63,6 +71,24 @@ void SceneManager::catch_switch(EventSceneSwitchType, std::shared_ptr<Observer::
     std::shared_ptr<EventSceneSwitch> nScene = std::dynamic_pointer_cast<EventSceneSwitch>(data);
 
     switch_to(nScene->sceneID);
+}
+void AScene::catch_network_event(Rtype::packageType type, std::shared_ptr<Observer::IEvent> data)
+{
+    std::shared_ptr<NetworkEvent> event = std::dynamic_pointer_cast<NetworkEvent>(data);
+    auto input = m_World->getSingletonComponent<Rtype::NetworkUpdateSingletonComponent>();
+    if (event->data.type == 0) {
+        ECS::Entity e;
+        auto texlib = m_World->getSingletonComponent<TextureLibraryComponent>();
+        m_World->addComponents<SpriteComponent, Rtype::TransformComponent, Rtype::MovementComponent, Rtype::UniqueID>(
+            e,
+            SpriteComponent(texlib.get()->get_texture("<default>"), 0),
+            Rtype::TransformComponent({event->data.x, event->data.y}, 0, {1, 1}),
+            Rtype::MovementComponent({0, 0}, 0, std::bind(base_update_routine, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
+            Rtype::UniqueID(event->data.id)
+        );
+    } else if (event->data.type == 1) {
+        input.get()->packets.push_back(std::move(event->data));
+    }
 }
 
 } // namespace Rtype

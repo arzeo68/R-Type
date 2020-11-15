@@ -71,7 +71,6 @@ add_executable(rtype_client
         src/Client/EventManager/EventManager.cpp
         src/Client/Application/Application.cpp
         src/Client/Application/Application.hpp
-        src/Client/Components/Network.hpp
         src/Client/ClientNetwork/ISocket.hpp
         src/Client/ClientNetwork/ASocket.hpp
         src/Client/ClientNetwork/TcpNetwork.cpp
@@ -111,7 +110,6 @@ add_executable(rtype_client
         src/Common/Component/Movement.hpp
         src/Common/Component/Transform.hpp
         src/Common/Component/Hitbox.hpp
-
         # - Common Components and Systems
 )
 

@@ -35,8 +35,8 @@ Application::Application(std::string const& title, unsigned int width, unsigned 
     tcpMessageReceived = std::make_shared<std::deque<int>>();
     tcpSocket = std::make_shared<Rtype::TCPBoostSocket>("127.0.0.1", "4242", this->_service,
                                                         tcpMessageReceived);
-    udpSocket = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", "4243", this->_service);
-    udpSocket_read = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", port, this->_service);
+    udpSocket = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", "4243", this->_service, std::bind(&Application::catch_network_event, this, std::placeholders::_1, std::placeholders::_2));
+    udpSocket_read = std::make_shared<Rtype::UDPBoostSocket>("127.0.0.1", port, this->_service, std::bind(&Application::catch_network_event, this, std::placeholders::_1, std::placeholders::_2));
     m_pEventManager->getSubject().registerObserver(EClose, std::bind(&Application::catch_close, this, std::placeholders::_1, std::placeholders::_2));
     m_pEventManager->getSubject().registerObserver(EKeyPressed, std::bind(&Application::catch_keyPressed, this, std::placeholders::_1, std::placeholders::_2));
 }
@@ -77,6 +77,7 @@ void Application::run()
     auto start = std::chrono::high_resolution_clock::now();
     RenderTarget target = w->getRenderTarget();
     std::shared_ptr<MenuScene> menu = std::make_shared<MenuScene>();
+    menu->register_network(m_subject);
     m_pSceneManager->add(menu);
 
     while (tcpMessageReceived->empty())
@@ -84,7 +85,6 @@ void Application::run()
         std::cout << "wait" << std::endl;
         std::this_thread::sleep_for(std::chrono::seconds(3));
     }
-    std::cout << "sdfsdf: " << tcpMessageReceived->front() << std::endl;
     _networkID = tcpMessageReceived->front();
     tcpMessageReceived->pop_front();
 
@@ -123,6 +123,13 @@ void Application::catch_keyPressed(EventType type, std::shared_ptr<Observer::IEv
     std::string keyString= std::to_string(key->_key);
     RType::Common::Network::UDPPacket p{RType::Common::Network::g_MagicNumber, _networkID ,key->_key};
     udpSocket->write(&p, sizeof(p));
+}
+
+void Application::catch_network_event(packageType type, std::shared_ptr<Observer::IEvent> data)
+{
+    std::shared_ptr<NetworkEvent> event = std::dynamic_pointer_cast<NetworkEvent>(data);
+
+    m_subject.notify(type, data);
 }
 
 } // namespace Rtype

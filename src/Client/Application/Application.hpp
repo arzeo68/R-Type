@@ -7,6 +7,7 @@
 #include <Client/SceneManager/SceneManager.hpp>
 #include <Client/EventManager/EventManager.hpp>
 #include <Client/ClientNetwork/ASocket.hpp>
+#include <Client/ClientNetwork/UdpNetwork.hpp>
 
 namespace Rtype {
 
@@ -31,6 +32,8 @@ namespace Rtype {
         void catch_keyPressed(EventType type,
                               std::shared_ptr<Observer::IEvent> data);
 
+        void catch_network_event(Rtype::packageType, std::shared_ptr<Observer::IEvent> data);
+
     private:
         std::shared_ptr<std::deque<int>> tcpMessageReceived;
         std::shared_ptr<Rtype::ASocket> tcpSocket;
@@ -41,6 +44,7 @@ namespace Rtype {
         std::shared_ptr<AEventManager> m_pEventManager;
         std::unordered_map<std::string, unsigned int> m_cScenes;
         boost::asio::io_service _service;
+        Observer::Subject<Rtype::packageType> m_subject;
         int _networkID = -1;
     };
 
