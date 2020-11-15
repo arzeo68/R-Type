@@ -83,8 +83,8 @@ add_executable(rtype_client
         src/Client/Game/Systems/RenderSystem.hpp
         src/Client/Game/Systems/RenderSystem.cpp
 
-        src/Client/Game/Systems/RotationSystem.hpp
-        src/Client/Game/Systems/RotationSystem.cpp
+        src/Client/Game/Systems/NetworkEntityDestructionSystem.hpp
+        src/Client/Game/Systems/NetworkEntityDestructionSystem.cpp
 
         # ECS
         src/Common/ECS/ComponentArray.hpp

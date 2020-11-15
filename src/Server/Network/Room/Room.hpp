@@ -28,6 +28,7 @@
 #include "Common/Component/OutputQueue.hpp"
 #include "Common/Component/PlayerID.hpp"
 #include "Common/Component/UniqueID.hpp"
+#include "Common/Component/Tag.hpp"
 
 #include "Common/Systems/TransformSystem.hpp"
 #include "Common/Systems/PhysicSystem.hpp"
@@ -259,6 +260,7 @@ namespace RType::Network::Room {
 
         private:
         void init_ecs() {
+            _packetQueue = std::make_shared<ThreadSafeQueue<ECS::NetworkPacket>>();
             _netId_Generator = std::make_shared<UniqueIDGenerator>();
 
             this->_world->template registerComponent<Rtype::TransformComponent>();
@@ -268,6 +270,7 @@ namespace RType::Network::Room {
             this->_world->template registerComponent<Rtype::OutputQueueComponent>();
             this->_world->template registerComponent<Rtype::PlayerID>();
             this->_world->template registerComponent<Rtype::UniqueID>();
+            this->_world->template registerComponent<Rtype::TagComponent>();
 
             this->_world->template addSingletonComponents<Rtype::InputQueueComponent, Rtype::OutputQueueComponent>(
                 Rtype::InputQueueComponent(),
@@ -289,12 +292,13 @@ namespace RType::Network::Room {
             for (size_t i = 0; i < this->_users.size(); i += 1) {
                 ECS::Entity e = this->_world->createEntity();
 
-                this->_world->template addComponents<Rtype::TransformComponent, Rtype::MovementComponent, Rtype::PlayerID, Rtype::UniqueID>(
+                this->_world->template addComponents<Rtype::TransformComponent, Rtype::MovementComponent, Rtype::PlayerID, Rtype::UniqueID, Rtype::TagComponent>(
                     e,
-                    Rtype::TransformComponent({0, 0}, 0, {1, 1}),
-                    Rtype::MovementComponent({0, 0}, 0, std::bind(Rtype::PlayerUpdateMovement, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
+                    Rtype::TransformComponent({-(1920 / 2) + 100, static_cast<float>(i) * 100.f}, 0, {1, 1}),
+                    Rtype::MovementComponent({0, 0}, 0, std::bind(Rtype::PlayerUpdateMovement, _netId_Generator, _packetQueue, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
                     Rtype::PlayerID(i),
-                    Rtype::UniqueID(_netId_Generator->getID())
+                    Rtype::UniqueID(_netId_Generator->getID()),
+                    Rtype::TagComponent("Player")
                 );
                 this->_users[i]->get_tcpsocket()->write({RType::Common::Network::g_MagicNumber, static_cast<int>(i)});
             }
@@ -314,6 +318,7 @@ namespace RType::Network::Room {
             });
             _start = std::chrono::high_resolution_clock::now();
             this->_worker_game_loop.run_awake([&] () {
+                this->_world->clearDeferList();
                 auto queue = this->_world->template getSingletonComponent<Rtype::InputQueueComponent>();
                 auto oqueue = this->_world->template getSingletonComponent<Rtype::OutputQueueComponent>();
                 for (std::size_t i = 0; i < _users.size(); i += 1) {
@@ -330,11 +335,15 @@ namespace RType::Network::Room {
                 this->_world->template getSystem<Rtype::TransformSystem>()->update(res, this->_world);
                 this->_world->template getSystem<Rtype::PhysicSystem>()->update(res, this->_world);
                 this->_world->template getSystem<Rtype::NetworkSystem>()->update(res, this->_world);
-                this->_world->template getSystem<Rtype::NetworkSystem>()->update(res, this->_world);
                 for (size_t i = 0; i < _users.size(); ++i) {
                     for (auto& p : oqueue.get()->OutputQueue) {
                         _users[i]->get_udpsocket_write()->write(p);
                     }
+                }
+                while (!_packetQueue->empty()) {
+                    ECS::NetworkPacket tmp = _packetQueue->pop();
+                    for (size_t i = 0; i < _users.size(); ++i)
+                        _users[i]->get_udpsocket_write()->write(tmp);
                 }
                 oqueue.get()->OutputQueue.clear();
                 std::this_thread::sleep_for(std::chrono::milliseconds(16));
@@ -350,6 +359,7 @@ namespace RType::Network::Room {
         GameState_e _state;
         std::mutex _mutex;
         std::vector<room_user_sptr> _users;
+        std::shared_ptr<ThreadSafeQueue<ECS::NetworkPacket>> _packetQueue;
     };
 }
 

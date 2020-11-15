@@ -10,6 +10,7 @@
 #include <Common/Component/UniqueID.hpp>
 
 #include <Client/Game/Systems/RenderSystem.hpp>
+#include <Client/Game/Systems/NetworkEntityDestructionSystem.hpp>
 #include <Common/Systems/MovementUpdateSystem.hpp>
 #include <Common/Systems/TransformSystem.hpp>
 #include <Common/Systems/PhysicSystem.hpp>
@@ -62,6 +63,9 @@ void MenuScene::onCreate()
 
     m_World->registerSystem<Rtype::MovementUpdateSystem>();
     m_World->setSystemSignature<Rtype::MovementUpdateSystem, Rtype::MovementComponent>();
+
+    m_World->registerSystem<NetworkEntityDestructionSystem>();
+    m_World->setSystemSignature<NetworkEntityDestructionSystem, Rtype::UniqueID>();
 
     auto texlib = m_World->getSingletonComponent<TextureLibraryComponent>();
 
@@ -141,6 +145,7 @@ void MenuScene::update(float delta, Rtype::RenderTarget& target)
     m_World->clearDeferList();
     target.expose().clear(Rtype::color::Black);
     m_World->getSystem<Rtype::MovementUpdateSystem>()->update(delta, m_World);
+    m_World->getSystem<NetworkEntityDestructionSystem>()->update(delta, m_World);
     m_World->getSystem<RenderSystem>()->update(delta, m_World, target);
     net_update.get()->packets.clear();
 }

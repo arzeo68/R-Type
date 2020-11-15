@@ -8,6 +8,7 @@ namespace Rtype
 
 struct NetworkUpdateSingletonComponent {
     std::vector<ECS::NetworkPacket> packets;
+    std::vector<int> destructionIDs;
 
     NetworkUpdateSingletonComponent() = default;
 };

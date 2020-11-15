@@ -143,6 +143,7 @@ class World
 
         void deferEntityDestruction(Entity entity)
         {
+            std::cout << "Deferring destruction\n";
             m_cDeferedDestruction->push_back(entity);
         }
 
