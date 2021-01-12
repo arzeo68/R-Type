@@ -1,0 +1,29 @@
+---
+Language: Cpp
+
+BasedOnStyle: Google
+AlignTrailingComments: true
+AllowShortFunctionsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+BreakBeforeBinaryOperators: false
+IndentWidth: 4
+AccessModifierOffset: -4
+SortIncludes: false
+NamespaceIndentation: All
+AllowAllConstructorInitializersOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowShortCaseLabelsOnASingleLine: false
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterEnum: false
+  AfterClass: true
+  AfterControlStatement: MultiLine
+  AfterFunction: true
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  BeforeElse: false
+  BeforeLambdaBody: false
+  BeforeWhile: false
+ColumnLimit: 80
